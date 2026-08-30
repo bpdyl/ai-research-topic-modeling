@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+sources/__pycache__/
+# output/
+output_smoke/
+*.pyc
+.vscode
+.cursor/
