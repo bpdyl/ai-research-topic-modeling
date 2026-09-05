@@ -22,12 +22,17 @@ dist/
 # Bulky intermediates are not.
 data/interim/*
 !data/interim/.gitkeep
+# Committed: the frozen corpus, the token streams and the JSON reports — these
+# are the inspectable inputs to every experiment.
+# Ignored: gensim binaries, which regenerate from tokens.jsonl in seconds via
+# scripts/02_preprocess.py. Committing them adds ~3 MB of opaque binary and
+# risks the dictionary and matrices drifting out of sync.
 data/processed/*.pkl
 data/processed/*.npy
 data/processed/*.npz
-data/processed/dictionary*
-data/processed/bow*
-data/processed/tfidf*
+data/processed/*.mm
+data/processed/*.mm.index
+data/processed/*.dict
 !data/processed/.gitkeep
 
 # ── Experiment outputs ─────────────────────────────────────────────
