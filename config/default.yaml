@@ -29,6 +29,13 @@ paths:
   processed_dir: "data/processed"
   frozen_corpus: "data/processed/corpus_frozen.jsonl"
   corpus_report: "data/processed/corpus_report.json"
+  # Phase 4 artefacts
+  tokens: "data/processed/tokens.jsonl"                # LDA branch
+  bertopic_docs: "data/processed/bertopic_docs.jsonl"  # BERTopic branch
+  dictionary: "data/processed/dictionary.dict"
+  bow_corpus: "data/processed/corpus_bow.mm"
+  tfidf_corpus: "data/processed/corpus_tfidf.mm"
+  preprocess_report: "data/processed/preprocess_report.json"
   results_dir: "results/runs"
   figures_dir: "figures"
 
@@ -62,9 +69,9 @@ corpus:
 # ── Preprocessing ─────────────────────────────────────────────────────
 preprocessing:
   lowercase: true
-  strip_leading_abstract: true     # 106 abstracts literally begin "Abstract"
-  strip_copyright: true            # 5 carry "© / all rights reserved" tails
-  unicode_normalize: "NFKC"        # 611 abstracts contain non-ASCII
+  strip_leading_abstract: true     # 71 documents begin with "Abstract" (frozen corpus)
+  strip_copyright: true            # 0 remain after the year filter; kept as a guard
+  unicode_normalize: "NFKC"        # 394 documents contain non-ASCII
   min_token_length: 3
   # Preserved verbatim even though they are shorter than min_token_length or
   # would otherwise be lemmatised away. A proposal commitment ("preserving
@@ -72,14 +79,44 @@ preprocessing:
   protected_acronyms:
     [ai, ml, dl, nlp, cv, rl, llm, cnn, rnn, lstm, gru, gan, gans, svm, knn,
       bert, gpt, xai, mlp, dnn, ann, nn, iot, gis, ocr, asr, tts, vae, rag]
-  # Corpus-specific stop words. EVERY entry must be justifiable in the paper —
-  # these are terms that appear across nearly all documents and carry no topical
-  # signal. Do not add words just because they are frequent.
+  # ── Corpus-specific stop words ──────────────────────────────────────
+  # Two groups, both evidence-based rather than chosen by taste (DEC-017).
+  #
+  # (a) Publication boilerplate.
+  # (b) Generic RESEARCH-PROCESS vocabulary: words describing how the work was
+  #     done or written up, not what it is about. Selected by measuring
+  #     document frequency on the frozen corpus and keeping candidates at
+  #     DF >= 5%. Measured DF for the worst offenders: challenge 32.5%,
+  #     enhance 30.4%, include 30.2%, improve 29.0%, provide 27.8%,
+  #     develop 22.7%, find 22.2%, identify 21.6%, evaluate 21.1%.
+  #
+  # `no_above: 0.5` alone does NOT catch these — it removed only "model"
+  # (59.8%). Everything from 18-33% survived into the dictionary and would
+  # appear in every topic, flattening topic diversity (one of our three
+  # reported metrics).
+  #
+  # DELIBERATELY KEPT despite matching the pattern: `level` and `value`.
+  # This corpus is applied-AI heavy (hydrology, hazards, health), where
+  # "water level", "groundwater level" and "p-value" are genuine content.
+  # Domain-content terms are kept regardless of frequency: data, accuracy,
+  # system, performance, image, dataset, classification, prediction, nepal.
   domain_stopwords:
+    # (a) publication boilerplate
     [paper, study, research, propose, proposed, result, results, method,
       methods, approach, using, use, used, based, show, shows, shown, also,
       however, therefore, thus, abstract, article, author, authors, journal,
-      conference, however, respectively, et_al]
+      conference, respectively, et_al,
+      # (b) generic research-process vocabulary (DF >= 5%, measured)
+      challenge, enhance, include, improve, provide, develop, find, identify,
+      evaluate, high, achieve, potential, make, different, present, compare,
+      comparison, demonstrate, various, advance, integrate, aim, significant,
+      increase, focus, address, need, future, explore, work, due, highlight,
+      offer, reduce, effective, among, well, enable, across, apply, key,
+      better, perform, help, support, efficient, examine, new, case, conduct,
+      contribute, require, best, current, indicate, within, novel, suggest,
+      obtain, investigate, specific, important, major, consider, type, number,
+      additionally, several, many, recent, overall, reveal, total, report,
+      furthermore, allow, large]
   bigrams: true
   trigrams: true
   phrase_min_count: 10
