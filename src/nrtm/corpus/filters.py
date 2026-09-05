@@ -13,6 +13,7 @@ report reads as a funnel rather than a single opaque number.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Sequence
 
@@ -128,7 +129,23 @@ def apply_filters(docs: Sequence[Document], cfg) -> tuple[list[Document], Filter
         )
         current = kept
 
-    # ── 4. Recompute reporting windows (DEC-013) ───────────────────────
+    # ── 4. Known false positives (DEC-018) ─────────────────────────────
+    patterns = corpus_cfg.get("exclude_patterns") or []
+    if patterns:
+        rx = re.compile("|".join(re.escape(p) for p in patterns), re.IGNORECASE)
+        dropped = [d for d in current if rx.search(d.text)]
+        kept = [d for d in current if not rx.search(d.text)]
+        report.add(
+            "exclude_patterns",
+            "DEC-018: drop documents matching known false positives of the "
+            "scraper's AI-relevance regex. 'Computer vision syndrome' is an "
+            "ophthalmic condition, not AI research; all matches were verified "
+            "by hand to contain no AI-method vocabulary.",
+            current, kept, dropped,
+        )
+        current = kept
+
+    # ── 5. Recompute reporting windows (DEC-013) ───────────────────────
     windows = corpus_cfg["time_windows"]
     for doc in current:
         doc.time_window = time_window_for_year(doc.year, windows)

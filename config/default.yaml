@@ -53,6 +53,15 @@ corpus:
   require_abstract: true
   min_raw_tokens: 30
 
+  # DEC-018: known false positives from the scraper's AI-relevance regex.
+  # `ai_relevance.py` matches the literal phrase "computer vision", which also
+  # occurs in "Computer Vision Syndrome" - an ophthalmic/occupational-health
+  # condition caused by screen use, not a field of AI. All 14 matches were read
+  # by hand and none contains any AI-method vocabulary; at K=10 they formed
+  # their own spurious topic. Matched case-insensitively against title+abstract.
+  exclude_patterns:
+    - "computer vision syndrome"
+
   # DEC-011: the second dataset (output_broad_unfiltered/) is NOT merged for
   # now. It is used only to quantify the AI-gate's effect. OQ-005.
   merge_broad_dataset: false

@@ -136,3 +136,43 @@ class TestToDocuments:
     def test_generates_an_id_when_paper_id_is_missing(self):
         d = to_documents([{"title": "T", "abstract": "A"}])[0]
         assert d.doc_id == "doc_00000"
+
+
+class TestExcludePatterns:
+    """DEC-018: 'computer vision' in the scraper's AI regex also matches
+    'Computer Vision Syndrome', an ophthalmic condition. 14 such papers were in
+    the corpus, none containing AI-method vocabulary."""
+
+    CFG = {
+        "corpus": {
+            "year_min": 2015, "year_max": 2025,
+            "require_abstract": True, "min_raw_tokens": 30,
+            "exclude_patterns": ["computer vision syndrome"],
+            "time_windows": WINDOWS,
+        }
+    }
+
+    def test_drops_matching_documents(self):
+        docs = [
+            _doc(doc_id="keep", title="Deep learning for crop disease"),
+            _doc(doc_id="cvs", title="Computer Vision Syndrome among IT workers"),
+        ]
+        kept, _ = apply_filters(docs, self.CFG)
+        assert [d.doc_id for d in kept] == ["keep"]
+
+    def test_is_case_insensitive(self):
+        docs = [_doc(doc_id="cvs", title="COMPUTER VISION SYNDROME prevalence")]
+        kept, _ = apply_filters(docs, self.CFG)
+        assert kept == []
+
+    def test_does_not_drop_genuine_computer_vision_papers(self):
+        docs = [_doc(doc_id="cv", title="Computer vision for landslide detection")]
+        kept, _ = apply_filters(docs, self.CFG)
+        assert [d.doc_id for d in kept] == ["cv"]
+
+    def test_absent_config_key_is_a_no_op(self):
+        cfg = {"corpus": dict(self.CFG["corpus"])}
+        del cfg["corpus"]["exclude_patterns"]
+        docs = [_doc(doc_id="cvs", title="Computer Vision Syndrome among workers")]
+        kept, _ = apply_filters(docs, cfg)
+        assert [d.doc_id for d in kept] == ["cvs"]
