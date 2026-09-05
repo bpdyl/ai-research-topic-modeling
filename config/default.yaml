@@ -1,0 +1,165 @@
+# ══════════════════════════════════════════════════════════════════════
+# Single source of truth for every tunable in the pipeline.
+# A snapshot of this file is written into results/runs/<RUN_ID>/config.yaml
+# on every run, so any reported number can be traced back to its settings
+# (marking criterion 5.1 — "sufficient information to reproduce the results").
+#
+# Decision references (DEC-xxx) point at ../.brain/DECISIONS.md.
+# ══════════════════════════════════════════════════════════════════════
+
+project:
+  name: "Optimized Topic Modeling of AI Research Involving Nepali Authors"
+  module: "ST7085CEM"
+  deadline: "2026-09-12"          # DEC-009
+
+# ── Reproducibility ───────────────────────────────────────────────────
+seed: 42
+# Windows + gensim: CoherenceModel defaults to spawning (n_cores - 1) workers,
+# each re-importing the whole scipy/BLAS stack. On this machine that exhausted
+# the commit limit and crashed with "the paging file is too small".
+# Keep this at 1. See ../.brain/RISKS.md RISK-006 / RISK-015.
+coherence_processes: 1
+blas_threads: 1
+
+# ── Paths (relative to the repository root) ───────────────────────────
+paths:
+  raw_corpus: "scraper/output/nepal_ai_papers.json"
+  raw_corpus_broad: "scraper/output_broad_unfiltered/nepal_ai_papers.json"
+  interim_dir: "data/interim"
+  processed_dir: "data/processed"
+  frozen_corpus: "data/processed/corpus_frozen.jsonl"
+  corpus_report: "data/processed/corpus_report.json"
+  results_dir: "results/runs"
+  figures_dir: "figures"
+
+# ── Corpus definition ─────────────────────────────────────────────────
+corpus:
+  # DEC-012: restrict to <= 2025 so the corpus matches the proposal's stated
+  # span exactly. Also cuts preprint-server content from 10.4% to 3.4% and the
+  # final window's share from 72% to 62%.
+  year_min: 2015
+  year_max: 2025
+
+  # Documents are title + abstract. Papers with no abstract are title-only and
+  # too short to model; 25 further records are <50-word editorials. A floor of
+  # 30 whitespace tokens on the raw title+abstract removes them. RISK-012.
+  require_abstract: true
+  min_raw_tokens: 30
+
+  # DEC-011: the second dataset (output_broad_unfiltered/) is NOT merged for
+  # now. It is used only to quantify the AI-gate's effect. OQ-005.
+  merge_broad_dataset: false
+
+  # DEC-013: reporting windows only. One global model is fitted on the whole
+  # corpus; these slice the *reporting* of topic proportions, not the fitting.
+  # Every temporal table/figure must also print the per-window n.
+  time_windows:
+    - [2015, 2017]
+    - [2018, 2020]
+    - [2021, 2023]
+    - [2024, 2025]
+
+# ── Preprocessing ─────────────────────────────────────────────────────
+preprocessing:
+  lowercase: true
+  strip_leading_abstract: true     # 106 abstracts literally begin "Abstract"
+  strip_copyright: true            # 5 carry "© / all rights reserved" tails
+  unicode_normalize: "NFKC"        # 611 abstracts contain non-ASCII
+  min_token_length: 3
+  # Preserved verbatim even though they are shorter than min_token_length or
+  # would otherwise be lemmatised away. A proposal commitment ("preserving
+  # critical technical acronyms").
+  protected_acronyms:
+    [ai, ml, dl, nlp, cv, rl, llm, cnn, rnn, lstm, gru, gan, gans, svm, knn,
+      bert, gpt, xai, mlp, dnn, ann, nn, iot, gis, ocr, asr, tts, vae, rag]
+  # Corpus-specific stop words. EVERY entry must be justifiable in the paper —
+  # these are terms that appear across nearly all documents and carry no topical
+  # signal. Do not add words just because they are frequent.
+  domain_stopwords:
+    [paper, study, research, propose, proposed, result, results, method,
+      methods, approach, using, use, used, based, show, shows, shown, also,
+      however, therefore, thus, abstract, article, author, authors, journal,
+      conference, however, respectively, et_al]
+  bigrams: true
+  trigrams: true
+  phrase_min_count: 10
+  phrase_threshold: 20.0
+  dictionary:
+    no_below: 5        # term must appear in >= 5 documents
+    no_above: 0.5      # drop terms in > 50% of documents
+    keep_n: 50000
+
+# ── Models ────────────────────────────────────────────────────────────
+lda:
+  k_min: 5
+  k_max: 40
+  k_step: 5
+  passes: 10
+  iterations: 100
+  chunksize: 500
+  alpha: "symmetric"
+  eta: null
+  # Use single-process LdaModel, not LdaMulticore. See coherence_processes note.
+  multicore: false
+
+ga:
+  population_size: 20
+  generations: 15
+  crossover_rate: 0.7      # justify with a citation in the paper, not by taste
+  mutation_rate: 0.05
+  elitism: 2
+  tournament_size: 3
+  search_space:
+    k: [5, 40]
+    alpha: [0.01, 1.0]
+    eta: [0.01, 1.0]
+  # OQ-011 (provisional): stability = mean pairwise Jaccard agreement of top-N
+  # topic word sets across `stability_seeds` refits, after Hungarian matching.
+  # Cheap inside the GA, wider for the final reported evaluation.
+  stability_seeds: 3
+  # OQ-013 (provisional): weighted-sum aggregation. Weights are reported and a
+  # small sensitivity table over 2-3 weightings goes in the paper.
+  fitness_weights:
+    coherence: 0.6
+    diversity: 0.2
+    stability: 0.2
+  cache_fitness: true      # GAs re-evaluate duplicate genomes constantly
+
+bertopic:
+  embedding_model: "all-MiniLM-L6-v2"
+  min_topic_size: 15
+  umap:
+    n_neighbors: 15
+    n_components: 5
+    min_dist: 0.0
+    metric: "cosine"
+    random_state: 42
+  hdbscan:
+    min_cluster_size: 15
+    metric: "euclidean"
+    cluster_selection_method: "eom"
+  # OQ-015 / RISK-008: BERTopic consumes cleaned natural sentences, NOT the
+  # LDA token stream. Feeding it lemmatised, stop-word-stripped bags of words
+  # would cripple the benchmark and invalidate the comparison.
+  use_raw_sentences: true
+
+# ── Evaluation ────────────────────────────────────────────────────────
+evaluation:
+  top_n_words: 10
+  # C_v is what the GA optimises, so reporting only C_v is circular (RISK-007).
+  # c_npmi and u_mass are independent checks the GA never saw.
+  coherence_measures: ["c_v", "c_npmi", "u_mass"]
+  diversity_top_n: 25
+  stability_seeds: 10          # wider than the GA's inner loop
+  # OQ-012: three human raters score each topic 1-5; report mean plus
+  # inter-rater agreement. Cannot be automated — schedule it.
+  interpretability:
+    n_raters: 3
+    scale: [1, 5]
+    agreement_statistic: "krippendorff_alpha"
+
+temporal:
+  # DEC-013: normalise topic proportions WITHIN each window so window size
+  # cancels out (RISK-005: 62% of the corpus sits in the final window).
+  normalize_within_window: true
+  report_window_n: true          # mandatory on every table and figure

@@ -1,0 +1,170 @@
+project:
+  name: Optimized Topic Modeling of AI Research Involving Nepali Authors
+  module: ST7085CEM
+  deadline: '2026-09-12'
+seed: 42
+coherence_processes: 1
+blas_threads: 1
+paths:
+  raw_corpus: scraper/output/nepal_ai_papers.json
+  raw_corpus_broad: scraper/output_broad_unfiltered/nepal_ai_papers.json
+  interim_dir: data/interim
+  processed_dir: data/processed
+  frozen_corpus: data/processed/corpus_frozen.jsonl
+  corpus_report: data/processed/corpus_report.json
+  results_dir: results/runs
+  figures_dir: figures
+corpus:
+  year_min: 2015
+  year_max: 2025
+  require_abstract: true
+  min_raw_tokens: 30
+  merge_broad_dataset: false
+  time_windows:
+  - - 2015
+    - 2017
+  - - 2018
+    - 2020
+  - - 2021
+    - 2023
+  - - 2024
+    - 2025
+preprocessing:
+  lowercase: true
+  strip_leading_abstract: true
+  strip_copyright: true
+  unicode_normalize: NFKC
+  min_token_length: 3
+  protected_acronyms:
+  - ai
+  - ml
+  - dl
+  - nlp
+  - cv
+  - rl
+  - llm
+  - cnn
+  - rnn
+  - lstm
+  - gru
+  - gan
+  - gans
+  - svm
+  - knn
+  - bert
+  - gpt
+  - xai
+  - mlp
+  - dnn
+  - ann
+  - nn
+  - iot
+  - gis
+  - ocr
+  - asr
+  - tts
+  - vae
+  - rag
+  domain_stopwords:
+  - paper
+  - study
+  - research
+  - propose
+  - proposed
+  - result
+  - results
+  - method
+  - methods
+  - approach
+  - using
+  - use
+  - used
+  - based
+  - show
+  - shows
+  - shown
+  - also
+  - however
+  - therefore
+  - thus
+  - abstract
+  - article
+  - author
+  - authors
+  - journal
+  - conference
+  - however
+  - respectively
+  - et_al
+  bigrams: true
+  trigrams: true
+  phrase_min_count: 10
+  phrase_threshold: 20.0
+  dictionary:
+    no_below: 5
+    no_above: 0.5
+    keep_n: 50000
+lda:
+  k_min: 5
+  k_max: 40
+  k_step: 5
+  passes: 10
+  iterations: 100
+  chunksize: 500
+  alpha: symmetric
+  eta: null
+  multicore: false
+ga:
+  population_size: 20
+  generations: 15
+  crossover_rate: 0.7
+  mutation_rate: 0.05
+  elitism: 2
+  tournament_size: 3
+  search_space:
+    k:
+    - 5
+    - 40
+    alpha:
+    - 0.01
+    - 1.0
+    eta:
+    - 0.01
+    - 1.0
+  stability_seeds: 3
+  fitness_weights:
+    coherence: 0.6
+    diversity: 0.2
+    stability: 0.2
+  cache_fitness: true
+bertopic:
+  embedding_model: all-MiniLM-L6-v2
+  min_topic_size: 15
+  umap:
+    n_neighbors: 15
+    n_components: 5
+    min_dist: 0.0
+    metric: cosine
+    random_state: 42
+  hdbscan:
+    min_cluster_size: 15
+    metric: euclidean
+    cluster_selection_method: eom
+  use_raw_sentences: true
+evaluation:
+  top_n_words: 10
+  coherence_measures:
+  - c_v
+  - c_npmi
+  - u_mass
+  diversity_top_n: 25
+  stability_seeds: 10
+  interpretability:
+    n_raters: 3
+    scale:
+    - 1
+    - 5
+    agreement_statistic: krippendorff_alpha
+temporal:
+  normalize_within_window: true
+  report_window_n: true
