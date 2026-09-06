@@ -31,6 +31,7 @@ SOURCES = [
     ("GA-Optimized LDA", "results/runs/*_ga_lda/ga_lda.json"),
     ("BERTopic", "results/runs/*_bertopic/bertopic.json"),
     ("Standard LDA", "results/runs/*_lda_baseline/lda_baseline.json"),
+    ("Random-Search LDA", "results/runs/*_random_search/random_search.json"),
 ]
 
 

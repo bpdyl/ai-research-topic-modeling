@@ -40,5 +40,33 @@
   },
   "_bertopic_notes": {
     "general": "BERTopic's topics were markedly easier to label than GA-LDA's: 14 of 14 mapped to a specific research area without hedging, whereas 3 of 7 GA-LDA topics required a 'mixed' qualifier. This is a qualitative observation from the labelling process and is evidence relevant to the interpretability comparison, but it is NOT a substitute for the human rating (OQ-012) - the same person who fitted the models should not be the sole judge of their output."
+  },
+  "Standard LDA": {
+    "0": "Environmental and Epidemic Control Systems",
+    "1": "Predictive Modelling of Dynamic Systems",
+    "2": "Power Networks and Security Control",
+    "3": "AI Governance, Risk and Resource Management",
+    "4": "Generative AI in Education",
+    "5": "Geospatial Hazard Mapping in Nepal",
+    "6": "Nepali Text Sentiment and Opinion Mining",
+    "7": "AI in Clinical Care and Health Misinformation",
+    "8": "CNN-Based Image Classification",
+    "9": "Generic Predictive Analytics (low coherence)"
+  },
+  "Random-Search LDA": {
+    "0": "COVID-19 and Clinical Care Systems",
+    "1": "Forecasting for Construction and Infrastructure",
+    "2": "Power Systems, Fuzzy and Reinforcement Control",
+    "3": "AI Systems Review and Resource Management",
+    "4": "AI and Digital Technology in Education",
+    "5": "Geospatial and Environmental Hazard Mapping",
+    "6": "CNN-Based Image Detection and Classification",
+    "7": "Generative AI Tools, LLMs and Misinformation"
+  },
+  "_standard_lda_notes": {
+    "9": "MIXED/GENERIC. data, analysis, factor, value, estimate — no recoverable theme. Labelled honestly rather than given a plausible-sounding name."
+  },
+  "_random_search_notes": {
+    "general": "7 of 8 topics map to a specific area; topic 3 is loose. Notably topic 7 isolates generative AI tools (genai, chatgpt, llm, agent) as distinct from AI-in-education (topic 4) — a separation neither the baseline nor GA-LDA achieved."
   }
 }

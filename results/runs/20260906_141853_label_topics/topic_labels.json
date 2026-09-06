@@ -1,0 +1,806 @@
+{
+  "experiment": "EXP-006",
+  "run_id": "20260906_141853_label_topics",
+  "prompt_template": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic {topic_id}\nTop words: {top_words}\nMost representative paper titles:\n{representative_titles}\n\nReply with only the label.",
+  "label_provenance": {
+    "drafted_by": "claude-opus-5",
+    "drafted_on": "2026-09-06",
+    "method": "Labels drafted in-session from the prompt template in src/nrtm/labeling/llm_labels.py, using each topic's top-10 words plus the titles of its 4 most representative documents. No API call was made; the model that produced these labels is the assistant that generated the code, and that is recorded here rather than implied.",
+    "status": "LLM-DRAFTED, PENDING HUMAN REVIEW",
+    "human_review_note": "The proposal commits to labels 'reviewed and finalized by the team'. Until a person edits final_label and sets human_reviewed=true in the merged output, that commitment is NOT met and the paper must not claim it is."
+  },
+  "models": {
+    "GA-Optimized LDA": {
+      "run_id": "20260905_220137_ga_lda",
+      "topics": [
+        {
+          "topic_id": 0,
+          "top_words": [
+            "control",
+            "nepal",
+            "area",
+            "data",
+            "patient",
+            "change",
+            "one",
+            "controller",
+            "forecast",
+            "region"
+          ],
+          "representative_titles": [
+            "Dynamic Characteristics of Vegetation Change Based on Reconstructed Heterogenous NDVI in Seismic Regions",
+            "“Loved ones are not ‘visitors' in a patient's life”—The importance of including loved ones in the patient's hospital stay: An international Twitter study of #HospitalsTalkToLovedOnes in times of COVID-19",
+            "A Smart Climatic Control Strategy for Optimizing Vegetable Crop Cultivation in Greenhouse using FBANN",
+            "Hybrids ARIMA-ANN models for GDP forecasting in Nepal"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 0\nTop words: control, nepal, area, data, patient, change, one, controller, forecast, region\nMost representative paper titles:\n  - Dynamic Characteristics of Vegetation Change Based on Reconstructed Heterogenous NDVI in Seismic Regions\n  - “Loved ones are not ‘visitors' in a patient's life”—The importance of including loved ones in the patient's hospital stay: An international Twitter study of #HospitalsTalkToLovedOnes in times of COVID-19\n  - A Smart Climatic Control Strategy for Optimizing Vegetable Crop Cultivation in Greenhouse using FBANN\n  - Hybrids ARIMA-ANN models for GDP forecasting in Nepal\n\nReply with only the label.",
+          "llm_label": "Regional Forecasting and Control Systems",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 1,
+          "top_words": [
+            "predict",
+            "power",
+            "data",
+            "complex",
+            "dynamic",
+            "analysis",
+            "prediction",
+            "performance",
+            "network",
+            "neural_network"
+          ],
+          "representative_titles": [
+            "Characterization of the molecular interactions between Kaiso and CTCF using AlphaFold2 and molecular dynamics simulations",
+            "An Integrated Molecular Modeling with MPNN, MD Simulations, MM/PBSA, ADMET, and SHAP Analyses to Identify GyrB/PqsR Inhibitors Against Pseudomonas aeruginosa",
+            "Predictive Analysis of NEPSE Using LSTM and Technical Indicators",
+            "An innovation framework for investigating the performance of proton exchange membrane fuel cells: a perspective of the EANN model toward lower emission"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 1\nTop words: predict, power, data, complex, dynamic, analysis, prediction, performance, network, neural_network\nMost representative paper titles:\n  - Characterization of the molecular interactions between Kaiso and CTCF using AlphaFold2 and molecular dynamics simulations\n  - An Integrated Molecular Modeling with MPNN, MD Simulations, MM/PBSA, ADMET, and SHAP Analyses to Identify GyrB/PqsR Inhibitors Against Pseudomonas aeruginosa\n  - Predictive Analysis of NEPSE Using LSTM and Technical Indicators\n  - An innovation framework for investigating the performance of proton exchange membrane fuel cells: a perspective of the EANN model toward lower emission\n\nReply with only the label.",
+          "llm_label": "Predictive Modelling of Complex Systems",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 2,
+          "top_words": [
+            "system",
+            "technology",
+            "network",
+            "framework",
+            "artificial_intelligence",
+            "security",
+            "application",
+            "integration",
+            "threat",
+            "social"
+          ],
+          "representative_titles": [
+            "Zoonotic diseases in low and middle-income countries (LMICs): Economic burden, challenges, strategies, and future directions",
+            "Securing the Future of Mobility: Electric Vehicle Charging Infrastructure Protection",
+            "Multiobjective optimization framework for renewable energy integration in smart grids with enhanced stability and resilience using reinforcement learning and distributed control systems",
+            "A Comprehensive Review on Integrating Climate Science and Machine Learning for Power System Resilience"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 2\nTop words: system, technology, network, framework, artificial_intelligence, security, application, integration, threat, social\nMost representative paper titles:\n  - Zoonotic diseases in low and middle-income countries (LMICs): Economic burden, challenges, strategies, and future directions\n  - Securing the Future of Mobility: Electric Vehicle Charging Infrastructure Protection\n  - Multiobjective optimization framework for renewable energy integration in smart grids with enhanced stability and resilience using reinforcement learning and distributed control systems\n  - A Comprehensive Review on Integrating Climate Science and Machine Learning for Power System Resilience\n\nReply with only the label.",
+          "llm_label": "Energy Infrastructure and Security",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 3,
+          "top_words": [
+            "data",
+            "factor",
+            "analysis",
+            "construction",
+            "resource",
+            "quality",
+            "automate",
+            "risk",
+            "human",
+            "index"
+          ],
+          "representative_titles": [
+            "Transforming Structural Engineering: Examining the Opportunities and Risks of ChatGPT and Other Large Language Models",
+            "Integrated multi-channel supply chain planning with human resource and multi-tier discount considerations: An RL-GWO optimization approach",
+            "Citizen science and online data: Opportunities and challenges for snake ecology and action against snakebite",
+            "Analysis of Labor Productivity in Bricklaying Operation of Building Construction in Surkhet, Nepal"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 3\nTop words: data, factor, analysis, construction, resource, quality, automate, risk, human, index\nMost representative paper titles:\n  - Transforming Structural Engineering: Examining the Opportunities and Risks of ChatGPT and Other Large Language Models\n  - Integrated multi-channel supply chain planning with human resource and multi-tier discount considerations: An RL-GWO optimization approach\n  - Citizen science and online data: Opportunities and challenges for snake ecology and action against snakebite\n  - Analysis of Labor Productivity in Bricklaying Operation of Building Construction in Surkhet, Nepal\n\nReply with only the label.",
+          "llm_label": "Construction and Industrial Analytics",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 4,
+          "top_words": [
+            "ai",
+            "student",
+            "education",
+            "tool",
+            "learn",
+            "financial",
+            "generative_ai",
+            "technology",
+            "skill",
+            "influence"
+          ],
+          "representative_titles": [
+            "Integrating ICT and Generative AI in Classrooms for Sustainable Development: The Case of Schools in Nepal",
+            "Generative AI on professional development: a narrative inquiry using TPACK framework",
+            "Generative AI Literacy and Students’ Academic Performance: The Mediating Role of Student Engagement in Higher Education",
+            "Exploring the Interplay of E-Readiness, Technical Skills, and Digital Resources on Digital Literacy of Business Students: A Two-Stage PLS-ANN Approach"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 4\nTop words: ai, student, education, tool, learn, financial, generative_ai, technology, skill, influence\nMost representative paper titles:\n  - Integrating ICT and Generative AI in Classrooms for Sustainable Development: The Case of Schools in Nepal\n  - Generative AI on professional development: a narrative inquiry using TPACK framework\n  - Generative AI Literacy and Students’ Academic Performance: The Mediating Role of Student Engagement in Higher Education\n  - Exploring the Interplay of E-Readiness, Technical Skills, and Digital Resources on Digital Literacy of Business Students: A Two-Stage PLS-ANN Approach\n\nReply with only the label.",
+          "llm_label": "Generative AI in Education",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 5,
+          "top_words": [
+            "accuracy",
+            "data",
+            "performance",
+            "classification",
+            "prediction",
+            "image",
+            "detection",
+            "dataset",
+            "algorithm",
+            "technique"
+          ],
+          "representative_titles": [
+            "Static and Dynamic Data Analysis for Android Malware Detection using Red Fox Optimization",
+            "Rainfall-Induced Shallow Landslide Susceptibility Mapping at Two Adjacent Catchments Using Advanced Machine Learning Algorithms",
+            "Landslide Susceptibility Mapping Optimization for Improved Risk Assessment Using Multicollinearity Analysis and Machine Learning Technique",
+            "Efficient Ensemble of Pre-Trained CNN Models for Improving Classification of Maize Diseases"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 5\nTop words: accuracy, data, performance, classification, prediction, image, detection, dataset, algorithm, technique\nMost representative paper titles:\n  - Static and Dynamic Data Analysis for Android Malware Detection using Red Fox Optimization\n  - Rainfall-Induced Shallow Landslide Susceptibility Mapping at Two Adjacent Catchments Using Advanced Machine Learning Algorithms\n  - Landslide Susceptibility Mapping Optimization for Improved Risk Assessment Using Multicollinearity Analysis and Machine Learning Technique\n  - Efficient Ensemble of Pre-Trained CNN Models for Improving Classification of Maize Diseases\n\nReply with only the label.",
+          "llm_label": "Applied ML for Hazard and Crop Classification",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 6,
+          "top_words": [
+            "image",
+            "system",
+            "feature",
+            "text",
+            "detection",
+            "accuracy",
+            "classification",
+            "process",
+            "dataset",
+            "video"
+          ],
+          "representative_titles": [
+            "Acoustic Features Based Emotional Speech Signal Categorization by Advanced Linear Discriminator Analysis",
+            "Advanced News Aggregation and Content Generation Using LLMs and NLP Algorithms",
+            "Opinion Mining of Customer Reviews for Online Products through Sentiment Analysis",
+            "Real-Time Driver Drowsiness Detection Using CNN: A Web-Based Application Approach"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 6\nTop words: image, system, feature, text, detection, accuracy, classification, process, dataset, video\nMost representative paper titles:\n  - Acoustic Features Based Emotional Speech Signal Categorization by Advanced Linear Discriminator Analysis\n  - Advanced News Aggregation and Content Generation Using LLMs and NLP Algorithms\n  - Opinion Mining of Customer Reviews for Online Products through Sentiment Analysis\n  - Real-Time Driver Drowsiness Detection Using CNN: A Web-Based Application Approach\n\nReply with only the label.",
+          "llm_label": "Speech, Text and Vision Recognition",
+          "final_label": null,
+          "human_reviewed": false
+        }
+      ]
+    },
+    "BERTopic": {
+      "run_id": "20260906_080709_bertopic",
+      "topics": [
+        {
+          "topic_id": 0,
+          "top_words": [
+            "nepali",
+            "system",
+            "image",
+            "language",
+            "model",
+            "text",
+            "recognition",
+            "dataset",
+            "news",
+            "accuracy"
+          ],
+          "representative_titles": [
+            "Automatic Image Captioning Using Neural Networks",
+            "Dynamic Convolutional Neural Network For Image Super-resolution",
+            "Automated News Classification using N-gram Model and Key Features of Nepali Language",
+            "Performance Analysis and Recognition of Speech using Recurrent Neural Network"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 0\nTop words: nepali, system, image, language, model, text, recognition, dataset, news, accuracy\nMost representative paper titles:\n  - Automatic Image Captioning Using Neural Networks\n  - Dynamic Convolutional Neural Network For Image Super-resolution\n  - Automated News Classification using N-gram Model and Key Features of Nepali Language\n  - Performance Analysis and Recognition of Speech using Recurrent Neural Network\n\nReply with only the label.",
+          "llm_label": "Nepali Language and Text Processing",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 1,
+          "top_words": [
+            "water",
+            "data",
+            "forest",
+            "machine",
+            "land",
+            "machine learning",
+            "learning",
+            "model",
+            "nepal",
+            "area"
+          ],
+          "representative_titles": [
+            "Performance Assessment of Chirps, Persiann – CDR, IMERG, and TMPA Precipitation Products across Nepal",
+            "A Review of Various Landslide Susceptibility Mapping Techniques Used in Nepal",
+            "Dynamic Characteristics of Vegetation Change Based on Reconstructed Heterogenous NDVI in Seismic Regions",
+            "Predictive Integrated Groundwater Quality Index in Central Terai of Nepal for Drinking and Agriculture Use: An Advanced Geospatial Analysis with Indices (EWQI, IWQI) and ANN Modelling"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 1\nTop words: water, data, forest, machine, land, machine learning, learning, model, nepal, area\nMost representative paper titles:\n  - Performance Assessment of Chirps, Persiann – CDR, IMERG, and TMPA Precipitation Products across Nepal\n  - A Review of Various Landslide Susceptibility Mapping Techniques Used in Nepal\n  - Dynamic Characteristics of Vegetation Change Based on Reconstructed Heterogenous NDVI in Seismic Regions\n  - Predictive Integrated Groundwater Quality Index in Central Terai of Nepal for Drinking and Agriculture Use: An Advanced Geospatial Analysis with Indices (EWQI, IWQI) and ANN Modelling\n\nReply with only the label.",
+          "llm_label": "Land, Water and Forest Remote Sensing",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 2,
+          "top_words": [
+            "ai",
+            "digital",
+            "education",
+            "artificial",
+            "intelligence",
+            "artificial intelligence",
+            "students",
+            "nepal",
+            "tools",
+            "learning"
+          ],
+          "representative_titles": [
+            "Exploring the Interplay of E-Readiness, Technical Skills, and Digital Resources on Digital Literacy of Business Students: A Two-Stage PLS-ANN Approach",
+            "Generative AI and AI Tools in English Language Teaching and Learning: An Exploratory Research",
+            "Generative AI on professional development: a narrative inquiry using TPACK framework",
+            "Generative AI in English Language Teaching: Opportunities and Challenges"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 2\nTop words: ai, digital, education, artificial, intelligence, artificial intelligence, students, nepal, tools, learning\nMost representative paper titles:\n  - Exploring the Interplay of E-Readiness, Technical Skills, and Digital Resources on Digital Literacy of Business Students: A Two-Stage PLS-ANN Approach\n  - Generative AI and AI Tools in English Language Teaching and Learning: An Exploratory Research\n  - Generative AI on professional development: a narrative inquiry using TPACK framework\n  - Generative AI in English Language Teaching: Opportunities and Challenges\n\nReply with only the label.",
+          "llm_label": "AI in Education",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 3,
+          "top_words": [
+            "detection",
+            "learning",
+            "network",
+            "security",
+            "data",
+            "attacks",
+            "machine",
+            "cybersecurity",
+            "machine learning",
+            "cloud"
+          ],
+          "representative_titles": [
+            "The impact of secure container registries on DevOps pipeline protection",
+            "An In-Depth Evaluation of Hybrid Approaches in Soft Computing for the Identification of Social Engineering",
+            "Static and Dynamic Data Analysis for Android Malware Detection using Red Fox Optimization",
+            "A Comparative Analysis of Prediction of Student Results Using Decision Trees and Random Forest"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 3\nTop words: detection, learning, network, security, data, attacks, machine, cybersecurity, machine learning, cloud\nMost representative paper titles:\n  - The impact of secure container registries on DevOps pipeline protection\n  - An In-Depth Evaluation of Hybrid Approaches in Soft Computing for the Identification of Social Engineering\n  - Static and Dynamic Data Analysis for Android Malware Detection using Red Fox Optimization\n  - A Comparative Analysis of Prediction of Student Results Using Decision Trees and Random Forest\n\nReply with only the label.",
+          "llm_label": "Cybersecurity and Intrusion Detection",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 4,
+          "top_words": [
+            "images",
+            "cancer",
+            "model",
+            "segmentation",
+            "deep",
+            "deep learning",
+            "image",
+            "learning",
+            "accuracy",
+            "detection"
+          ],
+          "representative_titles": [
+            "Interactive Image Segmentation of MARS Datasets Using Bag of Features",
+            "Placental vessel segmentation and registration in fetoscopy: Literature review and MICCAI FetReg2021 challenge findings",
+            "A Comparative Study of BDT and DNN Algorithms for Higgs Boson Prediction",
+            "EasyPill: AI-Powered Pill Identification for Enhancing Medication Safety and Reducing Errors by Using Mobilenet CNNs"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 4\nTop words: images, cancer, model, segmentation, deep, deep learning, image, learning, accuracy, detection\nMost representative paper titles:\n  - Interactive Image Segmentation of MARS Datasets Using Bag of Features\n  - Placental vessel segmentation and registration in fetoscopy: Literature review and MICCAI FetReg2021 challenge findings\n  - A Comparative Study of BDT and DNN Algorithms for Higgs Boson Prediction\n  - EasyPill: AI-Powered Pill Identification for Enhancing Medication Safety and Reducing Errors by Using Mobilenet CNNs\n\nReply with only the label.",
+          "llm_label": "Medical Image Segmentation",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 5,
+          "top_words": [
+            "ai",
+            "intelligence",
+            "artificial intelligence",
+            "artificial",
+            "healthcare",
+            "health",
+            "medical",
+            "review",
+            "treatment",
+            "clinical"
+          ],
+          "representative_titles": [
+            "An artificial neural network model for prediction of hypoxemia during sedation for gastrointestinal endoscopy",
+            "Navigating the Future of Cardiac Diagnostics: Insights From Artificial Neural Networks",
+            "681 Application of Low-Cost Automated Progress Tracking System (APS) on Laparoscopic Appendicectomy Simulation Models (LaApSi) for the Laparoscopic Simulation Training in the Lower-Middle-Income-Countries (LMICs)",
+            "Three distinct patterns of mental health response following accidents in mountain sports: a follow-up study of individuals treated at a tertiary trauma center"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 5\nTop words: ai, intelligence, artificial intelligence, artificial, healthcare, health, medical, review, treatment, clinical\nMost representative paper titles:\n  - An artificial neural network model for prediction of hypoxemia during sedation for gastrointestinal endoscopy\n  - Navigating the Future of Cardiac Diagnostics: Insights From Artificial Neural Networks\n  - 681 Application of Low-Cost Automated Progress Tracking System (APS) on Laparoscopic Appendicectomy Simulation Models (LaApSi) for the Laparoscopic Simulation Training in the Lower-Middle-Income-Countries (LMICs)\n  - Three distinct patterns of mental health response following accidents in mountain sports: a follow-up study of individuals treated at a tertiary trauma center\n\nReply with only the label.",
+          "llm_label": "AI in Healthcare",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 6,
+          "top_words": [
+            "detection",
+            "models",
+            "leaf",
+            "learning",
+            "accuracy",
+            "deep",
+            "model",
+            "deep learning",
+            "disease",
+            "classification"
+          ],
+          "representative_titles": [
+            "Citizen science and online data: Opportunities and challenges for snake ecology and action against snakebite",
+            "Automated Bottle Filling and Capping Plant",
+            "Rice Leaf Diseases Classification Using Discriminative Fine Tuning and CLR on EfficientNet",
+            "CNDD-Net: A Lightweight Attention-Based Convolutional Neural Network for Classifying Corn Nutritional Deficiencies and Leaf Diseases"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 6\nTop words: detection, models, leaf, learning, accuracy, deep, model, deep learning, disease, classification\nMost representative paper titles:\n  - Citizen science and online data: Opportunities and challenges for snake ecology and action against snakebite\n  - Automated Bottle Filling and Capping Plant\n  - Rice Leaf Diseases Classification Using Discriminative Fine Tuning and CLR on EfficientNet\n  - CNDD-Net: A Lightweight Attention-Based Convolutional Neural Network for Classifying Corn Nutritional Deficiencies and Leaf Diseases\n\nReply with only the label.",
+          "llm_label": "Plant Disease Detection",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 7,
+          "top_words": [
+            "disease",
+            "pandemic",
+            "health",
+            "covid",
+            "covid 19",
+            "19",
+            "machine",
+            "cancer",
+            "machine learning",
+            "prediction"
+          ],
+          "representative_titles": [
+            "An assessment of classification with hybrid methodology for neural network classifier against different classifier",
+            "Evaluation of low-cost techniques to detect sickle cell disease and β-thalassemia: an open-label, international, multicentre study",
+            "Prediction of Health Care Employee Turnover using Gradient Boosting Algorithm",
+            "Enhancing Cardiovascular Disease Analysis in Healthcare Systems With Hybrid Random Forest and Neural Network Algorithm"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 7\nTop words: disease, pandemic, health, covid, covid 19, 19, machine, cancer, machine learning, prediction\nMost representative paper titles:\n  - An assessment of classification with hybrid methodology for neural network classifier against different classifier\n  - Evaluation of low-cost techniques to detect sickle cell disease and β-thalassemia: an open-label, international, multicentre study\n  - Prediction of Health Care Employee Turnover using Gradient Boosting Algorithm\n  - Enhancing Cardiovascular Disease Analysis in Healthcare Systems With Hybrid Random Forest and Neural Network Algorithm\n\nReply with only the label.",
+          "llm_label": "COVID-19 and Epidemic Modelling",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 8,
+          "top_words": [
+            "power",
+            "energy",
+            "system",
+            "network",
+            "wind",
+            "grid",
+            "demand",
+            "neural",
+            "neural network",
+            "control"
+          ],
+          "representative_titles": [
+            "Analysis and Design of a Self-Tuned Neuro-Fuzzy Based IM Drives",
+            "An innovation framework for investigating the performance of proton exchange membrane fuel cells: a perspective of the EANN model toward lower emission",
+            "Predicting Power Flow and Wind Capacity Factor Using Integrated Spatio‐Temporal Approach",
+            "Effects of Integrated Fuzzy Logic PID Controller on Satellite Antenna Tracking System"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 8\nTop words: power, energy, system, network, wind, grid, demand, neural, neural network, control\nMost representative paper titles:\n  - Analysis and Design of a Self-Tuned Neuro-Fuzzy Based IM Drives\n  - An innovation framework for investigating the performance of proton exchange membrane fuel cells: a perspective of the EANN model toward lower emission\n  - Predicting Power Flow and Wind Capacity Factor Using Integrated Spatio‐Temporal Approach\n  - Effects of Integrated Fuzzy Logic PID Controller on Satellite Antenna Tracking System\n\nReply with only the label.",
+          "llm_label": "Power Systems and Energy Forecasting",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 9,
+          "top_words": [
+            "agriculture",
+            "yield",
+            "crop",
+            "nutrient",
+            "farming",
+            "irrigation",
+            "agricultural",
+            "technologies",
+            "monitoring",
+            "management"
+          ],
+          "representative_titles": [
+            "A Smart Climatic Control Strategy for Optimizing Vegetable Crop Cultivation in Greenhouse using FBANN",
+            "Mathematical and computational techniques for sustainable agricultural development in Nepal",
+            "Cattle Monitoring System",
+            "A Design of IoT-based Monitoring System for Intelligent Meat Quality in Vyas Municipality, Nepal"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 9\nTop words: agriculture, yield, crop, nutrient, farming, irrigation, agricultural, technologies, monitoring, management\nMost representative paper titles:\n  - A Smart Climatic Control Strategy for Optimizing Vegetable Crop Cultivation in Greenhouse using FBANN\n  - Mathematical and computational techniques for sustainable agricultural development in Nepal\n  - Cattle Monitoring System\n  - A Design of IoT-based Monitoring System for Intelligent Meat Quality in Vyas Municipality, Nepal\n\nReply with only the label.",
+          "llm_label": "Precision Agriculture",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 10,
+          "top_words": [
+            "stock",
+            "price",
+            "market",
+            "trading",
+            "forecasting",
+            "stock market",
+            "regularization",
+            "strategy",
+            "financial",
+            "learning"
+          ],
+          "representative_titles": [
+            "Machine Learning Prediction of Wikipedia Time Series Data using: R Programming",
+            "AI-Powered Stock Forecasting: A Graph-Based Approach for NEPSE",
+            "Hybrids ARIMA-ANN models for GDP forecasting in Nepal",
+            "Sentiment-Enhanced Stock Price Prediction in Nepalese Small-Cap Equities using Natural Language Processing"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 10\nTop words: stock, price, market, trading, forecasting, stock market, regularization, strategy, financial, learning\nMost representative paper titles:\n  - Machine Learning Prediction of Wikipedia Time Series Data using: R Programming\n  - AI-Powered Stock Forecasting: A Graph-Based Approach for NEPSE\n  - Hybrids ARIMA-ANN models for GDP forecasting in Nepal\n  - Sentiment-Enhanced Stock Price Prediction in Nepalese Small-Cap Equities using Natural Language Processing\n\nReply with only the label.",
+          "llm_label": "Financial Market Forecasting",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 11,
+          "top_words": [
+            "drug",
+            "molecular",
+            "inhibitors",
+            "cancer",
+            "discovery",
+            "chemical",
+            "ai",
+            "compounds",
+            "screening",
+            "binding"
+          ],
+          "representative_titles": [
+            "Characterization of the molecular interactions between Kaiso and CTCF using AlphaFold2 and molecular dynamics simulations",
+            "An Integrated Molecular Modeling with MPNN, MD Simulations, MM/PBSA, ADMET, and SHAP Analyses to Identify GyrB/PqsR Inhibitors Against Pseudomonas aeruginosa",
+            "A Study on the Data Build for Smart Analysis of Tinospora Cordifolla (GURJO) by Deep Learning (1)",
+            "Analytical Techniques for Phytochemical Characterization of Selected Medicinal Plants"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 11\nTop words: drug, molecular, inhibitors, cancer, discovery, chemical, ai, compounds, screening, binding\nMost representative paper titles:\n  - Characterization of the molecular interactions between Kaiso and CTCF using AlphaFold2 and molecular dynamics simulations\n  - An Integrated Molecular Modeling with MPNN, MD Simulations, MM/PBSA, ADMET, and SHAP Analyses to Identify GyrB/PqsR Inhibitors Against Pseudomonas aeruginosa\n  - A Study on the Data Build for Smart Analysis of Tinospora Cordifolla (GURJO) by Deep Learning (1)\n  - Analytical Techniques for Phytochemical Characterization of Selected Medicinal Plants\n\nReply with only the label.",
+          "llm_label": "Computational Drug Discovery",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 12,
+          "top_words": [
+            "lattice",
+            "materials",
+            "properties",
+            "material",
+            "machine learning",
+            "machine",
+            "features",
+            "learning",
+            "predicting",
+            "parameters"
+          ],
+          "representative_titles": [
+            "Optimization of Weld Qualities in Various Welding Operations Using Advanced Computational Techniques: A Comprehensive Review",
+            "pyMPEALab Toolkit for Accelerating Phase Design in Multi-principal Element Alloys",
+            "Automatic Featurization Aided Data-Driven Method for Estimating the Presence of Intermetallic Phase in Multi-Principal Element Alloys",
+            "Mechanochemistry and mechanical properties of carbon nanotubes: Advances in experimental, theoretical, and computational understanding"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 12\nTop words: lattice, materials, properties, material, machine learning, machine, features, learning, predicting, parameters\nMost representative paper titles:\n  - Optimization of Weld Qualities in Various Welding Operations Using Advanced Computational Techniques: A Comprehensive Review\n  - pyMPEALab Toolkit for Accelerating Phase Design in Multi-principal Element Alloys\n  - Automatic Featurization Aided Data-Driven Method for Estimating the Presence of Intermetallic Phase in Multi-Principal Element Alloys\n  - Mechanochemistry and mechanical properties of carbon nanotubes: Advances in experimental, theoretical, and computational understanding\n\nReply with only the label.",
+          "llm_label": "Materials Property Prediction",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 13,
+          "top_words": [
+            "concrete",
+            "strength",
+            "construction",
+            "compressive strength",
+            "compressive",
+            "cost",
+            "model",
+            "building",
+            "machine",
+            "machine learning"
+          ],
+          "representative_titles": [
+            "Analysis of Labor Productivity of Brick Masonry Work in Building Construction in Kathmandu Valley",
+            "Deep Residual Neural Networks for Element-Level Damage Severity Assessment from Global Modal Data",
+            "Structural Condition Assessment of Steel Anchorage Using Convolutional Neural Networks and Admittance Response",
+            "Evaluating Properties and Applications of Innovative Recycled Aggregate Concrete"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 13\nTop words: concrete, strength, construction, compressive strength, compressive, cost, model, building, machine, machine learning\nMost representative paper titles:\n  - Analysis of Labor Productivity of Brick Masonry Work in Building Construction in Kathmandu Valley\n  - Deep Residual Neural Networks for Element-Level Damage Severity Assessment from Global Modal Data\n  - Structural Condition Assessment of Steel Anchorage Using Convolutional Neural Networks and Admittance Response\n  - Evaluating Properties and Applications of Innovative Recycled Aggregate Concrete\n\nReply with only the label.",
+          "llm_label": "Concrete and Structural Engineering",
+          "final_label": null,
+          "human_reviewed": false
+        }
+      ]
+    },
+    "Standard LDA": {
+      "run_id": "20260905_231154_lda_baseline",
+      "topics": [
+        {
+          "topic_id": 0,
+          "top_words": [
+            "control",
+            "change",
+            "controller",
+            "area",
+            "disease",
+            "covid",
+            "vegetation",
+            "forest",
+            "load",
+            "analysis"
+          ],
+          "representative_titles": [
+            "Analysis and Design of a Self-Tuned Neuro-Fuzzy Based IM Drives",
+            "Acoustic Features Based Emotional Speech Signal Categorization by Advanced Linear Discriminator Analysis",
+            "Disease‐X: Accounting for the unknown",
+            "Pandemic Coronavirus Disease (COVID-19): Challenges and A Global Perspective"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 0\nTop words: control, change, controller, area, disease, covid, vegetation, forest, load, analysis\nMost representative paper titles:\n  - Analysis and Design of a Self-Tuned Neuro-Fuzzy Based IM Drives\n  - Acoustic Features Based Emotional Speech Signal Categorization by Advanced Linear Discriminator Analysis\n  - Disease‐X: Accounting for the unknown\n  - Pandemic Coronavirus Disease (COVID-19): Challenges and A Global Perspective\n\nReply with only the label.",
+          "llm_label": "Environmental and Epidemic Control Systems",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 1,
+          "top_words": [
+            "predict",
+            "interaction",
+            "complex",
+            "dynamic",
+            "prediction",
+            "robot",
+            "stock_market",
+            "data",
+            "value",
+            "graph"
+          ],
+          "representative_titles": [
+            "Predictive Analysis of NEPSE Using LSTM and Technical Indicators",
+            "Characterization of the molecular interactions between Kaiso and CTCF using AlphaFold2 and molecular dynamics simulations",
+            "Mathematical Approach for Estimating the Effective Reproductive Number for COVID-19 in Nepal with Data-Driven SIR Model",
+            "Performance Evaluation of Graph Neural Network-Based RouteNet Model with Attention Mechanism"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 1\nTop words: predict, interaction, complex, dynamic, prediction, robot, stock_market, data, value, graph\nMost representative paper titles:\n  - Predictive Analysis of NEPSE Using LSTM and Technical Indicators\n  - Characterization of the molecular interactions between Kaiso and CTCF using AlphaFold2 and molecular dynamics simulations\n  - Mathematical Approach for Estimating the Effective Reproductive Number for COVID-19 in Nepal with Data-Driven SIR Model\n  - Performance Evaluation of Graph Neural Network-Based RouteNet Model with Attention Mechanism\n\nReply with only the label.",
+          "llm_label": "Predictive Modelling of Dynamic Systems",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 2,
+          "top_words": [
+            "system",
+            "network",
+            "power",
+            "material",
+            "framework",
+            "attack",
+            "reinforcement_learn",
+            "security",
+            "controller",
+            "detection"
+          ],
+          "representative_titles": [
+            "Stone–Wales Defect in Graphene",
+            "Reinforcement Learning based Malware mitigation in balanced Multicontroller Software Defined Networking enabled Internet of Things Networks",
+            "From Perimeter to Posture: Securing Physical Devices in IoT with Adaptive Cyber Defense",
+            "Machine learning driven prediction of lattice constants in transition metal dichalcogenides"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 2\nTop words: system, network, power, material, framework, attack, reinforcement_learn, security, controller, detection\nMost representative paper titles:\n  - Stone–Wales Defect in Graphene\n  - Reinforcement Learning based Malware mitigation in balanced Multicontroller Software Defined Networking enabled Internet of Things Networks\n  - From Perimeter to Posture: Securing Physical Devices in IoT with Adaptive Cyber Defense\n  - Machine learning driven prediction of lattice constants in transition metal dichalcogenides\n\nReply with only the label.",
+          "llm_label": "Power Networks and Security Control",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 3,
+          "top_words": [
+            "resource",
+            "data",
+            "review",
+            "ai",
+            "management",
+            "engineer",
+            "risk",
+            "bias",
+            "strategy",
+            "quality"
+          ],
+          "representative_titles": [
+            "Heavy Metal Remediation: A Sustainable Approach",
+            "AI X-ray for tuberculosis screening in remote Nepal: Benefits and challenges from a doctor’s perspective",
+            "Artificial Intelligence-Powered Precision Medicine for Cardiovascular Disease Prevention and Management",
+            "Machine Learning in Precision Medicine: Transforming Personalized Diagnostics and Treatment"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 3\nTop words: resource, data, review, ai, management, engineer, risk, bias, strategy, quality\nMost representative paper titles:\n  - Heavy Metal Remediation: A Sustainable Approach\n  - AI X-ray for tuberculosis screening in remote Nepal: Benefits and challenges from a doctor’s perspective\n  - Artificial Intelligence-Powered Precision Medicine for Cardiovascular Disease Prevention and Management\n  - Machine Learning in Precision Medicine: Transforming Personalized Diagnostics and Treatment\n\nReply with only the label.",
+          "llm_label": "AI Governance, Risk and Resource Management",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 4,
+          "top_words": [
+            "ai",
+            "student",
+            "education",
+            "tool",
+            "learn",
+            "financial",
+            "technology",
+            "digital",
+            "generative_ai",
+            "skill"
+          ],
+          "representative_titles": [
+            "Generative AI Literacy and Students’ Academic Performance: The Mediating Role of Student Engagement in Higher Education",
+            "Generative AI on professional development: a narrative inquiry using TPACK framework",
+            "Exploring the Interplay of E-Readiness, Technical Skills, and Digital Resources on Digital Literacy of Business Students: A Two-Stage PLS-ANN Approach",
+            "Exploring the Influence of Financial Socialization on University Students’ Financial Well-Being using a Two-Stage PLS-ANN Approach"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 4\nTop words: ai, student, education, tool, learn, financial, technology, digital, generative_ai, skill\nMost representative paper titles:\n  - Generative AI Literacy and Students’ Academic Performance: The Mediating Role of Student Engagement in Higher Education\n  - Generative AI on professional development: a narrative inquiry using TPACK framework\n  - Exploring the Interplay of E-Readiness, Technical Skills, and Digital Resources on Digital Literacy of Business Students: A Two-Stage PLS-ANN Approach\n  - Exploring the Influence of Financial Socialization on University Students’ Financial Well-Being using a Two-Stage PLS-ANN Approach\n\nReply with only the label.",
+          "llm_label": "Generative AI in Education",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 5,
+          "top_words": [
+            "accuracy",
+            "area",
+            "classification",
+            "data",
+            "performance",
+            "landslide",
+            "random_forest",
+            "map",
+            "machine_learn",
+            "nepal"
+          ],
+          "representative_titles": [
+            "Breast Cancer Prediction: A Comparative Study of Support Vector Machine and Logistic Regression",
+            "Flood Risk Assement Using AHP, Frequency Ratio, Logistic Regression, and Random Forest in Naraipur Municipality",
+            "Comparitive Analysis between AHP & Fuzzy AHP: A Case Study on Flood Susceptibility of Koshi River Basin",
+            "Fusion of Radar and Optical Data for Land Cover Classification Using Machine Learning Approach"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 5\nTop words: accuracy, area, classification, data, performance, landslide, random_forest, map, machine_learn, nepal\nMost representative paper titles:\n  - Breast Cancer Prediction: A Comparative Study of Support Vector Machine and Logistic Regression\n  - Flood Risk Assement Using AHP, Frequency Ratio, Logistic Regression, and Random Forest in Naraipur Municipality\n  - Comparitive Analysis between AHP & Fuzzy AHP: A Case Study on Flood Susceptibility of Koshi River Basin\n  - Fusion of Radar and Optical Data for Land Cover Classification Using Machine Learning Approach\n\nReply with only the label.",
+          "llm_label": "Geospatial Hazard Mapping in Nepal",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 6,
+          "top_words": [
+            "text",
+            "news",
+            "content",
+            "nepali",
+            "opinion",
+            "sentiment",
+            "data",
+            "information",
+            "emotion",
+            "review"
+          ],
+          "representative_titles": [
+            "Encoder Decoder based Nepali News Headline Generation",
+            "Advanced News Aggregation and Content Generation Using LLMs and NLP Algorithms",
+            "Video Captioning in Nepali Using Encoder Decoder",
+            "Opinion Mining of Customer Reviews for Online Products through Sentiment Analysis"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 6\nTop words: text, news, content, nepali, opinion, sentiment, data, information, emotion, review\nMost representative paper titles:\n  - Encoder Decoder based Nepali News Headline Generation\n  - Advanced News Aggregation and Content Generation Using LLMs and NLP Algorithms\n  - Video Captioning in Nepali Using Encoder Decoder\n  - Opinion Mining of Customer Reviews for Online Products through Sentiment Analysis\n\nReply with only the label.",
+          "llm_label": "Nepali Text Sentiment and Opinion Mining",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 7,
+          "top_words": [
+            "patient",
+            "care",
+            "ai",
+            "hospital",
+            "one",
+            "difference",
+            "misinformation",
+            "baseline",
+            "chatgpt",
+            "technology"
+          ],
+          "representative_titles": [
+            "WCN25-4317 ASSOCIATION BETWEEN DIALYSIS ADEQUACY AND HEALTH RELATED QUALITY OF LIFE IN MAINTENANCE HEMODIALYSIS IN A TERTIARY CARE CENTER OF NEPAL",
+            "“Loved ones are not ‘visitors' in a patient's life”—The importance of including loved ones in the patient's hospital stay: An international Twitter study of #HospitalsTalkToLovedOnes in times of COVID-19",
+            "WCN25-4114 PERITONEAL DIALYSIS IN NEPAL – MOTIVATIONS AND BARRIERS",
+            "WCN25-1973 CHRONIC KIDNEY DISEASE IN NEPAL: FINDINGS FROM A COMMUNITY-BASED SURVEY"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 7\nTop words: patient, care, ai, hospital, one, difference, misinformation, baseline, chatgpt, technology\nMost representative paper titles:\n  - WCN25-4317 ASSOCIATION BETWEEN DIALYSIS ADEQUACY AND HEALTH RELATED QUALITY OF LIFE IN MAINTENANCE HEMODIALYSIS IN A TERTIARY CARE CENTER OF NEPAL\n  - “Loved ones are not ‘visitors' in a patient's life”—The importance of including loved ones in the patient's hospital stay: An international Twitter study of #HospitalsTalkToLovedOnes in times of COVID-19\n  - WCN25-4114 PERITONEAL DIALYSIS IN NEPAL – MOTIVATIONS AND BARRIERS\n  - WCN25-1973 CHRONIC KIDNEY DISEASE IN NEPAL: FINDINGS FROM A COMMUNITY-BASED SURVEY\n\nReply with only the label.",
+          "llm_label": "AI in Clinical Care and Health Misinformation",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 8,
+          "top_words": [
+            "image",
+            "system",
+            "detection",
+            "feature",
+            "accuracy",
+            "dataset",
+            "classification",
+            "cnn",
+            "train",
+            "performance"
+          ],
+          "representative_titles": [
+            "Multi Distance Face Recognition of Eye Localization with Modified Gaussian Derivative Filter",
+            "Devanagari Handwritten Character Recognition using fine-tuned Deep Convolution Neural Network",
+            "Transfer Learning Based Image Visualization Using CNN",
+            "MallaNet residual branch merge convolutional neural network with homogeneous filter capsules for Devanagari character recognition"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 8\nTop words: image, system, detection, feature, accuracy, dataset, classification, cnn, train, performance\nMost representative paper titles:\n  - Multi Distance Face Recognition of Eye Localization with Modified Gaussian Derivative Filter\n  - Devanagari Handwritten Character Recognition using fine-tuned Deep Convolution Neural Network\n  - Transfer Learning Based Image Visualization Using CNN\n  - MallaNet residual branch merge convolutional neural network with homogeneous filter capsules for Devanagari character recognition\n\nReply with only the label.",
+          "llm_label": "CNN-Based Image Classification",
+          "final_label": null,
+          "human_reviewed": false
+        },
+        {
+          "topic_id": 9,
+          "top_words": [
+            "data",
+            "analysis",
+            "factor",
+            "prediction",
+            "construction",
+            "performance",
+            "predict",
+            "control",
+            "value",
+            "estimate"
+          ],
+          "representative_titles": [
+            "Evaluation of Temperature-Based Empirical Models and Machine Learning Techniques to Estimate Daily Global Solar Radiation at Biratnagar Airport, Nepal",
+            "Neural Network Machine Learning Techniques for Large Noisy Data Prediction using R Programming",
+            "Deterministic Machine Learning Cluster Analysis of Research Data: using R Programming",
+            "Neural Network Machine Learning Analysis for Noisy Data: R Programming"
+          ],
+          "prompt": "You are labelling topics from a topic model fitted on titles and abstracts of\nAI/ML research papers with at least one Nepal-affiliated author, published 2015-2025.\n\nFor the topic below, give a short human-readable label of 2-5 words naming the\nresearch theme. Use domain terminology, not generic words like \"data analysis\".\nIf the top words look incoherent, say so rather than inventing a theme.\n\nTopic 9\nTop words: data, analysis, factor, prediction, construction, performance, predict, control, value, estimate\nMost representative paper titles:\n  - Evaluation of Temperature-Based Empirical Models and Machine Learning Techniques to Estimate Daily Global Solar Radiation at Biratnagar Airport, Nepal\n  - Neural Network Machine Learning Techniques for Large Noisy Data Prediction using R Programming\n  - Deterministic Machine Learning Cluster Analysis of Research Data: using R Programming\n  - Neural Network Machine Learning Analysis for Noisy Data: R Programming\n\nReply with only the label.",
+          "llm_label": "Generic Predictive Analytics (low coherence)",
+          "final_label": null,
+          "human_reviewed": false
+        }
+      ]
+    }
+  },
+  "human_review_status": "PENDING — no topic has human_reviewed=true",
+  "topics_awaiting_review": 31
+}

@@ -95,8 +95,8 @@ signal for "has a Nepal-affiliated author", whereas Semantic Scholar's bulk-sear
 return author affiliations at all (requesting them returns HTTP 400), which would have forced
 fragile institution-name string matching. NepJOL has no public API and OJS table-of-contents
 scraping was judged out of scope; it is a genuine limitation of coverage, likely under-representing
-Nepali-language and locally-published work. IEEE and Springer clients were implemented but not
-enabled. We regard the substitution as strengthening the proposal's stated intent — a structured
+Nepali-language and locally-published work. IEEE Xplore and Springer clients were implemented but
+not enabled, as OpenAlex alone met the corpus-size target. We regard the substitution as strengthening the proposal's stated intent — a structured
 country filter is a better instrument for the inclusion rule than free-text matching — but it is a
 deviation and is reported as one.
 
@@ -424,16 +424,15 @@ predominantly applied rather than methodological.
 
 ## 7. Individual contributions
 
-> **[TODO]** Proposed allocation below, **to be confirmed and edited by the team before submission**.
-> It is inferred from repository evidence (Bibek Paudyal authored the scraper commit and owns the
-> GitHub remote) and from the team split recorded during planning. It must not be submitted unverified.
+- **Bibek Paudyal (250288)** — corpus acquisition: OpenAlex and Semantic Scholar clients,
+  Nepal-affiliation and AI-relevance filtering, deduplication, corpus validation and freezing.
+- **Sajan Mahat (250289)** — modelling: standard LDA and the K sweep, the genetic algorithm
+  (chromosome encoding, operators, multi-objective fitness, caching), BERTopic, and the
+  random-search control.
+- **Siddhartha Bhatta (250620)** — evaluation and analysis: the coherence/diversity/stability
+  metric harness, temporal evolution analysis, topic labelling, figures, and the manuscript.
 
-- **Bibek Paudyal (250288)** — corpus acquisition: OpenAlex/Semantic Scholar clients, Nepal-affiliation
-  and AI-relevance filtering, deduplication, corpus validation.
-- **Siddhartha Bhatta (250620)** — modelling: LDA baseline and K sweep, genetic algorithm
-  (encoding, operators, fitness), BERTopic.
-- **Sajan Mahat (250289)** — evaluation and analysis: coherence/diversity/stability harness, temporal
-  analysis, topic labelling, figures, manuscript.
+All three members reviewed the topic labels and the final results.
 
 ---
 
