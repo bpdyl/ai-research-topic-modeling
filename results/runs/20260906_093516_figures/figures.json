@@ -1,0 +1,8 @@
+{
+  "figures": [
+    "fig_corpus_by_year.png",
+    "fig_wordcloud.png",
+    "fig_cooccurrence.png"
+  ],
+  "n_documents": 1074
+}

@@ -28,6 +28,9 @@ from nrtm.config import load_config, new_run, set_seed        # noqa: E402
 MODELS = [
     ("Standard LDA", "*_lda_baseline", "lda_baseline.json"),
     ("GA-Optimized LDA", "*_ga_lda", "ga_lda.json"),
+    # EXP-008: the budget-matched control. Included in the headline table because
+    # it beat the proposed model; omitting it would misrepresent the result.
+    ("Random-Search LDA", "*_random_search", "random_search.json"),
     ("BERTopic", "*_bertopic", "bertopic.json"),
 ]
 

@@ -1,0 +1,44 @@
+{
+  "_provenance": {
+    "drafted_by": "claude-opus-5",
+    "drafted_on": "2026-09-06",
+    "method": "Labels drafted in-session from the prompt template in src/nrtm/labeling/llm_labels.py, using each topic's top-10 words plus the titles of its 4 most representative documents. No API call was made; the model that produced these labels is the assistant that generated the code, and that is recorded here rather than implied.",
+    "status": "LLM-DRAFTED, PENDING HUMAN REVIEW",
+    "human_review_note": "The proposal commits to labels 'reviewed and finalized by the team'. Until a person edits final_label and sets human_reviewed=true in the merged output, that commitment is NOT met and the paper must not claim it is."
+  },
+  "GA-Optimized LDA": {
+    "0": "Regional Forecasting and Control Systems",
+    "1": "Predictive Modelling of Complex Systems",
+    "2": "Energy Infrastructure and Security",
+    "3": "Construction and Industrial Analytics",
+    "4": "Generative AI in Education",
+    "5": "Applied ML for Hazard and Crop Classification",
+    "6": "Speech, Text and Vision Recognition"
+  },
+  "_ga_lda_notes": {
+    "0": "MIXED. Representative titles span vegetation NDVI, greenhouse crop control, GDP forecasting and patient care. The common thread is time-series forecasting and control over regional data, but this topic is not cleanly interpretable and should be rated low by human raters.",
+    "1": "MIXED. Spans molecular modelling (AlphaFold), stock prediction (NEPSE LSTM) and fuel cells. Unified only by 'prediction over complex systems'.",
+    "3": "Loose. Construction productivity and supply chain sit alongside a ChatGPT-in-structural-engineering paper.",
+    "4": "CLEAN. All four representative titles are generative AI in classrooms and student learning.",
+    "5": "CLEAN. Landslide susceptibility, maize disease, malware detection - applied supervised classification."
+  },
+  "BERTopic": {
+    "0": "Nepali Language and Text Processing",
+    "1": "Land, Water and Forest Remote Sensing",
+    "2": "AI in Education",
+    "3": "Cybersecurity and Intrusion Detection",
+    "4": "Medical Image Segmentation",
+    "5": "AI in Healthcare",
+    "6": "Plant Disease Detection",
+    "7": "COVID-19 and Epidemic Modelling",
+    "8": "Power Systems and Energy Forecasting",
+    "9": "Precision Agriculture",
+    "10": "Financial Market Forecasting",
+    "11": "Computational Drug Discovery",
+    "12": "Materials Property Prediction",
+    "13": "Concrete and Structural Engineering"
+  },
+  "_bertopic_notes": {
+    "general": "BERTopic's topics were markedly easier to label than GA-LDA's: 14 of 14 mapped to a specific research area without hedging, whereas 3 of 7 GA-LDA topics required a 'mixed' qualifier. This is a qualitative observation from the labelling process and is evidence relevant to the interpretability comparison, but it is NOT a substitute for the human rating (OQ-012) - the same person who fitted the models should not be the sole judge of their output."
+  }
+}

@@ -72,20 +72,34 @@ def load_raw(path: str | Path) -> list[dict[str, Any]]:
     return data
 
 
+NEPAL_INSTITUTION_HINTS = (
+    "nepal", "tribhuvan", "kathmandu", "pokhara", "purbanchal", "pulchowk",
+    "thapathali", "naamii", "lalitpur", "dhulikhel", "biratnagar", "bhaktapur",
+    "chitwan", "butwal", "birgunj", "nepalgunj", "surkhet", "janakpur",
+    "mid-west university", "far-western", "gandaki", "lumbini",
+)
+
+
 def _nepal_affiliation_strings(record: dict[str, Any]) -> list[str]:
     """Affiliation strings that look Nepal-based.
 
-    Deliberately a light re-implementation rather than an import from
-    scraper/: the scraper is a standalone package with its own sys.path
-    conventions, and coupling the modelling code to it would make both harder
-    to run. The matching here only feeds the corpus report, never inclusion —
-    inclusion was already decided by the scraper (DEC-006).
+    Matches named Nepali institutions and cities, not just the literal word
+    "Nepal". A 30-record hand-check (RISK-010) found 7 records reporting no
+    Nepal affiliation that were in fact affiliated to Tribhuvan, Kathmandu or
+    Pokhara University — the affiliation strings simply omit the country. All
+    were correctly included by the scraper; only this reporting field was wrong.
+
+    This feeds the corpus report only. Inclusion was decided by the scraper's
+    fuller heuristic plus OpenAlex country codes (DEC-006).
     """
     out: list[str] = []
     seen: set[str] = set()
     for author in record.get("authors") or []:
         for aff in author.get("affiliations") or []:
-            if aff and "nepal" in aff.lower() and aff not in seen:
+            if not aff or aff in seen:
+                continue
+            low = aff.lower()
+            if any(h in low for h in NEPAL_INSTITUTION_HINTS):
                 seen.add(aff)
                 out.append(aff)
     return out

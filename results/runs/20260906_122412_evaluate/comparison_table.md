@@ -1,0 +1,12 @@
+| Metric | Standard LDA | GA-Optimized LDA | Random-Search LDA | BERTopic |
+|---|---|---|---|---|
+| Topics (K) | 10 | 7 | 8 | 14 |
+| Coherence C_v | 0.4483 | 0.4940 | 0.5030 | 0.5107 |
+| Coherence c_npmi | -0.0230 | 0.0112 | 0.0245 | -0.0300 |
+| Coherence u_mass | -3.3586 | -2.1796 | -2.5477 | -3.4444 |
+| Topic diversity | 0.7900 | 0.8000 | 0.8000 | 0.7286 |
+| Mean pairwise Jaccard | 0.0359 | 0.0471 | 0.0536 | 0.0471 |
+| Stability (3 seeds) | 0.2526 | 0.3375 | 0.3382 | 0.8418 |
+| Perplexity | 172.1 | 167.8 | 165.9 | — |
+| Unmodelled documents | 0.0% | 0.0% | 0.0% | 17.1% |
+| Interpretability (1-5) | pending | pending | pending | pending |

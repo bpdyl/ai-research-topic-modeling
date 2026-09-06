@@ -194,3 +194,31 @@ class TestStability:
         a = [["a", "b"], ["c", "d"]]
         b = [["a", "b"], ["c", "d"], ["e", "f"], ["g", "h"]]
         assert matched_jaccard(a, b) == 0.5
+
+
+class TestRandomSearchControl:
+    """EXP-008 compares the GA against random search at equal budget. The control
+    is only valid if both draw candidates from the same distribution and differ
+    solely in how candidates are proposed."""
+
+    def test_random_sampler_is_the_one_the_ga_seeds_with(self):
+        """Both strategies must use SearchSpace.random_genome, or the comparison
+        confounds search strategy with proposal distribution."""
+        rng_a = random.Random(7)
+        rng_b = random.Random(7)
+        a = [SPACE.random_genome(rng_a).key() for _ in range(20)]
+        b = [SPACE.random_genome(rng_b).key() for _ in range(20)]
+        assert a == b, "sampler must be deterministic under a fixed seed"
+
+    def test_sampler_covers_the_full_k_range(self):
+        """A control that never proposes large K would hand the GA an unfair win."""
+        rng = random.Random(11)
+        ks = [SPACE.random_genome(rng).k for _ in range(500)]
+        assert min(ks) <= SPACE.k_min + 3
+        assert max(ks) >= SPACE.k_max - 3
+
+    def test_cache_key_makes_budget_matching_meaningful(self):
+        """Budget is matched on UNIQUE evaluations. Two genomes differing only
+        past the rounding precision must collide, or the two searches would be
+        charged differently for the same work."""
+        assert Genome(9, 0.30001, 0.5).key() == Genome(9, 0.30002, 0.5).key()

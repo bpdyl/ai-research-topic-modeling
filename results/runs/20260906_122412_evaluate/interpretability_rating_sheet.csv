@@ -1,0 +1,40 @@
+item,top_words,rating_1_to_5,suggested_label,_model,_topic_id
+1,"image, system, feature, detection, classification, accuracy, dataset, cnn, data, technique",,,Random-Search LDA,6
+2,"power, energy, system, network, wind, grid, demand, neural, neural network, control",,,BERTopic,8
+3,"resource, data, review, ai, management, engineer, risk, bias, strategy, quality",,,Standard LDA,3
+4,"predict, power, data, complex, dynamic, analysis, prediction, performance, network, neural_network",,,GA-Optimized LDA,1
+5,"control, nepal, area, data, patient, change, one, controller, forecast, region",,,GA-Optimized LDA,0
+6,"stock, price, market, trading, forecasting, stock market, regularization, strategy, financial, learning",,,BERTopic,10
+7,"detection, learning, network, security, data, attacks, machine, cybersecurity, machine learning, cloud",,,BERTopic,3
+8,"ai, intelligence, artificial intelligence, artificial, healthcare, health, medical, review, treatment, clinical",,,BERTopic,5
+9,"detection, models, leaf, learning, accuracy, deep, model, deep learning, disease, classification",,,BERTopic,6
+10,"area, data, accuracy, nepal, prediction, landslide, factor, environmental, region, value",,,Random-Search LDA,5
+11,"water, data, forest, machine, land, machine learning, learning, model, nepal, area",,,BERTopic,1
+12,"student, ai, financial, education, digital, data, technology, university, learn, influence",,,Random-Search LDA,4
+13,"system, technology, network, framework, artificial_intelligence, security, application, integration, threat, social",,,GA-Optimized LDA,2
+14,"ai, student, education, tool, learn, financial, technology, digital, generative_ai, skill",,,Standard LDA,4
+15,"data, analysis, factor, prediction, construction, performance, predict, control, value, estimate",,,Standard LDA,9
+16,"agriculture, yield, crop, nutrient, farming, irrigation, agricultural, technologies, monitoring, management",,,BERTopic,9
+17,"ai, tool, genai, chatgpt, learn, llm, content, generative_ai, agent, misinformation",,,Random-Search LDA,7
+18,"images, cancer, model, segmentation, deep, deep learning, image, learning, accuracy, detection",,,BERTopic,4
+19,"ai, resource, system, analysis, data, review, application, quality, interaction, process",,,Random-Search LDA,3
+20,"nepali, system, image, language, model, text, recognition, dataset, news, accuracy",,,BERTopic,0
+21,"drug, molecular, inhibitors, cancer, discovery, chemical, ai, compounds, screening, binding",,,BERTopic,11
+22,"ai, digital, education, artificial, intelligence, artificial intelligence, students, nepal, tools, learning",,,BERTopic,2
+23,"controller, system, network, power, control, energy, framework, fuzzy, attack, reinforcement_learn",,,Random-Search LDA,2
+24,"image, system, feature, text, detection, accuracy, classification, process, dataset, video",,,GA-Optimized LDA,6
+25,"concrete, strength, construction, compressive strength, compressive, cost, model, building, machine, machine learning",,,BERTopic,13
+26,"disease, pandemic, health, covid, covid 19, 19, machine, cancer, machine learning, prediction",,,BERTopic,7
+27,"system, network, power, material, framework, attack, reinforcement_learn, security, controller, detection",,,Standard LDA,2
+28,"control, change, controller, area, disease, covid, vegetation, forest, load, analysis",,,Standard LDA,0
+29,"lattice, materials, properties, material, machine learning, machine, features, learning, predicting, parameters",,,BERTopic,12
+30,"data, factor, analysis, construction, resource, quality, automate, risk, human, index",,,GA-Optimized LDA,3
+31,"data, predict, prediction, performance, analysis, forecast, estimate, construction, accuracy, nepal",,,Random-Search LDA,1
+32,"accuracy, area, classification, data, performance, landslide, random_forest, map, machine_learn, nepal",,,Standard LDA,5
+33,"text, news, content, nepali, opinion, sentiment, data, information, emotion, review",,,Standard LDA,6
+34,"image, system, detection, feature, accuracy, dataset, classification, cnn, train, performance",,,Standard LDA,8
+35,"ai, student, education, tool, learn, financial, generative_ai, technology, skill, influence",,,GA-Optimized LDA,4
+36,"accuracy, data, performance, classification, prediction, image, detection, dataset, algorithm, technique",,,GA-Optimized LDA,5
+37,"disease, patient, one, covid, control, care, time, health, hospital, system",,,Random-Search LDA,0
+38,"predict, interaction, complex, dynamic, prediction, robot, stock_market, data, value, graph",,,Standard LDA,1
+39,"patient, care, ai, hospital, one, difference, misinformation, baseline, chatgpt, technology",,,Standard LDA,7
