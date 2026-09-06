@@ -136,3 +136,52 @@ def plot_ga_convergence(
     fig.savefig(out_path)
     plt.close(fig)
     return out_path
+
+
+def plot_topic_trends(
+    proportions,
+    windows: Sequence[str],
+    counts: Sequence[int],
+    labels: Sequence[str],
+    out_path: str | Path,
+    top_n: int = 8,
+    title: str = "Thematic evolution of AI research involving Nepali authors",
+) -> Path:
+    """Topic share by time window.
+
+    Per-window document counts are printed on the x-axis tick labels, not
+    relegated to a caption. The first window holds 8 documents; a reader who
+    cannot see that will over-read its trend line (DEC-013).
+
+    Only the `top_n` topics by absolute change are drawn — plotting all of them
+    produces an unreadable tangle, and the ones that did not move are precisely
+    the ones with nothing to show.
+    """
+    import numpy as np
+
+    plt = _style()
+    props = np.asarray(proportions, dtype=float)
+
+    change = np.nan_to_num(np.abs(props[-1, :] - props[0, :]))
+    order = np.argsort(-change)[:top_n]
+
+    fig, ax = plt.subplots(figsize=(7.6, 4.6))
+    cmap = plt.get_cmap("tab10")
+    x = np.arange(len(windows))
+
+    for rank, t in enumerate(order):
+        ax.plot(x, props[:, t], marker="o", linewidth=1.8,
+                color=cmap(rank % 10), label=labels[t])
+
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"{w}\n(n={c})" for w, c in zip(windows, counts)])
+    ax.set_xlabel("Time window")
+    ax.set_ylabel("Share of topic mass within window")
+    ax.set_title(title)
+    ax.legend(loc="center left", bbox_to_anchor=(1.01, 0.5), fontsize=8)
+
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path)
+    plt.close(fig)
+    return out_path
