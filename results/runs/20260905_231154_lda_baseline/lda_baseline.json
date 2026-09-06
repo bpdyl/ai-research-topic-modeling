@@ -1,0 +1,646 @@
+{
+  "experiment": "EXP-001",
+  "run_id": "20260905_231154_lda_baseline",
+  "seed": 42,
+  "k_grid": [
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40
+  ],
+  "selected_k": 10,
+  "selected_k_at_grid_edge": false,
+  "sweep_seconds": 82.3,
+  "fit_kwargs": {
+    "passes": 10,
+    "iterations": 100,
+    "chunksize": 500,
+    "alpha": "symmetric",
+    "eta": null,
+    "multicore": false
+  },
+  "sweep": [
+    {
+      "k": 5,
+      "c_v": 0.4270595780990993,
+      "diversity": 0.82,
+      "mean_pairwise_jaccard": 0.0739938080495356,
+      "perplexity": 167.83143360668205
+    },
+    {
+      "k": 10,
+      "c_v": 0.44834087237962594,
+      "diversity": 0.79,
+      "mean_pairwise_jaccard": 0.03585789091465046,
+      "perplexity": 172.13745962210817
+    },
+    {
+      "k": 15,
+      "c_v": 0.4310246724763839,
+      "diversity": 0.7866666666666666,
+      "mean_pairwise_jaccard": 0.023652267924713748,
+      "perplexity": 196.10397908039434
+    },
+    {
+      "k": 20,
+      "c_v": 0.4220962843637219,
+      "diversity": 0.78,
+      "mean_pairwise_jaccard": 0.019696105589050023,
+      "perplexity": 212.28649562610127
+    },
+    {
+      "k": 25,
+      "c_v": 0.4125337093609663,
+      "diversity": 0.792,
+      "mean_pairwise_jaccard": 0.015842219928907234,
+      "perplexity": 223.78048766932537
+    },
+    {
+      "k": 30,
+      "c_v": 0.40932726821722537,
+      "diversity": 0.81,
+      "mean_pairwise_jaccard": 0.010853706273798084,
+      "perplexity": 237.5480122121976
+    },
+    {
+      "k": 35,
+      "c_v": 0.4273406127324594,
+      "diversity": 0.7914285714285715,
+      "mean_pairwise_jaccard": 0.011623927176649814,
+      "perplexity": 247.772394540043
+    },
+    {
+      "k": 40,
+      "c_v": 0.39901455760307386,
+      "diversity": 0.7875,
+      "mean_pairwise_jaccard": 0.009855521155830754,
+      "perplexity": 260.11207673759725
+    }
+  ],
+  "metrics": {
+    "c_v": 0.44834087237962594,
+    "c_npmi": -0.022960628064676213,
+    "u_mass": -3.3585721298803692,
+    "diversity": 0.79,
+    "mean_pairwise_jaccard": 0.03585789091465046,
+    "perplexity": 172.13745962210817,
+    "num_topics": 10,
+    "stability": 0.25264748724501046,
+    "stability_pairwise": [
+      0.2532,
+      0.2956,
+      0.2091
+    ]
+  },
+  "topics": [
+    [
+      "control",
+      "change",
+      "controller",
+      "area",
+      "disease",
+      "covid",
+      "vegetation",
+      "forest",
+      "load",
+      "analysis"
+    ],
+    [
+      "predict",
+      "interaction",
+      "complex",
+      "dynamic",
+      "prediction",
+      "robot",
+      "stock_market",
+      "data",
+      "value",
+      "graph"
+    ],
+    [
+      "system",
+      "network",
+      "power",
+      "material",
+      "framework",
+      "attack",
+      "reinforcement_learn",
+      "security",
+      "controller",
+      "detection"
+    ],
+    [
+      "resource",
+      "data",
+      "review",
+      "ai",
+      "management",
+      "engineer",
+      "risk",
+      "bias",
+      "strategy",
+      "quality"
+    ],
+    [
+      "ai",
+      "student",
+      "education",
+      "tool",
+      "learn",
+      "financial",
+      "technology",
+      "digital",
+      "generative_ai",
+      "skill"
+    ],
+    [
+      "accuracy",
+      "area",
+      "classification",
+      "data",
+      "performance",
+      "landslide",
+      "random_forest",
+      "map",
+      "machine_learn",
+      "nepal"
+    ],
+    [
+      "text",
+      "news",
+      "content",
+      "nepali",
+      "opinion",
+      "sentiment",
+      "data",
+      "information",
+      "emotion",
+      "review"
+    ],
+    [
+      "patient",
+      "care",
+      "ai",
+      "hospital",
+      "one",
+      "difference",
+      "misinformation",
+      "baseline",
+      "chatgpt",
+      "technology"
+    ],
+    [
+      "image",
+      "system",
+      "detection",
+      "feature",
+      "accuracy",
+      "dataset",
+      "classification",
+      "cnn",
+      "train",
+      "performance"
+    ],
+    [
+      "data",
+      "analysis",
+      "factor",
+      "prediction",
+      "construction",
+      "performance",
+      "predict",
+      "control",
+      "value",
+      "estimate"
+    ]
+  ],
+  "topics_with_weights": [
+    [
+      [
+        "control",
+        0.01299
+      ],
+      [
+        "change",
+        0.01076
+      ],
+      [
+        "controller",
+        0.01025
+      ],
+      [
+        "area",
+        0.0089
+      ],
+      [
+        "disease",
+        0.00865
+      ],
+      [
+        "covid",
+        0.00824
+      ],
+      [
+        "vegetation",
+        0.00793
+      ],
+      [
+        "forest",
+        0.00741
+      ],
+      [
+        "load",
+        0.00693
+      ],
+      [
+        "analysis",
+        0.00679
+      ]
+    ],
+    [
+      [
+        "predict",
+        0.03799
+      ],
+      [
+        "interaction",
+        0.02746
+      ],
+      [
+        "complex",
+        0.02333
+      ],
+      [
+        "dynamic",
+        0.02263
+      ],
+      [
+        "prediction",
+        0.021
+      ],
+      [
+        "robot",
+        0.01863
+      ],
+      [
+        "stock_market",
+        0.01824
+      ],
+      [
+        "data",
+        0.01637
+      ],
+      [
+        "value",
+        0.01456
+      ],
+      [
+        "graph",
+        0.01347
+      ]
+    ],
+    [
+      [
+        "system",
+        0.03038
+      ],
+      [
+        "network",
+        0.01801
+      ],
+      [
+        "power",
+        0.01721
+      ],
+      [
+        "material",
+        0.01492
+      ],
+      [
+        "framework",
+        0.01187
+      ],
+      [
+        "attack",
+        0.0107
+      ],
+      [
+        "reinforcement_learn",
+        0.01067
+      ],
+      [
+        "security",
+        0.01038
+      ],
+      [
+        "controller",
+        0.01029
+      ],
+      [
+        "detection",
+        0.01024
+      ]
+    ],
+    [
+      [
+        "resource",
+        0.00971
+      ],
+      [
+        "data",
+        0.00818
+      ],
+      [
+        "review",
+        0.00746
+      ],
+      [
+        "ai",
+        0.0069
+      ],
+      [
+        "management",
+        0.0068
+      ],
+      [
+        "engineer",
+        0.00673
+      ],
+      [
+        "risk",
+        0.00656
+      ],
+      [
+        "bias",
+        0.00649
+      ],
+      [
+        "strategy",
+        0.00634
+      ],
+      [
+        "quality",
+        0.00622
+      ]
+    ],
+    [
+      [
+        "ai",
+        0.03633
+      ],
+      [
+        "student",
+        0.02848
+      ],
+      [
+        "education",
+        0.01429
+      ],
+      [
+        "tool",
+        0.0138
+      ],
+      [
+        "learn",
+        0.01232
+      ],
+      [
+        "financial",
+        0.0119
+      ],
+      [
+        "technology",
+        0.01074
+      ],
+      [
+        "digital",
+        0.00969
+      ],
+      [
+        "generative_ai",
+        0.00893
+      ],
+      [
+        "skill",
+        0.00884
+      ]
+    ],
+    [
+      [
+        "accuracy",
+        0.0205
+      ],
+      [
+        "area",
+        0.01759
+      ],
+      [
+        "classification",
+        0.0173
+      ],
+      [
+        "data",
+        0.01515
+      ],
+      [
+        "performance",
+        0.0146
+      ],
+      [
+        "landslide",
+        0.01289
+      ],
+      [
+        "random_forest",
+        0.01238
+      ],
+      [
+        "map",
+        0.01216
+      ],
+      [
+        "machine_learn",
+        0.01081
+      ],
+      [
+        "nepal",
+        0.00969
+      ]
+    ],
+    [
+      [
+        "text",
+        0.02955
+      ],
+      [
+        "news",
+        0.02297
+      ],
+      [
+        "content",
+        0.02231
+      ],
+      [
+        "nepali",
+        0.01478
+      ],
+      [
+        "opinion",
+        0.01304
+      ],
+      [
+        "sentiment",
+        0.01285
+      ],
+      [
+        "data",
+        0.01283
+      ],
+      [
+        "information",
+        0.01279
+      ],
+      [
+        "emotion",
+        0.01232
+      ],
+      [
+        "review",
+        0.01183
+      ]
+    ],
+    [
+      [
+        "patient",
+        0.02628
+      ],
+      [
+        "care",
+        0.0119
+      ],
+      [
+        "ai",
+        0.01179
+      ],
+      [
+        "hospital",
+        0.01032
+      ],
+      [
+        "one",
+        0.00996
+      ],
+      [
+        "difference",
+        0.00926
+      ],
+      [
+        "misinformation",
+        0.00902
+      ],
+      [
+        "baseline",
+        0.0087
+      ],
+      [
+        "chatgpt",
+        0.00821
+      ],
+      [
+        "technology",
+        0.00803
+      ]
+    ],
+    [
+      [
+        "image",
+        0.03417
+      ],
+      [
+        "system",
+        0.01928
+      ],
+      [
+        "detection",
+        0.01835
+      ],
+      [
+        "feature",
+        0.01643
+      ],
+      [
+        "accuracy",
+        0.01622
+      ],
+      [
+        "dataset",
+        0.01422
+      ],
+      [
+        "classification",
+        0.01285
+      ],
+      [
+        "cnn",
+        0.01158
+      ],
+      [
+        "train",
+        0.00901
+      ],
+      [
+        "performance",
+        0.0088
+      ]
+    ],
+    [
+      [
+        "data",
+        0.02553
+      ],
+      [
+        "analysis",
+        0.017
+      ],
+      [
+        "factor",
+        0.01643
+      ],
+      [
+        "prediction",
+        0.01312
+      ],
+      [
+        "construction",
+        0.01017
+      ],
+      [
+        "performance",
+        0.00994
+      ],
+      [
+        "predict",
+        0.00929
+      ],
+      [
+        "control",
+        0.0084
+      ],
+      [
+        "value",
+        0.00746
+      ],
+      [
+        "estimate",
+        0.0073
+      ]
+    ]
+  ],
+  "redundant_topic_pairs": [],
+  "n_documents": 1074,
+  "dictionary_size": 3018
+}

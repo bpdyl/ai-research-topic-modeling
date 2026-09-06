@@ -86,3 +86,53 @@ def plot_coherence_vs_k(
     fig.savefig(out_path)
     plt.close(fig)
     return out_path
+
+
+def plot_ga_convergence(
+    history: Sequence[dict],
+    out_path: str | Path,
+    baseline_cv: float | None = None,
+    title: str = "GA convergence: fitness by generation",
+) -> Path:
+    """Convergence plot — best and mean fitness per generation.
+
+    Mean is shown alongside best because best alone can look like healthy
+    convergence while the population has actually collapsed onto one genome.
+    The gap between the two curves is the visible evidence of diversity.
+
+    The baseline's C_v is drawn on the right axis when available, so the figure
+    answers the question the paper actually asks: did the GA beat grid search?
+    """
+    plt = _style()
+    gens = [h["generation"] for h in history]
+
+    fig, ax = plt.subplots()
+    ax.plot(gens, [h["best_fitness"] for h in history],
+            marker="o", color="#B5533C", label="best fitness")
+    ax.plot(gens, [h["mean_fitness"] for h in history],
+            marker="s", linestyle="--", color="#4A6670", label="population mean")
+    ax.set_xlabel("Generation")
+    ax.set_ylabel("Fitness (weighted sum)")
+    ax.set_xticks(gens)
+    ax.legend(loc="lower right")
+
+    if baseline_cv is not None:
+        ax2 = ax.twinx()
+        ax2.plot(gens, [h["best_c_v"] for h in history],
+                 marker="^", linestyle=":", color="#7A8450", label="best $C_v$")
+        ax2.axhline(baseline_cv, color="#999999", linestyle="-.", linewidth=1)
+        ax2.annotate(f"grid-search baseline $C_v$ = {baseline_cv:.4f}",
+                     xy=(gens[0], baseline_cv), xytext=(2, 4),
+                     textcoords="offset points", fontsize=8, color="#666666")
+        ax2.set_ylabel("Coherence ($C_v$)", color="#7A8450")
+        ax2.tick_params(axis="y", labelcolor="#7A8450")
+        ax2.grid(False)
+        ax2.spines["top"].set_visible(False)
+        ax2.legend(loc="center right", fontsize=8)
+
+    ax.set_title(title)
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path)
+    plt.close(fig)
+    return out_path

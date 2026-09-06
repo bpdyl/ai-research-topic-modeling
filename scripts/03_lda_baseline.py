@@ -33,6 +33,7 @@ from nrtm.evaluation.coherence import all_coherences                         # n
 from nrtm.evaluation.diversity import (                                      # noqa: E402
     topic_diversity, mean_pairwise_jaccard, redundant_topic_pairs,
 )
+from nrtm.evaluation.stability import topic_stability                        # noqa: E402
 from nrtm.viz.figures import plot_coherence_vs_k                             # noqa: E402
 
 
@@ -128,6 +129,20 @@ def main() -> int:
     metrics["mean_pairwise_jaccard"] = mean_pairwise_jaccard(topics, top_n=ecfg["diversity_top_n"])
     metrics["perplexity"] = perplexity(model, corpus)
     metrics["num_topics"] = best_k
+
+    # Stability across seeds, using the same definition and seed count as the
+    # GA (OQ-011). Without this the three-way comparison table would have a
+    # hole in the baseline row, and "GA-LDA is more stable" would be unfalsifiable.
+    stability_seeds = [seed + i for i in range(cfg["ga"]["stability_seeds"])]
+    print("Measuring stability across seeds", stability_seeds)
+
+    def _fit_and_extract(s: int):
+        m = fit_lda(corpus, dictionary, num_topics=best_k, seed=s, **fit_kwargs)
+        return topic_top_words(m, top_n=ecfg["top_n_words"])
+
+    stab = topic_stability(_fit_and_extract, stability_seeds, top_n=ecfg["top_n_words"])
+    metrics["stability"] = stab["stability"]
+    metrics["stability_pairwise"] = stab["pairwise"]
 
     print("\nBaseline metrics:")
     for k, v in metrics.items():
