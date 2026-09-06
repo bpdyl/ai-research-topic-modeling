@@ -469,6 +469,10 @@ the ACL*, vol. 8, pp. 439–453, 2020.
 
 Code: `https://github.com/bpdyl/ai-research-topic-modeling` (branch `core-development`).
 
+A single end-to-end notebook, `notebooks/nepal_ai_topic_modelling.ipynb`, reproduces the whole
+pipeline and runs unmodified in Google Colab. It calls the same package functions the reported
+results came from, so it cannot diverge from the numbers in this paper.
+
 ```
 pip install -r requirements.txt
 python -c "import nltk; [nltk.download(r) for r in ['punkt_tab','stopwords','wordnet','omw-1.4']]"

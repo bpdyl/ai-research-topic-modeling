@@ -44,6 +44,13 @@ results/runs/**/*.pkl
 results/runs/**/*.safetensors
 results/**/embeddings*
 
+# ── Notebook scratch ───────────────────────────────────────────────
+# The notebook writes figures/nb_*.png. In QUICK_MODE those are NOT the paper's
+# numbers, and having them sit beside the real figures invites using the wrong
+# one. The paper's figures come from the numbered scripts.
+figures/nb_*.png
+notebooks/*-checkpoint.ipynb
+
 # ── Caches ─────────────────────────────────────────────────────────
 .pytest_cache/
 .ipynb_checkpoints/
