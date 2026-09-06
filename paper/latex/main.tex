@@ -57,10 +57,12 @@ search at an identical budget beat it} (fitness 0.5282 vs.\ 0.5196; $C_v$ 0.5030
 the gain is attributable to searching $(K,\alpha,\beta)$ finely rather than to the evolutionary
 mechanism. Two further findings qualify the comparison. No model dominates: BERTopic attains the
 highest $C_v$ (0.5107) and far higher cross-seed stability (0.842 vs.\ 0.338) while leaving 17.1\%
-of documents unclustered. And an interpretability assessment \textbf{inverts} the coherence ranking
---- GA-LDA, which won most numeric metrics, is the \emph{least} interpretable model tested
-(2.71/5 against BERTopic's 4.64/5), because the optimiser converged to $K{=}7$ and produced broad,
-generic topics. Both model families independently identify generative AI in education as the
+of documents unclustered. And an interpretability panel of three independent
+blind raters (Krippendorff's $\alpha = 0.979$) \textbf{inverts} the coherence ranking --- GA-LDA,
+which won most numeric metrics, is the \emph{least} interpretable model tested (2.05/5 against
+BERTopic's 4.10/5), because the optimiser converged to $K{=}7$ and produced broad, generic topics.
+An independent review of the 39 generated topic labels corroborates this from a different angle:
+only 1 of GA-LDA's 7 labels was accepted unchanged, against 9 of BERTopic's 14. Both model families independently identify generative AI in education as the
 dominant rising theme. We conclude that optimising coherence metrics optimises neither
 interpretability nor anything the evolutionary machinery uniquely provides.
 \end{abstract}
@@ -306,12 +308,18 @@ $n_{\text{components}}{=}5$, cosine, fixed \texttt{random\_state}) and HDBSCAN
 (\texttt{min\_cluster\_size}$\,{=}\,$15, EOM), with the \emph{same} stop-word list used for LDA so the
 comparison measures modelling rather than preprocessing.
 
-Interpretability was assessed by rating each topic 1--5 on whether its top-10 words name one
-identifiable research area. \textbf{These ratings come from a single automated (LLM-as-judge) rater,
-not the three independent human raters the proposal specifies.} Inter-rater agreement is therefore
-not reported, and the same system fitted the models it rated. We state this as a limitation rather
-than conceal it; a blind, shuffled rating instrument is prepared for human ratings, which would
-supersede these numbers.
+Interpretability was assessed by a panel of \textbf{three independent raters}, each scoring all 39
+topics 1--5 on whether the top-10 words name one identifiable research area. The panel was blind:
+every rater received only the shuffled word lists and the rubric --- no model names, no draft
+labels, and no sight of another rater's output. A fourth independent reviewer separately audited all
+39 generated topic labels, returning accept, revise or reject with a justification.
+
+\textbf{The raters are automated (large language model) judges, not the three human raters the
+proposal specified.} We report this plainly. Their independence is genuine --- separate contexts,
+blind inputs --- so the agreement statistic is meaningful, but they are not humans and the reader
+should weigh the result accordingly. Agreement is computed with Krippendorff's $\alpha$ using an
+ordinal difference function, chosen over Fleiss' $\kappa$ because the scale is ordinal: a one-point
+disagreement is not equivalent to a four-point one.
 
 %==============================================================================
 \section{Results}
@@ -319,8 +327,9 @@ supersede these numbers.
 \subsection{Model comparison}
 
 \begin{table*}[t]
-\caption{Four-way model comparison. Best value per row in \textbf{bold}. Interpretability is a
-single-rater LLM-as-judge assessment, not the three-human protocol (Section IV).}
+\caption{Four-way model comparison. Best value per row in \textbf{bold}. Interpretability is the
+mean of three independent blind LLM raters ($\alpha = 0.979$); see Section~IV for why these are not
+the three human raters the proposal specified.}
 \label{tab:comparison}
 \centering
 \begin{tabular}{@{}lrrrr@{}}
@@ -338,7 +347,8 @@ Stability (3 seeds)             & 0.2526  & 0.3375           & 0.3382           
 Perplexity                      & 172.1   & 167.8            & \textbf{165.9}   & --- \\
 Unmodelled documents            & \textbf{0\%} & \textbf{0\%} & \textbf{0\%}    & 17.1\% \\
 \midrule
-\textbf{Interpretability (1--5)} & 3.10   & 2.71             & 4.00             & \textbf{4.64} \\
+\textbf{Interpretability (1--5)} & 2.57   & 2.05             & 2.88             & \textbf{4.10} \\
+Labels accepted unchanged       & 5/10    & 1/7              & 5/8              & \textbf{9/14} \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -353,7 +363,7 @@ independence.
 \textbf{But the random-search control reverses the conclusion.} At an identical budget of 183 unique
 evaluations, random sampling of the same space found a better solution: fitness 0.5282 vs.\ 0.5196,
 $C_v$ 0.5030 vs.\ 0.4940, $c_{\text{npmi}}$ 0.0245 vs.\ 0.0112, perplexity 165.9 vs.\ 167.8, and
-interpretability 4.00 vs.\ 2.71. The GA wins only $u_{\text{mass}}$, a measure neither strategy
+interpretability 2.88 vs.\ 2.05. The GA wins only $u_{\text{mass}}$, a measure neither strategy
 optimised. \textbf{We therefore cannot claim that evolutionary search outperforms alternatives on
 this problem.} The supportable claim is narrower: searching $(K,\alpha,\beta)$ finely beats an
 8-point grid, and the search strategy is not what matters.
@@ -392,8 +402,15 @@ mechanism, or restarts would be the obvious remedies.
 
 \subsection{Interpretability inverts the coherence ranking}
 
-Rated 1--5 on whether top-10 words name one identifiable research area:
-\textbf{BERTopic 4.64} $>$ Random-Search LDA 4.00 $>$ standard LDA 3.10 $>$ \textbf{GA-LDA 2.71}.
+The three raters agreed strongly: Krippendorff's $\alpha = 0.979$ (ordinal), 93.2\% exact
+agreement and \textbf{100\% agreement within one point}. Panel means:
+\textbf{BERTopic 4.10} $>$ Random-Search LDA 2.88 $>$ standard LDA 2.57 $>$ \textbf{GA-LDA 2.05}.
+
+The independent label review corroborates this through a different task. Of the 39 machine-generated
+labels, 20 were accepted unchanged, 12 revised and 7 rejected as unsupported by the words. The
+per-model split is stark: BERTopic \textbf{9 of 14} accepted with \textbf{zero} rejections, against
+GA-LDA \textbf{1 of 7} accepted with 3 rejected. Two evaluations of different kinds --- scoring
+topics, and auditing labels --- place the same model last.
 
 \textbf{This inverts the coherence ranking, and it is the paper's most consequential finding.} The
 GA converged to $K{=}7$ because fewer, broader topics scored well on a fitness of coherence,
@@ -513,8 +530,10 @@ our temporal analysis.
 \textbf{Limitations.} (i) Absolute stability for every LDA variant is low (0.25--0.34): even the
 best model recovers about a third of the same structure across seeds, which qualifies every
 topic-level claim here. (ii) The 2015--17 window holds 8 documents; its trend line is indicative
-only. (iii) NepJOL's absence biases coverage against locally-published work. (iv) Interpretability
-rests on one automated rater. (v) The GA was run once with one parameter setting; a fairer test of
+only. (iii) NepJOL's absence biases coverage against locally-published work. (iv) Interpretability rests on
+automated raters: three independent LLM judges rather than the three humans the proposal specified.
+Their agreement is high ($\alpha = 0.979$), but high agreement among models sharing a training
+distribution is weaker evidence than agreement among independent people. (v) The GA was run once with one parameter setting; a fairer test of
 evolutionary search would tune its mutation rate and population size, and repeat both searches over
 multiple seeds to compare distributions rather than single runs.
 

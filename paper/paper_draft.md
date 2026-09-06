@@ -28,7 +28,7 @@ qualify the comparison. First, **no model dominates**: BERTopic attains the high
 a far higher cross-seed stability (0.842 vs 0.338) while leaving 17.1% of documents unclustered.
 Second, an interpretability assessment **inverts** the coherence ranking — GA-LDA, which won most
 numeric metrics, scores *lowest* (2.71/5) because the optimiser converged to K=7 and produced broad,
-generic topics, against BERTopic's 4.64/5. Both model families independently identify generative AI
+generic topics, against BERTopic's 4.10/5. Both model families independently identify generative AI
 in education as the dominant rising theme (+0.131 and +0.181 share). We conclude that optimising
 coherence metrics optimises neither interpretability nor, relative to random search, anything the
 evolutionary machinery uniquely provides.
@@ -246,7 +246,8 @@ optimises C_v, so quoting C_v alone as evidence of its success would be circular
 | Stability (3 seeds) | 0.2526 | 0.3375 | 0.3382 | **0.8418** |
 | Perplexity | 172.1 | 167.8 | **165.9** | — |
 | Unmodelled documents | **0%** | **0%** | **0%** | 17.1% |
-| **Interpretability (1–5)** | 3.10 | 2.71 | [TODO] | **4.64** |
+| **Interpretability (1–5)** | 2.57 | 2.05 | 2.88 | **4.10** |
+| Labels accepted unchanged | 5/10 | 1/7 | 5/8 | **9/14** |
 
 **RQ3 — GA-LDA versus baseline, and versus a matched control.** Against the grid-searched baseline
 GA-LDA improves every computed metric. The C_v gain (+10.2%) is partly expected since C_v is the
@@ -265,6 +266,7 @@ evaluations, random sampling of the same space found a *better* solution:
 | u_mass | −2.5477 | **−2.1796** | +0.3681 |
 | diversity | 0.8000 | 0.8000 | 0.0000 |
 | stability | 0.3382 | 0.3375 | −0.0007 |
+| interpretability | **2.88** | 2.05 | −0.83 |
 
 The GA wins only u_mass, a measure neither strategy optimised. **We therefore cannot claim that
 evolutionary search outperforms alternatives on this problem.** The supportable claim is narrower:
@@ -300,7 +302,11 @@ line of future work.
 ### 4.3 Interpretability — and an inverted ranking
 
 Each topic was rated 1–5 on whether its top-10 words name one identifiable research area.
-**BERTopic 4.64 (100% rated ≥4) > standard LDA 3.10 > GA-LDA 2.71 (14% rated ≥4).**
+Panel of three independent blind raters, Krippendorff's α = 0.979 (93.2% exact agreement, 100% within one point):
+
+**BERTopic 4.10 > Random-Search LDA 2.88 > standard LDA 2.57 > GA-LDA 2.05 (last).**
+
+An independent review of all 39 labels corroborates it from a different task: 20 accepted, 12 revised, 7 rejected — BERTopic **9/14 accepted with zero rejections**, GA-LDA **1/7 accepted with 3 rejected**.
 
 **This inverts the coherence ranking, and it is the paper's most consequential finding.** The GA
 converged to K=7 because fewer, broader topics scored well on a fitness of coherence + diversity +
@@ -313,11 +319,12 @@ directly: `drug, molecular, inhibitors, screening, binding`; `concrete, compress
 **Optimising coherence metrics did not optimise interpretability; on this corpus it worked against
 it.** A study reporting only C_v would have concluded GA-LDA was the better model.
 
-> **[TODO — human ratings]** These ratings come from a **single automated rater**, not the three
-> independent human raters the proposal specifies. Inter-rater agreement is therefore not reported.
-> The same system fitted the models and rated their output, which is a conflict of interest we state
-> rather than conceal. A blind, shuffled rating instrument is prepared; human ratings, once
-> collected, supersede these numbers.
+> **Rater provenance.** The panel is **three independent LLM judges**, not the three human raters
+> the proposal specified. Each ran in a separate context and saw only shuffled word lists and the
+> rubric — no model names, no draft labels, no sight of another rater's output — so their
+> independence, and therefore the agreement statistic, is genuine. But they are not humans, and
+> high agreement among models sharing a training distribution is weaker evidence than agreement
+> among independent people. Human ratings would supersede these; the blind instrument still exists.
 
 ### 4.4 Thematic evolution (RQ1, RQ2)
 

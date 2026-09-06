@@ -222,3 +222,44 @@ class TestRandomSearchControl:
         past the rounding precision must collide, or the two searches would be
         charged differently for the same work."""
         assert Genome(9, 0.30001, 0.5).key() == Genome(9, 0.30002, 0.5).key()
+
+
+class TestInterRaterAgreement:
+    """Krippendorff's alpha is the statistic the proposal promises alongside the
+    interpretability score. It only exists with >=2 independent raters, which is
+    why the single-rater version of this study could not report it."""
+
+    def _alpha(self, ratings):
+        from nrtm.evaluation.agreement import krippendorff_alpha_ordinal
+        return krippendorff_alpha_ordinal(ratings)
+
+    def test_perfect_agreement_is_one(self):
+        r = [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]
+        assert abs(self._alpha(r) - 1.0) < 1e-9
+
+    def test_systematic_disagreement_is_low(self):
+        """Raters ranking items in opposite order must not score as agreeing."""
+        r = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]]
+        assert self._alpha(r) < 0.1
+
+    def test_ordinal_scale_treats_near_misses_as_near_agreement(self):
+        """The reason for alpha over kappa: off-by-one must beat off-by-four."""
+        near = [[3, 3, 4, 4, 5, 5, 2, 2], [3, 4, 4, 5, 5, 4, 2, 3]]
+        far = [[3, 3, 4, 4, 5, 5, 2, 2], [1, 5, 1, 5, 1, 5, 5, 1]]
+        assert self._alpha(near) > self._alpha(far)
+
+    def test_single_rater_is_not_computable(self):
+        import math
+        assert math.isnan(self._alpha([[1, 2, 3, 4, 5]]))
+
+    def test_percent_agreement_within_tolerance(self):
+        from nrtm.evaluation.agreement import percent_agreement
+        r = [[3, 3, 3], [4, 3, 5]]
+        assert percent_agreement(r, tolerance=0) == 1 / 3
+        assert percent_agreement(r, tolerance=1) == 2 / 3
+
+    def test_interpretation_thresholds(self):
+        from nrtm.evaluation.agreement import interpret_alpha
+        assert interpret_alpha(0.85) == "reliable"
+        assert interpret_alpha(0.70) == "tentative conclusions only"
+        assert interpret_alpha(0.50) == "unreliable"
