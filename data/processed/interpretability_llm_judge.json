@@ -1,0 +1,176 @@
+{
+  "_provenance": {
+    "rater": "claude-opus-5",
+    "rater_type": "LLM-as-judge, SINGLE rater",
+    "rated_on": "2026-09-06",
+    "scale": "1-5, where 1 = top words share no discernible theme, 5 = top words name one specific research area unambiguously",
+    "protocol": "Each topic rated from its top-10 words alone, without reference to representative documents or to which model produced it. Criteria applied uniformly: (a) is there one identifiable theme? (b) do the words name a domain, or only generic ML vocabulary? (c) are there junk or duplicate tokens?",
+    "IMPORTANT": "This is NOT the three-human-rater protocol the proposal commits to (OQ-012). It is one automated rater. Inter-rater agreement cannot be computed from a single rater and is NOT reported. The paper must describe this as an LLM-assisted interpretability assessment, and if human ratings are collected they supersede it.",
+    "conflict_of_interest": "The same assistant fitted the models and rated their output. This is a real limitation and is stated in the paper rather than hidden.",
+    "note_2026_09_06": "Random-Search LDA rated after EXP-008, using the identical protocol and criteria. Rated from top-10 words alone, as for the other three models."
+  },
+  "GA-Optimized LDA": {
+    "0": {
+      "rating": 2,
+      "why": "Mixes control systems, patients, regions and forecasting; 'one' is a junk token. No single theme."
+    },
+    "1": {
+      "rating": 2,
+      "why": "Almost entirely generic prediction vocabulary; 'predict' and 'prediction' duplicate. Names no domain."
+    },
+    "2": {
+      "rating": 3,
+      "why": "Coheres loosely around networked systems and security, but 'social' and 'application' dilute it."
+    },
+    "3": {
+      "rating": 2,
+      "why": "Construction and risk are visible but buried under generic terms (data, factor, analysis, quality)."
+    },
+    "4": {
+      "rating": 5,
+      "why": "Unambiguous: generative AI in education. Every word supports one theme."
+    },
+    "5": {
+      "rating": 2,
+      "why": "Entirely ML evaluation vocabulary (accuracy, performance, classification, dataset). Describes a method, not a subject."
+    },
+    "6": {
+      "rating": 3,
+      "why": "Multimedia recognition is discernible, but image, text and video are three modalities under generic metric words."
+    }
+  },
+  "Standard LDA": {
+    "0": {
+      "rating": 2,
+      "why": "Control systems, COVID and vegetation in one topic. Incoherent."
+    },
+    "1": {
+      "rating": 2,
+      "why": "Robotics, stock market and graphs under generic prediction words."
+    },
+    "2": {
+      "rating": 3,
+      "why": "Power systems and security co-occur; reinforcement_learn is a genuine anchor."
+    },
+    "3": {
+      "rating": 3,
+      "why": "Reads as AI governance and risk management; 'bias' and 'strategy' support it."
+    },
+    "4": {
+      "rating": 5,
+      "why": "Clearly AI and generative AI in education."
+    },
+    "5": {
+      "rating": 4,
+      "why": "Landslide susceptibility mapping with random forests, Nepal-specific. Clear despite generic metric words."
+    },
+    "6": {
+      "rating": 5,
+      "why": "Nepali text, sentiment and opinion mining. Specific and coherent."
+    },
+    "7": {
+      "rating": 3,
+      "why": "Healthcare AI with ChatGPT and misinformation; 'one' and 'baseline' are junk."
+    },
+    "8": {
+      "rating": 3,
+      "why": "Computer vision, consistent but described only through metrics and cnn."
+    },
+    "9": {
+      "rating": 1,
+      "why": "Wholly generic: data, analysis, factor, value, estimate. No theme recoverable."
+    }
+  },
+  "BERTopic": {
+    "0": {
+      "rating": 4,
+      "why": "Nepali language, text and news recognition. Clear; 'system' and 'accuracy' add nothing."
+    },
+    "1": {
+      "rating": 4,
+      "why": "Land, water and forest over Nepal. Diluted by machine/learning/model repetition."
+    },
+    "2": {
+      "rating": 5,
+      "why": "AI and digital tools in education, Nepal-specific. Unambiguous."
+    },
+    "3": {
+      "rating": 5,
+      "why": "Cybersecurity: attacks, intrusion, cloud. Names the domain directly."
+    },
+    "4": {
+      "rating": 5,
+      "why": "Medical image segmentation for cancer. Specific and coherent."
+    },
+    "5": {
+      "rating": 5,
+      "why": "AI in healthcare: clinical, treatment, medical. Unambiguous."
+    },
+    "6": {
+      "rating": 4,
+      "why": "Plant leaf disease detection; 'leaf' anchors it despite generic deep-learning words."
+    },
+    "7": {
+      "rating": 4,
+      "why": "COVID-19 and epidemic prediction. '19' is a tokenisation artefact and 'cancer' is out of place."
+    },
+    "8": {
+      "rating": 5,
+      "why": "Power systems: wind, grid, demand, control. Very specific."
+    },
+    "9": {
+      "rating": 5,
+      "why": "Precision agriculture: yield, crop, nutrient, irrigation, farming."
+    },
+    "10": {
+      "rating": 5,
+      "why": "Financial market forecasting: stock, price, trading. 'regularization' is the only intruder."
+    },
+    "11": {
+      "rating": 5,
+      "why": "Computational drug discovery: inhibitors, compounds, screening, binding."
+    },
+    "12": {
+      "rating": 4,
+      "why": "Materials property prediction; 'lattice' and 'properties' anchor it."
+    },
+    "13": {
+      "rating": 5,
+      "why": "Concrete compressive strength in construction. Highly specific."
+    }
+  },
+  "Random-Search LDA": {
+    "0": {
+      "rating": 4,
+      "why": "COVID, patients, hospital, care — clearly clinical, though 'one' and 'time' are junk."
+    },
+    "1": {
+      "rating": 2,
+      "why": "Generic forecasting vocabulary; 'construction' and 'nepal' are the only anchors."
+    },
+    "2": {
+      "rating": 5,
+      "why": "Power/control systems with fuzzy and reinforcement learning named explicitly."
+    },
+    "3": {
+      "rating": 2,
+      "why": "ai, resource, system, analysis, data, review — no domain, near-generic."
+    },
+    "4": {
+      "rating": 5,
+      "why": "Students, education, university, digital — unambiguous."
+    },
+    "5": {
+      "rating": 5,
+      "why": "Landslide, environmental, region, Nepal — specific geospatial hazard work."
+    },
+    "6": {
+      "rating": 4,
+      "why": "CNN image detection/classification; specific method, generic metrics."
+    },
+    "7": {
+      "rating": 5,
+      "why": "genai, chatgpt, llm, generative_ai, agent — isolates generative AI tools cleanly."
+    }
+  }
+}

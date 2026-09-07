@@ -1,0 +1,275 @@
+[
+ {
+  "model": "BERTopic",
+  "topic_id": 9,
+  "words": "agriculture, yield, crop, nutrient, farming, irrigation, agricultural, technologies, monitoring, management",
+  "draft_label": "Precision Agriculture",
+  "item": 1
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 6,
+  "words": "image, system, feature, detection, classification, accuracy, dataset, cnn, data, technique",
+  "draft_label": "CNN-Based Image Detection and Classification",
+  "item": 2
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 0,
+  "words": "control, change, controller, area, disease, covid, vegetation, forest, load, analysis",
+  "draft_label": "Environmental and Epidemic Control Systems",
+  "item": 3
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 2,
+  "words": "system, network, power, material, framework, attack, reinforcement_learn, security, controller, detection",
+  "draft_label": "Power Networks and Security Control",
+  "item": 4
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 4,
+  "words": "student, ai, financial, education, digital, data, technology, university, learn, influence",
+  "draft_label": "AI and Digital Technology in Education",
+  "item": 5
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 6,
+  "words": "detection, models, leaf, learning, accuracy, deep, model, deep learning, disease, classification",
+  "draft_label": "Plant Disease Detection",
+  "item": 6
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 7,
+  "words": "patient, care, ai, hospital, one, difference, misinformation, baseline, chatgpt, technology",
+  "draft_label": "AI in Clinical Care and Health Misinformation",
+  "item": 7
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 4,
+  "words": "images, cancer, model, segmentation, deep, deep learning, image, learning, accuracy, detection",
+  "draft_label": "Medical Image Segmentation",
+  "item": 8
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 1,
+  "words": "predict, power, data, complex, dynamic, analysis, prediction, performance, network, neural_network",
+  "draft_label": "Predictive Modelling of Complex Systems",
+  "item": 9
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 1,
+  "words": "water, data, forest, machine, land, machine learning, learning, model, nepal, area",
+  "draft_label": "Land, Water and Forest Remote Sensing",
+  "item": 10
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 8,
+  "words": "image, system, detection, feature, accuracy, dataset, classification, cnn, train, performance",
+  "draft_label": "CNN-Based Image Classification",
+  "item": 11
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 5,
+  "words": "ai, intelligence, artificial intelligence, artificial, healthcare, health, medical, review, treatment, clinical",
+  "draft_label": "AI in Healthcare",
+  "item": 12
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 5,
+  "words": "accuracy, data, performance, classification, prediction, image, detection, dataset, algorithm, technique",
+  "draft_label": "Applied ML for Hazard and Crop Classification",
+  "item": 13
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 4,
+  "words": "ai, student, education, tool, learn, financial, generative_ai, technology, skill, influence",
+  "draft_label": "Generative AI in Education",
+  "item": 14
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 10,
+  "words": "stock, price, market, trading, forecasting, stock market, regularization, strategy, financial, learning",
+  "draft_label": "Financial Market Forecasting",
+  "item": 15
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 3,
+  "words": "ai, resource, system, analysis, data, review, application, quality, interaction, process",
+  "draft_label": "AI Systems Review and Resource Management",
+  "item": 16
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 3,
+  "words": "detection, learning, network, security, data, attacks, machine, cybersecurity, machine learning, cloud",
+  "draft_label": "Cybersecurity and Intrusion Detection",
+  "item": 17
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 8,
+  "words": "power, energy, system, network, wind, grid, demand, neural, neural network, control",
+  "draft_label": "Power Systems and Energy Forecasting",
+  "item": 18
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 4,
+  "words": "ai, student, education, tool, learn, financial, technology, digital, generative_ai, skill",
+  "draft_label": "Generative AI in Education",
+  "item": 19
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 6,
+  "words": "text, news, content, nepali, opinion, sentiment, data, information, emotion, review",
+  "draft_label": "Nepali Text Sentiment and Opinion Mining",
+  "item": 20
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 1,
+  "words": "predict, interaction, complex, dynamic, prediction, robot, stock_market, data, value, graph",
+  "draft_label": "Predictive Modelling of Dynamic Systems",
+  "item": 21
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 2,
+  "words": "ai, digital, education, artificial, intelligence, artificial intelligence, students, nepal, tools, learning",
+  "draft_label": "AI in Education",
+  "item": 22
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 3,
+  "words": "data, factor, analysis, construction, resource, quality, automate, risk, human, index",
+  "draft_label": "Construction and Industrial Analytics",
+  "item": 23
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 2,
+  "words": "system, technology, network, framework, artificial_intelligence, security, application, integration, threat, social",
+  "draft_label": "Energy Infrastructure and Security",
+  "item": 24
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 12,
+  "words": "lattice, materials, properties, material, machine learning, machine, features, learning, predicting, parameters",
+  "draft_label": "Materials Property Prediction",
+  "item": 25
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 0,
+  "words": "control, nepal, area, data, patient, change, one, controller, forecast, region",
+  "draft_label": "Regional Forecasting and Control Systems",
+  "item": 26
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 7,
+  "words": "ai, tool, genai, chatgpt, learn, llm, content, generative_ai, agent, misinformation",
+  "draft_label": "Generative AI Tools, LLMs and Misinformation",
+  "item": 27
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 2,
+  "words": "controller, system, network, power, control, energy, framework, fuzzy, attack, reinforcement_learn",
+  "draft_label": "Power Systems, Fuzzy and Reinforcement Control",
+  "item": 28
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 11,
+  "words": "drug, molecular, inhibitors, cancer, discovery, chemical, ai, compounds, screening, binding",
+  "draft_label": "Computational Drug Discovery",
+  "item": 29
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 9,
+  "words": "data, analysis, factor, prediction, construction, performance, predict, control, value, estimate",
+  "draft_label": "Generic Predictive Analytics (low coherence)",
+  "item": 30
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 3,
+  "words": "resource, data, review, ai, management, engineer, risk, bias, strategy, quality",
+  "draft_label": "AI Governance, Risk and Resource Management",
+  "item": 31
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 0,
+  "words": "disease, patient, one, covid, control, care, time, health, hospital, system",
+  "draft_label": "COVID-19 and Clinical Care Systems",
+  "item": 32
+ },
+ {
+  "model": "Standard LDA",
+  "topic_id": 5,
+  "words": "accuracy, area, classification, data, performance, landslide, random_forest, map, machine_learn, nepal",
+  "draft_label": "Geospatial Hazard Mapping in Nepal",
+  "item": 33
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 7,
+  "words": "disease, pandemic, health, covid, covid 19, 19, machine, cancer, machine learning, prediction",
+  "draft_label": "COVID-19 and Epidemic Modelling",
+  "item": 34
+ },
+ {
+  "model": "GA-Optimized LDA",
+  "topic_id": 6,
+  "words": "image, system, feature, text, detection, accuracy, classification, process, dataset, video",
+  "draft_label": "Speech, Text and Vision Recognition",
+  "item": 35
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 5,
+  "words": "area, data, accuracy, nepal, prediction, landslide, factor, environmental, region, value",
+  "draft_label": "Geospatial and Environmental Hazard Mapping",
+  "item": 36
+ },
+ {
+  "model": "Random-Search LDA",
+  "topic_id": 1,
+  "words": "data, predict, prediction, performance, analysis, forecast, estimate, construction, accuracy, nepal",
+  "draft_label": "Forecasting for Construction and Infrastructure",
+  "item": 37
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 13,
+  "words": "concrete, strength, construction, compressive strength, compressive, cost, model, building, machine, machine learning",
+  "draft_label": "Concrete and Structural Engineering",
+  "item": 38
+ },
+ {
+  "model": "BERTopic",
+  "topic_id": 0,
+  "words": "nepali, system, image, language, model, text, recognition, dataset, news, accuracy",
+  "draft_label": "Nepali Language and Text Processing",
+  "item": 39
+ }
+]

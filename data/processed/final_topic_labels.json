@@ -1,0 +1,55 @@
+{
+  "_provenance": {
+    "drafted_by": "claude-opus-5 (EXP-006)",
+    "reviewed_by": "independent LLM reviewer, separate context, 2026-09-06",
+    "outcome": "20 accepted, 12 revised, 7 rejected",
+    "note": "Rejected labels were replaced with honest low-coherence descriptions rather than plausible-sounding invented themes."
+  },
+  "BERTopic": {
+    "9": "Crop Yield and Farm Management",
+    "6": "Plant Disease Detection",
+    "4": "Medical Image Segmentation",
+    "1": "Water, Land and Forest Modelling in Nepal",
+    "5": "AI in Healthcare",
+    "10": "Financial Market Forecasting",
+    "3": "Cybersecurity and Intrusion Detection",
+    "8": "Power Grid and Energy Demand Modelling",
+    "2": "AI in Education",
+    "12": "Materials Property Prediction",
+    "11": "Computational Drug Discovery",
+    "7": "COVID-19 and Epidemic Modelling",
+    "13": "Concrete Compressive Strength Prediction",
+    "0": "Nepali OCR and Text Processing"
+  },
+  "Random-Search LDA": {
+    "6": "CNN-Based Image Detection and Classification",
+    "4": "AI and Digital Technology in Education",
+    "3": "Generic AI Application Vocabulary (low coherence)",
+    "7": "Generative AI Tools, LLMs and Misinformation",
+    "2": "Power Systems, Fuzzy and Reinforcement Control",
+    "0": "COVID-19 and Clinical Care Systems",
+    "5": "Landslide Prediction in Nepal",
+    "1": "Generic Forecasting Vocabulary (low coherence)"
+  },
+  "Standard LDA": {
+    "0": "Mixed Control / COVID / Land-Cover Terms (low coherence)",
+    "2": "Power System Control and Cybersecurity",
+    "7": "AI in Clinical Care and Health Misinformation",
+    "8": "CNN-Based Image Classification",
+    "4": "Generative AI in Education",
+    "6": "Nepali Text Sentiment and Opinion Mining",
+    "1": "Mixed Prediction Topic: Robotics, Markets, Graphs (low coherence)",
+    "9": "Generic Predictive Analytics (low coherence)",
+    "3": "AI Risk, Bias and Resource Management",
+    "5": "Landslide Susceptibility Mapping in Nepal"
+  },
+  "GA-Optimized LDA": {
+    "1": "Generic Predictive Modelling (low coherence)",
+    "5": "Generic ML Evaluation Vocabulary (low coherence)",
+    "4": "Generative AI in Education",
+    "3": "Construction Risk and Quality Analytics",
+    "2": "AI Systems, Networks and Security Threats",
+    "0": "Mixed Control / Health / Regional Terms (low coherence)",
+    "6": "Image, Text and Video Recognition"
+  }
+}

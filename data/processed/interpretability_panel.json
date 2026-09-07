@@ -1,0 +1,705 @@
+{
+  "_provenance": {
+    "panel": "THREE INDEPENDENT LLM RATERS (claude-opus-5), separate contexts, blind to model identity",
+    "NOT_HUMAN": "These are NOT the three human raters the proposal specifies. They are three independent automated raters. Inter-rater agreement between them is real and computable, but they are LLM judges and the paper says so.",
+    "independence": "Each rater received only the shuffled top-10 word lists and the rating rubric. No rater saw another's output, the model names, or the draft labels.",
+    "rated_on": "2026-09-06",
+    "n_items": 39
+  },
+  "agreement": {
+    "krippendorff_alpha_ordinal": 0.9787,
+    "interpretation": "reliable",
+    "exact_agreement": 0.9316,
+    "within_one_point": 1.0
+  },
+  "summary": {
+    "BERTopic": {
+      "n_topics": 14,
+      "mean": 4.095,
+      "sd": 0.733,
+      "n_ge_4": 11,
+      "pct_ge_4": 78.6,
+      "per_topic_means": [
+        5,
+        3,
+        4,
+        3,
+        4,
+        5,
+        4,
+        4.333,
+        4,
+        4,
+        5,
+        3,
+        5,
+        4
+      ]
+    },
+    "Random-Search LDA": {
+      "n_topics": 8,
+      "mean": 2.875,
+      "sd": 1.126,
+      "n_ge_4": 3,
+      "pct_ge_4": 37.5,
+      "per_topic_means": [
+        2,
+        4,
+        1,
+        4,
+        3,
+        4,
+        3,
+        2
+      ]
+    },
+    "Standard LDA": {
+      "n_topics": 10,
+      "mean": 2.567,
+      "sd": 1.155,
+      "n_ge_4": 2,
+      "pct_ge_4": 20.0,
+      "per_topic_means": [
+        1.333,
+        2,
+        2,
+        2,
+        4,
+        5,
+        2,
+        2,
+        2,
+        3.333
+      ]
+    },
+    "GA-Optimized LDA": {
+      "n_topics": 7,
+      "mean": 2.048,
+      "sd": 1.008,
+      "n_ge_4": 1,
+      "pct_ge_4": 14.3,
+      "per_topic_means": [
+        2,
+        1,
+        4,
+        2.333,
+        2,
+        1,
+        2
+      ]
+    }
+  },
+  "per_item": [
+    {
+      "item": 1,
+      "model": "BERTopic",
+      "topic_id": 9,
+      "words": "agriculture, yield, crop, nutrient, farming, irrigation, agricultural, technologies, monitoring, management",
+      "ratings": {
+        "A": 5,
+        "B": 5,
+        "C": 5
+      },
+      "mean": 5,
+      "label_verdict": "revise",
+      "final_label": "Crop Yield and Farm Management",
+      "review_note": "Words cover general crop, nutrient and irrigation management; nothing indicates the site-specific sensing that 'precision agriculture' names."
+    },
+    {
+      "item": 2,
+      "model": "Random-Search LDA",
+      "topic_id": 6,
+      "words": "image, system, feature, detection, classification, accuracy, dataset, cnn, data, technique",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "accept",
+      "final_label": "CNN-Based Image Detection and Classification",
+      "review_note": "cnn, image, detection, classification and dataset all appear explicitly."
+    },
+    {
+      "item": 3,
+      "model": "Standard LDA",
+      "topic_id": 0,
+      "words": "control, change, controller, area, disease, covid, vegetation, forest, load, analysis",
+      "ratings": {
+        "A": 1,
+        "B": 1,
+        "C": 2
+      },
+      "mean": 1.333,
+      "label_verdict": "reject",
+      "final_label": "Mixed Control / COVID / Land-Cover Terms (low coherence)",
+      "review_note": "Control engineering, epidemic and vegetation words are unrelated; the draft invents a single theme that binds them."
+    },
+    {
+      "item": 4,
+      "model": "Standard LDA",
+      "topic_id": 2,
+      "words": "system, network, power, material, framework, attack, reinforcement_learn, security, controller, detection",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "revise",
+      "final_label": "Power System Control and Cybersecurity",
+      "review_note": "Supported by power, network, controller, attack and security, but 'security control' is ambiguous phrasing."
+    },
+    {
+      "item": 5,
+      "model": "Random-Search LDA",
+      "topic_id": 4,
+      "words": "student, ai, financial, education, digital, data, technology, university, learn, influence",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "AI and Digital Technology in Education",
+      "review_note": "student, education, university, ai and digital dominate; only 'financial' is off-theme."
+    },
+    {
+      "item": 6,
+      "model": "BERTopic",
+      "topic_id": 6,
+      "words": "detection, models, leaf, learning, accuracy, deep, model, deep learning, disease, classification",
+      "ratings": {
+        "A": 3,
+        "B": 3,
+        "C": 3
+      },
+      "mean": 3,
+      "label_verdict": "accept",
+      "final_label": "Plant Disease Detection",
+      "review_note": "leaf, disease, detection and deep learning give a clear, specific theme."
+    },
+    {
+      "item": 7,
+      "model": "Standard LDA",
+      "topic_id": 7,
+      "words": "patient, care, ai, hospital, one, difference, misinformation, baseline, chatgpt, technology",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "accept",
+      "final_label": "AI in Clinical Care and Health Misinformation",
+      "review_note": "Both named strands are backed by words (patient/care/hospital and chatgpt/misinformation)."
+    },
+    {
+      "item": 8,
+      "model": "BERTopic",
+      "topic_id": 4,
+      "words": "images, cancer, model, segmentation, deep, deep learning, image, learning, accuracy, detection",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "Medical Image Segmentation",
+      "review_note": "segmentation, images, cancer and detection support the label directly."
+    },
+    {
+      "item": 9,
+      "model": "GA-Optimized LDA",
+      "topic_id": 1,
+      "words": "predict, power, data, complex, dynamic, analysis, prediction, performance, network, neural_network",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "reject",
+      "final_label": "Generic Predictive Modelling (low coherence)",
+      "review_note": "predict, data, analysis, prediction and performance are generic ML vocabulary; 'complex systems' is not in the words."
+    },
+    {
+      "item": 10,
+      "model": "BERTopic",
+      "topic_id": 1,
+      "words": "water, data, forest, machine, land, machine learning, learning, model, nepal, area",
+      "ratings": {
+        "A": 3,
+        "B": 3,
+        "C": 3
+      },
+      "mean": 3,
+      "label_verdict": "revise",
+      "final_label": "Water, Land and Forest Modelling in Nepal",
+      "review_note": "No imagery, satellite or sensing term appears, so 'remote sensing' over-claims the method."
+    },
+    {
+      "item": 11,
+      "model": "Standard LDA",
+      "topic_id": 8,
+      "words": "image, system, detection, feature, accuracy, dataset, classification, cnn, train, performance",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "accept",
+      "final_label": "CNN-Based Image Classification",
+      "review_note": "cnn, image, classification, feature and train are all present."
+    },
+    {
+      "item": 12,
+      "model": "BERTopic",
+      "topic_id": 5,
+      "words": "ai, intelligence, artificial intelligence, artificial, healthcare, health, medical, review, treatment, clinical",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "AI in Healthcare",
+      "review_note": "healthcare, health, medical, clinical and treatment plus AI terms match exactly."
+    },
+    {
+      "item": 13,
+      "model": "GA-Optimized LDA",
+      "topic_id": 5,
+      "words": "accuracy, data, performance, classification, prediction, image, detection, dataset, algorithm, technique",
+      "ratings": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "mean": 1,
+      "label_verdict": "reject",
+      "final_label": "Generic ML Evaluation Vocabulary (low coherence)",
+      "review_note": "Not one word refers to hazards or crops; the whole list is accuracy/data/performance boilerplate."
+    },
+    {
+      "item": 14,
+      "model": "GA-Optimized LDA",
+      "topic_id": 4,
+      "words": "ai, student, education, tool, learn, financial, generative_ai, technology, skill, influence",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "Generative AI in Education",
+      "review_note": "generative_ai appears explicitly alongside student, education, tool and skill."
+    },
+    {
+      "item": 15,
+      "model": "BERTopic",
+      "topic_id": 10,
+      "words": "stock, price, market, trading, forecasting, stock market, regularization, strategy, financial, learning",
+      "ratings": {
+        "A": 5,
+        "B": 5,
+        "C": 5
+      },
+      "mean": 5,
+      "label_verdict": "accept",
+      "final_label": "Financial Market Forecasting",
+      "review_note": "stock, price, market, trading and forecasting name the theme unambiguously."
+    },
+    {
+      "item": 16,
+      "model": "Random-Search LDA",
+      "topic_id": 3,
+      "words": "ai, resource, system, analysis, data, review, application, quality, interaction, process",
+      "ratings": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "mean": 1,
+      "label_verdict": "reject",
+      "final_label": "Generic AI Application Vocabulary (low coherence)",
+      "review_note": "system, analysis, data, application, quality and process are contentless; 'resource management' rests on one word."
+    },
+    {
+      "item": 17,
+      "model": "BERTopic",
+      "topic_id": 3,
+      "words": "detection, learning, network, security, data, attacks, machine, cybersecurity, machine learning, cloud",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "Cybersecurity and Intrusion Detection",
+      "review_note": "cybersecurity, attacks, detection, network and cloud support both halves of the label."
+    },
+    {
+      "item": 18,
+      "model": "BERTopic",
+      "topic_id": 8,
+      "words": "power, energy, system, network, wind, grid, demand, neural, neural network, control",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 5
+      },
+      "mean": 4.333,
+      "label_verdict": "revise",
+      "final_label": "Power Grid and Energy Demand Modelling",
+      "review_note": "No forecast/predict term appears; wind, grid, demand and control point to grid and load modelling."
+    },
+    {
+      "item": 19,
+      "model": "Standard LDA",
+      "topic_id": 4,
+      "words": "ai, student, education, tool, learn, financial, technology, digital, generative_ai, skill",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "Generative AI in Education",
+      "review_note": "Near-duplicate of item 14 and equally well supported by generative_ai, student and education."
+    },
+    {
+      "item": 20,
+      "model": "Standard LDA",
+      "topic_id": 6,
+      "words": "text, news, content, nepali, opinion, sentiment, data, information, emotion, review",
+      "ratings": {
+        "A": 5,
+        "B": 5,
+        "C": 5
+      },
+      "mean": 5,
+      "label_verdict": "accept",
+      "final_label": "Nepali Text Sentiment and Opinion Mining",
+      "review_note": "nepali, text, news, sentiment, opinion and emotion all appear."
+    },
+    {
+      "item": 21,
+      "model": "Standard LDA",
+      "topic_id": 1,
+      "words": "predict, interaction, complex, dynamic, prediction, robot, stock_market, data, value, graph",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "reject",
+      "final_label": "Mixed Prediction Topic: Robotics, Markets, Graphs (low coherence)",
+      "review_note": "robot, stock_market and graph are unrelated anchors around generic prediction words; 'dynamic systems' papers over that."
+    },
+    {
+      "item": 22,
+      "model": "BERTopic",
+      "topic_id": 2,
+      "words": "ai, digital, education, artificial, intelligence, artificial intelligence, students, nepal, tools, learning",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "AI in Education",
+      "review_note": "ai, education, students, digital and tools carry the topic; nepal is a secondary marker."
+    },
+    {
+      "item": 23,
+      "model": "GA-Optimized LDA",
+      "topic_id": 3,
+      "words": "data, factor, analysis, construction, resource, quality, automate, risk, human, index",
+      "ratings": {
+        "A": 3,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2.333,
+      "label_verdict": "revise",
+      "final_label": "Construction Risk and Quality Analytics",
+      "review_note": "'Industrial' is unsupported; construction is the sole domain word, with risk, quality and resource as consistent but weak support."
+    },
+    {
+      "item": 24,
+      "model": "GA-Optimized LDA",
+      "topic_id": 2,
+      "words": "system, technology, network, framework, artificial_intelligence, security, application, integration, threat, social",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "revise",
+      "final_label": "AI Systems, Networks and Security Threats",
+      "review_note": "No energy or infrastructure word occurs anywhere; security, threat and network are the real content."
+    },
+    {
+      "item": 25,
+      "model": "BERTopic",
+      "topic_id": 12,
+      "words": "lattice, materials, properties, material, machine learning, machine, features, learning, predicting, parameters",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "Materials Property Prediction",
+      "review_note": "materials, properties, lattice, parameters and predicting match precisely."
+    },
+    {
+      "item": 26,
+      "model": "GA-Optimized LDA",
+      "topic_id": 0,
+      "words": "control, nepal, area, data, patient, change, one, controller, forecast, region",
+      "ratings": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "mean": 1,
+      "label_verdict": "reject",
+      "final_label": "Mixed Control / Health / Regional Terms (low coherence)",
+      "review_note": "controller, patient and region belong to different literatures; 'regional forecasting' fits only two words."
+    },
+    {
+      "item": 27,
+      "model": "Random-Search LDA",
+      "topic_id": 7,
+      "words": "ai, tool, genai, chatgpt, learn, llm, content, generative_ai, agent, misinformation",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "Generative AI Tools, LLMs and Misinformation",
+      "review_note": "genai, chatgpt, llm, agent and misinformation are all explicit."
+    },
+    {
+      "item": 28,
+      "model": "Random-Search LDA",
+      "topic_id": 2,
+      "words": "controller, system, network, power, control, energy, framework, fuzzy, attack, reinforcement_learn",
+      "ratings": {
+        "A": 3,
+        "B": 3,
+        "C": 3
+      },
+      "mean": 3,
+      "label_verdict": "accept",
+      "final_label": "Power Systems, Fuzzy and Reinforcement Control",
+      "review_note": "fuzzy, reinforcement_learn, controller, power and energy each appear in the top ten."
+    },
+    {
+      "item": 29,
+      "model": "BERTopic",
+      "topic_id": 11,
+      "words": "drug, molecular, inhibitors, cancer, discovery, chemical, ai, compounds, screening, binding",
+      "ratings": {
+        "A": 5,
+        "B": 5,
+        "C": 5
+      },
+      "mean": 5,
+      "label_verdict": "accept",
+      "final_label": "Computational Drug Discovery",
+      "review_note": "drug, molecular, inhibitors, screening, compounds and binding are textbook for this label."
+    },
+    {
+      "item": 30,
+      "model": "Standard LDA",
+      "topic_id": 9,
+      "words": "data, analysis, factor, prediction, construction, performance, predict, control, value, estimate",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "accept",
+      "final_label": "Generic Predictive Analytics (low coherence)",
+      "review_note": "The draft already declines to invent a domain, which is the honest reading of these words."
+    },
+    {
+      "item": 31,
+      "model": "Standard LDA",
+      "topic_id": 3,
+      "words": "resource, data, review, ai, management, engineer, risk, bias, strategy, quality",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "revise",
+      "final_label": "AI Risk, Bias and Resource Management",
+      "review_note": "bias, risk and strategy are present but 'governance' is an inference beyond the words."
+    },
+    {
+      "item": 32,
+      "model": "Random-Search LDA",
+      "topic_id": 0,
+      "words": "disease, patient, one, covid, control, care, time, health, hospital, system",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "accept",
+      "final_label": "COVID-19 and Clinical Care Systems",
+      "review_note": "covid, disease, patient, care, hospital and health support both parts."
+    },
+    {
+      "item": 33,
+      "model": "Standard LDA",
+      "topic_id": 5,
+      "words": "accuracy, area, classification, data, performance, landslide, random_forest, map, machine_learn, nepal",
+      "ratings": {
+        "A": 3,
+        "B": 3,
+        "C": 4
+      },
+      "mean": 3.333,
+      "label_verdict": "revise",
+      "final_label": "Landslide Susceptibility Mapping in Nepal",
+      "review_note": "landslide is the only hazard named, so the specific term beats the vaguer 'geospatial hazard'."
+    },
+    {
+      "item": 34,
+      "model": "BERTopic",
+      "topic_id": 7,
+      "words": "disease, pandemic, health, covid, covid 19, 19, machine, cancer, machine learning, prediction",
+      "ratings": {
+        "A": 3,
+        "B": 3,
+        "C": 3
+      },
+      "mean": 3,
+      "label_verdict": "accept",
+      "final_label": "COVID-19 and Epidemic Modelling",
+      "review_note": "covid, covid 19, pandemic, disease and prediction fit; cancer is a single outlier."
+    },
+    {
+      "item": 35,
+      "model": "GA-Optimized LDA",
+      "topic_id": 6,
+      "words": "image, system, feature, text, detection, accuracy, classification, process, dataset, video",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "revise",
+      "final_label": "Image, Text and Video Recognition",
+      "review_note": "No speech or audio word appears, so 'speech' is fabricated; video and text are the real second modalities."
+    },
+    {
+      "item": 36,
+      "model": "Random-Search LDA",
+      "topic_id": 5,
+      "words": "area, data, accuracy, nepal, prediction, landslide, factor, environmental, region, value",
+      "ratings": {
+        "A": 3,
+        "B": 3,
+        "C": 3
+      },
+      "mean": 3,
+      "label_verdict": "revise",
+      "final_label": "Landslide Prediction in Nepal",
+      "review_note": "landslide, environmental, area and nepal anchor it, but 'mapping' is absent while 'prediction' is present."
+    },
+    {
+      "item": 37,
+      "model": "Random-Search LDA",
+      "topic_id": 1,
+      "words": "data, predict, prediction, performance, analysis, forecast, estimate, construction, accuracy, nepal",
+      "ratings": {
+        "A": 2,
+        "B": 2,
+        "C": 2
+      },
+      "mean": 2,
+      "label_verdict": "reject",
+      "final_label": "Generic Forecasting Vocabulary (low coherence)",
+      "review_note": "Eight of ten words are generic prediction/evaluation terms; construction appears once and infrastructure not at all."
+    },
+    {
+      "item": 38,
+      "model": "BERTopic",
+      "topic_id": 13,
+      "words": "concrete, strength, construction, compressive strength, compressive, cost, model, building, machine, machine learning",
+      "ratings": {
+        "A": 5,
+        "B": 5,
+        "C": 5
+      },
+      "mean": 5,
+      "label_verdict": "revise",
+      "final_label": "Concrete Compressive Strength Prediction",
+      "review_note": "compressive strength is the dominant, explicit signal; 'structural engineering' is broader than the words warrant."
+    },
+    {
+      "item": 39,
+      "model": "BERTopic",
+      "topic_id": 0,
+      "words": "nepali, system, image, language, model, text, recognition, dataset, news, accuracy",
+      "ratings": {
+        "A": 4,
+        "B": 4,
+        "C": 4
+      },
+      "mean": 4,
+      "label_verdict": "revise",
+      "final_label": "Nepali OCR and Text Processing",
+      "review_note": "image and recognition indicate a character/document recognition strand the draft label drops."
+    }
+  ],
+  "label_review": {
+    "accept": 20,
+    "revise": 12,
+    "reject": 7,
+    "by_model": {
+      "BERTopic": {
+        "revise": 5,
+        "accept": 9
+      },
+      "Random-Search LDA": {
+        "accept": 5,
+        "reject": 2,
+        "revise": 1
+      },
+      "Standard LDA": {
+        "reject": 2,
+        "revise": 3,
+        "accept": 5
+      },
+      "GA-Optimized LDA": {
+        "reject": 3,
+        "accept": 1,
+        "revise": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "run_id": "20260905_210554_preprocess",
+  "n_documents": 1074,
+  "cleaning": {
+    "raw_chars": 1707801,
+    "clean_chars": 1692522
+  },
+  "before_phrases": {
+    "n_documents": 1074,
+    "total_tokens": 132565,
+    "unique_types": 9762,
+    "tokens_per_doc": {
+      "min": 24,
+      "median": 117,
+      "max": 760,
+      "mean": 123.4
+    },
+    "empty_documents": 0
+  },
+  "after_phrases": {
+    "n_documents": 1074,
+    "total_tokens": 122959,
+    "unique_types": 10058,
+    "tokens_per_doc": {
+      "min": 21,
+      "median": 108,
+      "max": 739,
+      "mean": 114.5
+    },
+    "empty_documents": 0
+  },
+  "phrase_occurrences": 7863,
+  "dictionary": {
+    "types_before_filter": 10058,
+    "types_after_filter": 3018,
+    "no_below": 5,
+    "no_above": 0.5
+  },
+  "bow": {
+    "non_zero_entries": 73948,
+    "empty_documents": 0
+  },
+  "acronyms": {
+    "configured": [
+      "ai",
+      "ml",
+      "dl",
+      "nlp",
+      "cv",
+      "rl",
+      "llm",
+      "cnn",
+      "rnn",
+      "lstm",
+      "gru",
+      "gan",
+      "gans",
+      "svm",
+      "knn",
+      "bert",
+      "gpt",
+      "xai",
+      "mlp",
+      "dnn",
+      "ann",
+      "nn",
+      "iot",
+      "gis",
+      "ocr",
+      "asr",
+      "tts",
+      "vae",
+      "rag"
+    ],
+    "surviving": [
+      "ai",
+      "ann",
+      "bert",
+      "cnn",
+      "dl",
+      "dnn",
+      "gan",
+      "gis",
+      "gpt",
+      "gru",
+      "iot",
+      "knn",
+      "llm",
+      "lstm",
+      "ml",
+      "mlp",
+      "nlp",
+      "nn",
+      "rnn",
+      "svm",
+      "vae"
+    ]
+  },
+  "final": {
+    "n_documents": 1074,
+    "total_tokens": 122959,
+    "unique_types": 10058,
+    "tokens_per_doc": {
+      "min": 21,
+      "median": 108,
+      "max": 739,
+      "mean": 114.5
+    },
+    "empty_documents": 0,
+    "most_common": [
+      [
+        "data",
+        522
+      ],
+      [
+        "accuracy",
+        397
+      ],
+      [
+        "system",
+        371
+      ],
+      [
+        "performance",
+        361
+      ],
+      [
+        "analysis",
+        345
+      ],
+      [
+        "machine_learn",
+        295
+      ],
+      [
+        "artificial_intelligence",
+        265
+      ],
+      [
+        "ai",
+        253
+      ],
+      [
+        "process",
+        250
+      ],
+      [
+        "application",
+        244
+      ],
+      [
+        "prediction",
+        242
+      ],
+      [
+        "train",
+        241
+      ],
+      [
+        "technology",
+        241
+      ],
+      [
+        "dataset",
+        238
+      ],
+      [
+        "technique",
+        234
+      ],
+      [
+        "image",
+        232
+      ],
+      [
+        "nepal",
+        217
+      ],
+      [
+        "classification",
+        214
+      ],
+      [
+        "predict",
+        209
+      ],
+      [
+        "tool",
+        205
+      ],
+      [
+        "algorithm",
+        204
+      ],
+      [
+        "feature",
+        204
+      ],
+      [
+        "analyze",
+        189
+      ],
+      [
+        "like",
+        189
+      ],
+      [
+        "management",
+        186
+      ]
+    ],
+    "dictionary_size": 3018,
+    "most_common_note": "document frequency, restricted to in-dictionary terms"
+  }
+}
