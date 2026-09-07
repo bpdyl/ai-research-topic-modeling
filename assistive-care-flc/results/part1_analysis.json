@@ -1,0 +1,570 @@
+{
+  "controller": "AssistiveCareRoomFLC",
+  "structure": {
+    "n_rules": 54,
+    "n_params": 81,
+    "chromosome_bits": 648,
+    "layout": [
+      {
+        "variable": "room_temp",
+        "role": "input",
+        "n_params": 17
+      },
+      {
+        "variable": "activity",
+        "role": "input",
+        "n_params": 11
+      },
+      {
+        "variable": "daylight",
+        "role": "input",
+        "n_params": 11
+      },
+      {
+        "variable": "preference",
+        "role": "input",
+        "n_params": 11
+      },
+      {
+        "variable": "hvac",
+        "role": "output",
+        "n_params": 17
+      },
+      {
+        "variable": "dimmer",
+        "role": "output",
+        "n_params": 14
+      }
+    ]
+  },
+  "fam_tables": {
+    "HVAC | preference = Cooler": {
+      "rows": [
+        "Cold",
+        "Cool",
+        "Comfortable",
+        "Warm",
+        "Hot"
+      ],
+      "cols": [
+        "Resting",
+        "Light",
+        "Active"
+      ],
+      "cells": [
+        [
+          "HeatHigh",
+          "HeatLow",
+          "HeatLow"
+        ],
+        [
+          "HeatLow",
+          "Off",
+          "Off"
+        ],
+        [
+          "Off",
+          "CoolLow",
+          "CoolLow"
+        ],
+        [
+          "CoolLow",
+          "CoolHigh",
+          "CoolHigh"
+        ],
+        [
+          "CoolHigh",
+          "CoolHigh",
+          "CoolHigh"
+        ]
+      ]
+    },
+    "HVAC | preference = Neutral": {
+      "rows": [
+        "Cold",
+        "Cool",
+        "Comfortable",
+        "Warm",
+        "Hot"
+      ],
+      "cols": [
+        "Resting",
+        "Light",
+        "Active"
+      ],
+      "cells": [
+        [
+          "HeatHigh",
+          "HeatHigh",
+          "HeatLow"
+        ],
+        [
+          "HeatHigh",
+          "HeatLow",
+          "Off"
+        ],
+        [
+          "HeatLow",
+          "Off",
+          "CoolLow"
+        ],
+        [
+          "Off",
+          "CoolLow",
+          "CoolHigh"
+        ],
+        [
+          "CoolLow",
+          "CoolHigh",
+          "CoolHigh"
+        ]
+      ]
+    },
+    "HVAC | preference = Warmer": {
+      "rows": [
+        "Cold",
+        "Cool",
+        "Comfortable",
+        "Warm",
+        "Hot"
+      ],
+      "cols": [
+        "Resting",
+        "Light",
+        "Active"
+      ],
+      "cells": [
+        [
+          "HeatHigh",
+          "HeatHigh",
+          "HeatHigh"
+        ],
+        [
+          "HeatHigh",
+          "HeatHigh",
+          "HeatLow"
+        ],
+        [
+          "HeatLow",
+          "HeatLow",
+          "Off"
+        ],
+        [
+          "Off",
+          "Off",
+          "CoolLow"
+        ],
+        [
+          "CoolLow",
+          "CoolLow",
+          "CoolHigh"
+        ]
+      ]
+    },
+    "Dimmer": {
+      "rows": [
+        "Dark",
+        "Dim",
+        "Bright"
+      ],
+      "cols": [
+        "Resting",
+        "Light",
+        "Active"
+      ],
+      "cells": [
+        [
+          "Low",
+          "Medium",
+          "High"
+        ],
+        [
+          "Low",
+          "Low",
+          "Medium"
+        ],
+        [
+          "Off",
+          "Off",
+          "Low"
+        ]
+      ]
+    }
+  },
+  "audit": {
+    "grid_points": 70875,
+    "undefined_outputs": 0,
+    "dead_rules": 0,
+    "rules_active_mean": 2.889100529100529,
+    "rules_active_max": 12,
+    "inferences_per_second": 15729.355395838917
+  },
+  "defuzzification": [
+    {
+      "output": "hvac",
+      "method": "centroid",
+      "min": -79.8883572567783,
+      "max": 79.88835725677832,
+      "pct_of_universe": 79.8883572567783
+    },
+    {
+      "output": "hvac",
+      "method": "bisector",
+      "min": -81.24971428571429,
+      "max": 81.24971428571429,
+      "pct_of_universe": 81.24971428571429
+    },
+    {
+      "output": "hvac",
+      "method": "mean_of_maximum",
+      "min": -90.0,
+      "max": 90.00000000000001,
+      "pct_of_universe": 90.0
+    },
+    {
+      "output": "dimmer",
+      "method": "centroid",
+      "min": 7.0,
+      "max": 88.85714285714286,
+      "pct_of_universe": 81.85714285714286
+    },
+    {
+      "output": "dimmer",
+      "method": "bisector",
+      "min": 6.307299270072992,
+      "max": 89.5,
+      "pct_of_universe": 83.19270072992703
+    },
+    {
+      "output": "dimmer",
+      "method": "mean_of_maximum",
+      "min": 2.5,
+      "max": 94.0,
+      "pct_of_universe": 91.5
+    }
+  ],
+  "cog_discrete_vs_trapezoidal": {
+    "hvac": {
+      "trapezoidal": -22.769723640204184,
+      "discrete_sum": -22.769723640204187,
+      "difference": 3.552713678800501e-15
+    },
+    "dimmer": {
+      "trapezoidal": 72.60161964247253,
+      "discrete_sum": 72.65475494411007,
+      "difference": -0.0531353016375391
+    }
+  },
+  "scenarios": {
+    "winter_dawn_resting": {
+      "story": "Winter, before sunrise. Resident still in bed, room has cooled overnight, prefers a warm room.",
+      "inputs": {
+        "room_temp": 17.5,
+        "activity": 0.5,
+        "daylight": 5.0,
+        "preference": 1.5
+      },
+      "memberships": {
+        "room_temp": {
+          "Cold": 0.5,
+          "Cool": 0.2
+        },
+        "activity": {
+          "Resting": 1.0
+        },
+        "daylight": {
+          "Dark": 1.0
+        },
+        "preference": {
+          "Neutral": 0.25,
+          "Warmer": 0.25
+        }
+      },
+      "n_active_rules": 5,
+      "activations": [
+        {
+          "rule": 45,
+          "text": "IF daylight is Dark AND activity is Resting THEN dimmer is Low",
+          "alpha": 1.0
+        },
+        {
+          "rule": 1,
+          "text": "IF room_temp is Cold AND activity is Resting AND preference is Neutral THEN hvac is HeatHigh",
+          "alpha": 0.25
+        },
+        {
+          "rule": 2,
+          "text": "IF room_temp is Cold AND activity is Resting AND preference is Warmer THEN hvac is HeatHigh",
+          "alpha": 0.25
+        },
+        {
+          "rule": 10,
+          "text": "IF room_temp is Cool AND activity is Resting AND preference is Neutral THEN hvac is HeatHigh",
+          "alpha": 0.2
+        },
+        {
+          "rule": 11,
+          "text": "IF room_temp is Cool AND activity is Resting AND preference is Warmer THEN hvac is HeatHigh",
+          "alpha": 0.2
+        }
+      ],
+      "clipped": {
+        "hvac": {
+          "HeatHigh": 0.25
+        },
+        "dimmer": {
+          "Low": 1.0
+        }
+      },
+      "outputs": {
+        "hvac": 74.62403022025569,
+        "dimmer": 29.999999999999996
+      }
+    },
+    "winter_morning_transfer": {
+      "story": "Same morning, resident transferring to the wheelchair -- strenuous work that generates heat, and needs task lighting.",
+      "inputs": {
+        "room_temp": 19.0,
+        "activity": 8.0,
+        "daylight": 18.0,
+        "preference": 1.5
+      },
+      "memberships": {
+        "room_temp": {
+          "Cool": 0.8
+        },
+        "activity": {
+          "Active": 0.75
+        },
+        "daylight": {
+          "Dark": 0.6
+        },
+        "preference": {
+          "Neutral": 0.25,
+          "Warmer": 0.25
+        }
+      },
+      "n_active_rules": 3,
+      "activations": [
+        {
+          "rule": 47,
+          "text": "IF daylight is Dark AND activity is Active THEN dimmer is High",
+          "alpha": 0.6
+        },
+        {
+          "rule": 16,
+          "text": "IF room_temp is Cool AND activity is Active AND preference is Neutral THEN hvac is Off",
+          "alpha": 0.25
+        },
+        {
+          "rule": 17,
+          "text": "IF room_temp is Cool AND activity is Active AND preference is Warmer THEN hvac is HeatLow",
+          "alpha": 0.25
+        }
+      ],
+      "clipped": {
+        "hvac": {
+          "HeatLow": 0.25,
+          "Off": 0.25
+        },
+        "dimmer": {
+          "High": 0.6
+        }
+      },
+      "outputs": {
+        "hvac": 26.28094270621698,
+        "dimmer": 87.50243902439026
+      }
+    },
+    "mild_midday_reading": {
+      "story": "Mild day, resident reading by the window. The room is already comfortable and the daylight is doing the work.",
+      "inputs": {
+        "room_temp": 22.0,
+        "activity": 3.0,
+        "daylight": 72.0,
+        "preference": 0.0
+      },
+      "memberships": {
+        "room_temp": {
+          "Comfortable": 0.75
+        },
+        "activity": {
+          "Resting": 0.25,
+          "Light": 0.2
+        },
+        "daylight": {
+          "Bright": 0.6
+        },
+        "preference": {
+          "Neutral": 1.0
+        }
+      },
+      "n_active_rules": 4,
+      "activations": [
+        {
+          "rule": 19,
+          "text": "IF room_temp is Comfortable AND activity is Resting AND preference is Neutral THEN hvac is HeatLow",
+          "alpha": 0.25
+        },
+        {
+          "rule": 51,
+          "text": "IF daylight is Bright AND activity is Resting THEN dimmer is Off",
+          "alpha": 0.25
+        },
+        {
+          "rule": 22,
+          "text": "IF room_temp is Comfortable AND activity is Light AND preference is Neutral THEN hvac is Off",
+          "alpha": 0.2
+        },
+        {
+          "rule": 52,
+          "text": "IF daylight is Bright AND activity is Light THEN dimmer is Off",
+          "alpha": 0.2
+        }
+      ],
+      "clipped": {
+        "hvac": {
+          "HeatLow": 0.25,
+          "Off": 0.2
+        },
+        "dimmer": {
+          "Off": 0.25
+        }
+      },
+      "outputs": {
+        "hvac": 27.746071166843087,
+        "dimmer": 9.09443095711028
+      }
+    },
+    "summer_afternoon_resting": {
+      "story": "Hot afternoon, resident resting, prefers it cooler. Impaired sweating response makes overheating the live risk.",
+      "inputs": {
+        "room_temp": 29.5,
+        "activity": 1.0,
+        "daylight": 88.0,
+        "preference": -2.5
+      },
+      "memberships": {
+        "room_temp": {
+          "Hot": 1.0
+        },
+        "activity": {
+          "Resting": 1.0
+        },
+        "daylight": {
+          "Bright": 1.0
+        },
+        "preference": {
+          "Cooler": 0.75
+        }
+      },
+      "n_active_rules": 2,
+      "activations": [
+        {
+          "rule": 51,
+          "text": "IF daylight is Bright AND activity is Resting THEN dimmer is Off",
+          "alpha": 1.0
+        },
+        {
+          "rule": 36,
+          "text": "IF room_temp is Hot AND activity is Resting AND preference is Cooler THEN hvac is CoolHigh",
+          "alpha": 0.75
+        }
+      ],
+      "clipped": {
+        "hvac": {
+          "CoolHigh": 0.75
+        },
+        "dimmer": {
+          "Off": 1.0
+        }
+      },
+      "outputs": {
+        "hvac": -78.37631432912127,
+        "dimmer": 7.0
+      }
+    },
+    "evening_active_dim": {
+      "story": "Evening, resident moving about preparing a meal as the light goes.",
+      "inputs": {
+        "room_temp": 21.0,
+        "activity": 7.5,
+        "daylight": 25.0,
+        "preference": 0.0
+      },
+      "memberships": {
+        "room_temp": {
+          "Cool": 0.4,
+          "Comfortable": 0.25
+        },
+        "activity": {
+          "Active": 0.5
+        },
+        "daylight": {
+          "Dark": 0.25,
+          "Dim": 0.2
+        },
+        "preference": {
+          "Neutral": 1.0
+        }
+      },
+      "n_active_rules": 4,
+      "activations": [
+        {
+          "rule": 16,
+          "text": "IF room_temp is Cool AND activity is Active AND preference is Neutral THEN hvac is Off",
+          "alpha": 0.4
+        },
+        {
+          "rule": 25,
+          "text": "IF room_temp is Comfortable AND activity is Active AND preference is Neutral THEN hvac is CoolLow",
+          "alpha": 0.25
+        },
+        {
+          "rule": 47,
+          "text": "IF daylight is Dark AND activity is Active THEN dimmer is High",
+          "alpha": 0.25
+        },
+        {
+          "rule": 50,
+          "text": "IF daylight is Dim AND activity is Active THEN dimmer is Medium",
+          "alpha": 0.2
+        }
+      ],
+      "clipped": {
+        "hvac": {
+          "Off": 0.4,
+          "CoolLow": 0.25
+        },
+        "dimmer": {
+          "Medium": 0.2,
+          "High": 0.25
+        }
+      },
+      "outputs": {
+        "hvac": -22.769723640204184,
+        "dimmer": 72.60161964247253
+      }
+    }
+  },
+  "operational_day": {
+    "hvac_min": -70.97129547350735,
+    "hvac_max": 76.59857833568078,
+    "dimmer_min": 7.0,
+    "dimmer_max": 87.68892867164938,
+    "heating_hours": 12.833333333333334,
+    "cooling_hours": 6.5
+  },
+  "figures": [
+    "figures\\fig01_membership_functions.png",
+    "figures\\fig02_fuzzification_worked.png",
+    "figures\\fig03_rule_activation.png",
+    "figures\\fig04_inference_stages_hvac.png",
+    "figures\\fig05_inference_stages_dimmer.png",
+    "figures\\fig06_surface_hvac_temp_activity.png",
+    "figures\\fig07_surface_hvac_temp_preference.png",
+    "figures\\fig08_surface_dimmer.png",
+    "figures\\fig09_response_hvac_by_activity.png",
+    "figures\\fig10_operational_day.png"
+  ]
+}
