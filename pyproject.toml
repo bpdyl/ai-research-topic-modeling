@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nrtm"
+version = "0.1.0"
+description = "Optimized topic modeling of AI research involving Nepali authors (ST7085CEM Task 1)"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "pandas",
+    "scikit-learn",
+    "matplotlib",
+    "seaborn",
+    "gensim",
+    "nltk",
+    "pyyaml",
+    "wordcloud",
+    "pyLDAvis",
+]
+
+[project.optional-dependencies]
+bertopic = ["bertopic", "sentence-transformers", "umap-learn", "hdbscan", "torch"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# -p no:cacheprovider keeps the repo clean; short tracebacks keep output readable.
+addopts = "-q --tb=short -p no:cacheprovider"

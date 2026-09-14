@@ -1,0 +1,167 @@
+{
+  "experiment": "EXP-008",
+  "run_id": "20260906_112900_random_search_smoke",
+  "seed": 42,
+  "budget_unique_evaluations": 4,
+  "budget_matched_to": "20260905_220137_ga_lda",
+  "search_space": {
+    "k": [
+      5,
+      40
+    ],
+    "alpha": [
+      0.01,
+      1.0
+    ],
+    "eta": [
+      0.01,
+      1.0
+    ]
+  },
+  "fitness_weights": {
+    "coherence": 0.6,
+    "diversity": 0.2,
+    "stability": 0.2
+  },
+  "best_genome": {
+    "k": 6,
+    "alpha": 0.015395,
+    "eta": 0.029196
+  },
+  "best_fitness": 0.48654976271416733,
+  "metrics": {
+    "c_v": 0.4656751005070978,
+    "c_npmi": -0.0024031972758976083,
+    "u_mass": -2.0529476630468966,
+    "diversity": 0.7833333333333333,
+    "mean_pairwise_jaccard": 0.06608187134502924,
+    "perplexity": 252.39201411127573,
+    "num_topics": 6,
+    "stability": 0.3568522264342697
+  },
+  "topics": [
+    [
+      "data",
+      "nepal",
+      "area",
+      "control",
+      "prediction",
+      "patient",
+      "one",
+      "change",
+      "analysis",
+      "region"
+    ],
+    [
+      "feature",
+      "predict",
+      "data",
+      "accuracy",
+      "classification",
+      "dataset",
+      "algorithm",
+      "video",
+      "analysis",
+      "performance"
+    ],
+    [
+      "system",
+      "technology",
+      "news",
+      "application",
+      "risk",
+      "energy",
+      "machine_learn",
+      "framework",
+      "material",
+      "integration"
+    ],
+    [
+      "data",
+      "analysis",
+      "factor",
+      "construction",
+      "power",
+      "performance",
+      "predict",
+      "resource",
+      "optimization",
+      "system"
+    ],
+    [
+      "ai",
+      "student",
+      "tool",
+      "learn",
+      "education",
+      "financial",
+      "technology",
+      "digital",
+      "generative_ai",
+      "human"
+    ],
+    [
+      "image",
+      "detection",
+      "accuracy",
+      "system",
+      "classification",
+      "performance",
+      "dataset",
+      "cnn",
+      "technique",
+      "network"
+    ]
+  ],
+  "history": [
+    {
+      "evaluation": 0,
+      "fitness": 0.480208,
+      "best_so_far": 0.480208,
+      "k": 12,
+      "c_v": 0.484223
+    },
+    {
+      "evaluation": 1,
+      "fitness": 0.418196,
+      "best_so_far": 0.480208,
+      "k": 19,
+      "c_v": 0.452451
+    },
+    {
+      "evaluation": 2,
+      "fitness": 0.335683,
+      "best_so_far": 0.480208,
+      "k": 39,
+      "c_v": 0.404044
+    },
+    {
+      "evaluation": 3,
+      "fitness": 0.48655,
+      "best_so_far": 0.48655,
+      "k": 6,
+      "c_v": 0.465675
+    }
+  ],
+  "evaluator_stats": {
+    "unique_evaluations": 4,
+    "cache_hits": 0,
+    "lda_fits": 12,
+    "cache_size": 4
+  },
+  "elapsed_seconds": 45.0,
+  "ga_comparison": {
+    "ga_run": "20260905_220137_ga_lda",
+    "ga_best_fitness": 0.519581509893294,
+    "ga_metrics": {
+      "c_v": 0.4939554026208733,
+      "c_npmi": 0.011169740917763913,
+      "u_mass": -2.1795882798851673,
+      "diversity": 0.8,
+      "mean_pairwise_jaccard": 0.04711124215768178,
+      "perplexity": 167.79956545069953,
+      "num_topics": 7,
+      "stability": 0.3375277440956344
+    }
+  }
+}

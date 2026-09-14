@@ -1,0 +1,32 @@
+item,top_words,rating_1_to_5,suggested_label,_model,_topic_id
+1,"ai, digital, education, artificial, intelligence, artificial intelligence, students, nepal, tools, learning",,,BERTopic,2
+2,"ai, student, education, tool, learn, financial, generative_ai, technology, skill, influence",,,GA-Optimized LDA,4
+3,"control, nepal, area, data, patient, change, one, controller, forecast, region",,,GA-Optimized LDA,0
+4,"disease, pandemic, health, covid, covid 19, 19, machine, cancer, machine learning, prediction",,,BERTopic,7
+5,"stock, price, market, trading, forecasting, stock market, regularization, strategy, financial, learning",,,BERTopic,10
+6,"text, news, content, nepali, opinion, sentiment, data, information, emotion, review",,,Standard LDA,6
+7,"accuracy, area, classification, data, performance, landslide, random_forest, map, machine_learn, nepal",,,Standard LDA,5
+8,"system, technology, network, framework, artificial_intelligence, security, application, integration, threat, social",,,GA-Optimized LDA,2
+9,"predict, power, data, complex, dynamic, analysis, prediction, performance, network, neural_network",,,GA-Optimized LDA,1
+10,"accuracy, data, performance, classification, prediction, image, detection, dataset, algorithm, technique",,,GA-Optimized LDA,5
+11,"data, analysis, factor, prediction, construction, performance, predict, control, value, estimate",,,Standard LDA,9
+12,"agriculture, yield, crop, nutrient, farming, irrigation, agricultural, technologies, monitoring, management",,,BERTopic,9
+13,"concrete, strength, construction, compressive strength, compressive, cost, model, building, machine, machine learning",,,BERTopic,13
+14,"ai, intelligence, artificial intelligence, artificial, healthcare, health, medical, review, treatment, clinical",,,BERTopic,5
+15,"image, system, feature, text, detection, accuracy, classification, process, dataset, video",,,GA-Optimized LDA,6
+16,"drug, molecular, inhibitors, cancer, discovery, chemical, ai, compounds, screening, binding",,,BERTopic,11
+17,"predict, interaction, complex, dynamic, prediction, robot, stock_market, data, value, graph",,,Standard LDA,1
+18,"data, factor, analysis, construction, resource, quality, automate, risk, human, index",,,GA-Optimized LDA,3
+19,"water, data, forest, machine, land, machine learning, learning, model, nepal, area",,,BERTopic,1
+20,"system, network, power, material, framework, attack, reinforcement_learn, security, controller, detection",,,Standard LDA,2
+21,"nepali, system, image, language, model, text, recognition, dataset, news, accuracy",,,BERTopic,0
+22,"images, cancer, model, segmentation, deep, deep learning, image, learning, accuracy, detection",,,BERTopic,4
+23,"lattice, materials, properties, material, machine learning, machine, features, learning, predicting, parameters",,,BERTopic,12
+24,"ai, student, education, tool, learn, financial, technology, digital, generative_ai, skill",,,Standard LDA,4
+25,"power, energy, system, network, wind, grid, demand, neural, neural network, control",,,BERTopic,8
+26,"patient, care, ai, hospital, one, difference, misinformation, baseline, chatgpt, technology",,,Standard LDA,7
+27,"image, system, detection, feature, accuracy, dataset, classification, cnn, train, performance",,,Standard LDA,8
+28,"detection, models, leaf, learning, accuracy, deep, model, deep learning, disease, classification",,,BERTopic,6
+29,"control, change, controller, area, disease, covid, vegetation, forest, load, analysis",,,Standard LDA,0
+30,"resource, data, review, ai, management, engineer, risk, bias, strategy, quality",,,Standard LDA,3
+31,"detection, learning, network, security, data, attacks, machine, cybersecurity, machine learning, cloud",,,BERTopic,3

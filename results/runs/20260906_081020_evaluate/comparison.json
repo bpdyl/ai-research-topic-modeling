@@ -1,0 +1,76 @@
+{
+  "experiment": "EXP-004",
+  "run_id": "20260906_081020_evaluate",
+  "models": {
+    "Standard LDA": "20260905_231154_lda_baseline",
+    "GA-Optimized LDA": "20260905_220137_ga_lda",
+    "BERTopic": "20260906_080709_bertopic"
+  },
+  "table": [
+    {
+      "metric": "Topics (K)",
+      "key": "num_topics",
+      "Standard LDA": 10,
+      "GA-Optimized LDA": 7,
+      "BERTopic": 14
+    },
+    {
+      "metric": "Coherence C_v",
+      "key": "c_v",
+      "Standard LDA": 0.44834087237962594,
+      "GA-Optimized LDA": 0.4939554026208733,
+      "BERTopic": 0.510662288328588
+    },
+    {
+      "metric": "Coherence c_npmi",
+      "key": "c_npmi",
+      "Standard LDA": -0.022960628064676213,
+      "GA-Optimized LDA": 0.011169740917763913,
+      "BERTopic": -0.030021408961148247
+    },
+    {
+      "metric": "Coherence u_mass",
+      "key": "u_mass",
+      "Standard LDA": -3.3585721298803692,
+      "GA-Optimized LDA": -2.1795882798851673,
+      "BERTopic": -3.4444454525883152
+    },
+    {
+      "metric": "Topic diversity",
+      "key": "diversity",
+      "Standard LDA": 0.79,
+      "GA-Optimized LDA": 0.8,
+      "BERTopic": 0.7285714285714285
+    },
+    {
+      "metric": "Mean pairwise Jaccard",
+      "key": "mean_pairwise_jaccard",
+      "Standard LDA": 0.03585789091465046,
+      "GA-Optimized LDA": 0.04711124215768178,
+      "BERTopic": 0.04707227020362801
+    },
+    {
+      "metric": "Stability (3 seeds)",
+      "key": "stability",
+      "Standard LDA": 0.25264748724501046,
+      "GA-Optimized LDA": 0.3375277440956344,
+      "BERTopic": 0.8418169132454847
+    },
+    {
+      "metric": "Perplexity",
+      "key": "perplexity",
+      "Standard LDA": 172.13745962210817,
+      "GA-Optimized LDA": 167.79956545069953,
+      "BERTopic": null
+    },
+    {
+      "metric": "Unmodelled documents",
+      "key": "outlier_fraction",
+      "Standard LDA": null,
+      "GA-Optimized LDA": null,
+      "BERTopic": 0.1713221601489758
+    }
+  ],
+  "n_topics_to_rate": 31,
+  "interpretability_status": "PENDING — requires 3 human raters (OQ-012)"
+}

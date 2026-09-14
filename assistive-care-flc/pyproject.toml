@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acflc"
+version = "0.1.0"
+description = "Fuzzy logic controller for an assistive-care flat, with GA tuning and a CEC'2005 optimiser comparison (ST7085CEM Task 2)"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+# scikit-fuzzy is the independent oracle for the hand-written Mamdani
+# engine; it is never imported by the package itself.
+dev = ["pytest", "scikit-fuzzy"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q --tb=short -p no:cacheprovider -W ignore::DeprecationWarning"

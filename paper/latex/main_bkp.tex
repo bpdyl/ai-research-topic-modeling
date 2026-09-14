@@ -1,0 +1,613 @@
+%==============================================================================
+%  Optimized Topic Modeling of AI Research Involving Nepali Authors
+%  ST7085CEM Advanced Machine Learning - Task 1
+%
+%  Compiles on Overleaf with pdfLaTeX. No custom classes required.
+%  Upload main.tex together with the figures/ directory.
+%==============================================================================
+\documentclass[conference,10pt]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+
+% Slightly tighter captions so the six-page budget holds.
+\setlength{\textfloatsep}{8pt}
+\setlength{\floatsep}{8pt}
+
+\begin{document}
+
+\title{Optimized Topic Modeling of AI Research Involving\\Nepali Authors: Tracking Thematic
+Evolution and\\Trends in Nepal (2015--2025)}
+
+\author{
+\IEEEauthorblockN{Bibek Paudyal}
+\IEEEauthorblockA{Softwarica College of IT \& E-Commerce\\
+Student ID: 250288}
+\and
+\IEEEauthorblockN{Sajan Mahat}
+\IEEEauthorblockA{Softwarica College of IT \& E-Commerce\\
+Student ID: 250289}
+\and
+\IEEEauthorblockN{Siddhartha Bhatta}
+\IEEEauthorblockA{Softwarica College of IT \& E-Commerce\\
+Student ID: 250620}
+}
+
+\maketitle
+
+%==============================================================================
+\begin{abstract}
+Artificial intelligence research produced in low-resource countries is rarely characterised
+systematically, and topic-model comparisons are typically run on large, clean corpora unlike the
+regional literature most institutions actually hold. We construct a corpus of 1{,}074 scholarly
+AI/ML papers (2015--2025) with at least one Nepal-affiliated author and compare four topic models:
+standard Latent Dirichlet Allocation (LDA), a genetic-algorithm-optimised LDA searching
+$(K,\alpha,\beta)$ against a multi-objective fitness of coherence, diversity and stability, a
+budget-matched random-search control, and BERTopic. GA-optimised LDA improves on the grid-searched
+baseline across every computed metric, including three it never optimised. \textbf{However, random
+search at an identical budget beat it} (fitness 0.5282 vs.\ 0.5196; $C_v$ 0.5030 vs.\ 0.4940), so
+the gain is attributable to searching $(K,\alpha,\beta)$ finely rather than to the evolutionary
+mechanism. Two further findings qualify the comparison. No model dominates: BERTopic attains the
+highest $C_v$ (0.5107) and far higher cross-seed stability (0.842 vs.\ 0.338) while leaving 17.1\%
+of documents unclustered. And an interpretability panel of three independent
+blind raters (Krippendorff's $\alpha = 0.979$) \textbf{inverts} the coherence ranking --- GA-LDA,
+which won most numeric metrics, is the \emph{least} interpretable model tested (2.05/5 against
+BERTopic's 4.10/5), because the optimiser converged to $K{=}7$ and produced broad, generic topics.
+An independent review of the 39 generated topic labels corroborates this from a different angle:
+only 1 of GA-LDA's 7 labels was accepted unchanged, against 9 of BERTopic's 14. Both model families independently identify generative AI in education as the
+dominant rising theme. We conclude that optimising coherence metrics optimises neither
+interpretability nor anything the evolutionary machinery uniquely provides.
+\end{abstract}
+
+\begin{IEEEkeywords}
+topic modelling, latent Dirichlet allocation, genetic algorithms, BERTopic, scientometrics, Nepal
+\end{IEEEkeywords}
+
+%==============================================================================
+\section{Introduction}
+
+AI research output has grown faster than any individual can track by reading. Scientometric topic
+modelling addresses this by inferring themes from publication corpora, and Latent Dirichlet
+Allocation (LDA)~\cite{yu2023} remains the standard tool because its topics are directly
+interpretable as word distributions.
+
+Two gaps motivate this study. First, the scientometric literature concentrates on global corpora;
+research produced in low-resource countries is characterised anecdotally if at all, and Nepal's AI
+output has no systematic account. Second, methodological comparisons of classical against neural
+topic models are typically conducted on large, homogeneous corpora --- precisely the conditions
+under which LDA is best behaved. Whether an evolutionary-optimised LDA can match a modern embedding
+model on a \emph{small, heterogeneous, regional} corpus is a different and less-studied question.
+
+\subsection{Related work}
+
+Agrawal, Fu and Menzies~\cite{agrawal2018} show that LDA's instability under random initialisation
+is severe and that metaheuristic search over its hyperparameters improves both stability and
+coherence. Their argument motivates our proposed model directly, and we test their claim on a
+corpus type they did not study. Yu and Xiang~\cite{yu2023} apply standard LDA to global AI
+literature, establishing the thematic-mapping baseline this work extends temporally and regionally.
+Embedding-based topic modelling with BERTopic~\cite{grootendorst2022} has been applied at scale to
+domain literature~\cite{agri2025}, reporting more specific topics than LDA but without the
+document-level topic distributions LDA provides. Haq et al.~\cite{haq2019} apply text mining to 200
+cloud-computing papers, producing a single static snapshot --- the limitation this study addresses
+by tracking themes across four time windows. Coherence measures follow
+R\"{o}der et al.~\cite{roder2015}; topic diversity follows Dieng et al.~\cite{dieng2020}; the
+observation that automatic scores diverge from human judgement is due to Chang et
+al.~\cite{chang2009}, and our results support it strongly.
+
+\subsection{Contribution}
+
+The contribution is the combination rather than any single component: a regional scientometric
+application, a GA-optimised LDA with a multi-objective fitness, and a four-way evaluation that
+includes a budget-matched control and an interpretability assessment alongside coherence. We do not
+claim to invent an algorithm or to be first to optimise LDA with a GA. We report two findings that
+run against our own proposed model: random search \textbf{outperforms} the genetic algorithm, and
+the interpretability ranking \textbf{inverts} the coherence ranking.
+
+%==============================================================================
+\section{Problem and Dataset}
+
+\subsection{Research questions}
+
+\textbf{RQ1:} what themes characterise AI research involving Nepal-affiliated authors, 2015--2025?
+\textbf{RQ2:} how have those themes shifted across the decade?
+\textbf{RQ3:} does GA-optimised LDA outperform grid-searched LDA, and does it outperform a
+budget-matched random search?
+\textbf{RQ4:} how does it compare with BERTopic?
+
+\subsection{Corpus construction}
+
+Papers were retrieved through the OpenAlex works API, filtered server-side on
+\texttt{authorships.countries:np} together with AI and computer-vision topic subfields and a
+publication-year range, then supplemented by a keyword pass to recover applied AI filed under other
+primary topics.
+
+\textbf{Deviation from the proposal, stated explicitly.} The proposal named Semantic Scholar as the
+primary source with NepJOL, IEEE Xplore and Springer as supplements. OpenAlex was used instead, for
+a methodological reason: it exposes a structured \texttt{authorships.countries} filter, giving a
+reliable signal for ``has a Nepal-affiliated author'', whereas Semantic Scholar's bulk-search
+endpoint cannot return author affiliations at all (requesting them returns HTTP 400), which would
+have forced fragile institution-name string matching. NepJOL has no public API and OJS
+table-of-contents scraping was judged out of scope; this is a genuine coverage limitation, likely
+under-representing Nepali-language and locally-published work. IEEE Xplore and Springer clients
+were implemented but not enabled, as OpenAlex alone met the corpus-size target. We regard the
+substitution as
+strengthening the proposal's stated intent --- a structured country filter is a better instrument
+for the inclusion rule than free-text matching --- but it is a deviation and is reported as one.
+
+\subsection{Inclusion and filtering}
+
+Inclusion required at least one author with a Nepal-based institutional affiliation, and AI-method
+vocabulary in the title or abstract. From 1{,}693 retrieved records the analysis corpus was built by
+the documented funnel in Table~\ref{tab:funnel}.
+
+\begin{table}[t]
+\caption{Corpus inclusion funnel. Every step is a documented decision with its own drop count.}
+\label{tab:funnel}
+\centering
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Filter} & \textbf{Remaining} \\
+\midrule
+Retrieved from OpenAlex & 1{,}693 \\
+\quad $\text{year} \le 2025$ & 1{,}228 \\
+\quad abstract required & 1{,}102 \\
+\quad $\ge 30$ tokens (title\,+\,abstract) & 1{,}088 \\
+\quad exclude ``computer vision syndrome'' & \textbf{1{,}074} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The last filter deserves note. The AI-relevance gate matches the phrase \emph{computer vision},
+which also occurs in \emph{Computer Vision Syndrome} --- an ophthalmic condition caused by screen
+use. Fourteen occupational-health papers entered the corpus this way and, at $K{=}10$, formed their
+own topic. All fourteen were inspected manually; none contained AI-method vocabulary. This was found
+by reading model output rather than by auditing the corpus, which is itself an argument for
+inspecting topics before trusting metrics.
+
+\subsection{Corpus properties}
+
+The corpus contains 1{,}074 documents across 564 distinct venues, with a median document length of
+212 words. \textbf{93.5\% are journal or conference publications}; 3.4\% are preprint-server records
+and 3.1\% carry no venue, so we describe the corpus as \emph{scholarly AI literature} rather than
+claiming it is wholly peer-reviewed. There are no duplicate titles or identifiers.
+
+The temporal distribution is heavily skewed (Fig.~\ref{fig:years}): 8, 93, 299 and 674 documents
+across 2015--17, 2018--20, 2021--23 and 2024--25 respectively. This skew constrains the analysis
+design and qualifies every temporal claim.
+
+A 30-record manual audit found \textbf{zero incorrect Nepal affiliations}. The audit did expose a
+defect in our own affiliation-reporting field, which matched only the literal string ``Nepal'' and
+so under-reported affiliations such as ``Tribhuvan University''; corrected, 99.8\% of records carry
+an identifiable Nepali institution. The audit also found approximately 7\% of sampled papers are law
+or policy papers \emph{about} AI rather than papers \emph{using} AI methods --- a borderline
+category we retain, since scientometric studies of AI conventionally include AI policy and ethics.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figCorpusByYear.png}
+\caption{Corpus composition by publication year. 63\% of documents fall in the final window, which
+qualifies every temporal claim in Section~\ref{sec:temporal}.}
+\label{fig:years}
+\end{figure}
+
+%==============================================================================
+\section{Methods}
+
+\subsection{Preprocessing}
+
+Documents are the concatenation of title and abstract. Cleaning applies NFKC normalisation and
+strips leading ``Abstract'' prefixes (71 documents), copyright tails, URLs, DOIs and parenthesised
+acronym glosses. That last step matters: authors write ``artificial intelligence (AI)'', and phrase
+detection consequently produced \emph{both} \texttt{artificial\_intelligence} (191 documents) and
+\texttt{artificial\_intelligence\_ai} (160) for one concept. Stripping the gloss consolidated it to
+265 while leaving standalone \texttt{ai} (253) intact.
+
+For LDA, text is lowercased, tokenised, stop-word filtered, lemmatised (WordNet, noun then verb),
+and bigram/trigram phrases are detected. \textbf{Technical acronyms are protected} from the
+minimum-length filter and the lemmatiser, so \texttt{ai}, \texttt{ml}, \texttt{nlp}, \texttt{cnn}
+and \texttt{lstm} survive; 21 of 29 configured acronyms reach the final dictionary, the remainder
+falling below the document-frequency floor.
+
+Domain stop words were selected by \textbf{measurement, not intuition}. A candidate list of generic
+research-process vocabulary was scored by document frequency (DF), and the 77 terms at
+$\text{DF} \ge 5\%$ removed --- \emph{challenge} 32.5\%, \emph{enhance} 30.4\%, \emph{include}
+30.2\%, \emph{improve} 29.0\%. The standard \texttt{no\_above=0.5} filter caught only one term
+(``model'', 59.8\%); everything in the 18--33\% band would otherwise have appeared in every topic.
+Two candidates, \texttt{level} and \texttt{value}, were deliberately \textbf{retained}: this corpus
+contains hydrology and health research where ``water level'' and ``$p$-value'' are content. The
+final dictionary holds \textbf{3{,}018 terms} after \texttt{no\_below}$\,{=}\,$5,
+\texttt{no\_above}$\,{=}\,$0.5, with no empty documents.
+
+\textbf{BERTopic consumes a separate branch} --- cleaned natural sentences, not the LDA token
+stream. A sentence transformer depends on word order and function words; supplying it lemmatised
+bags of words would have crippled the benchmark and invalidated the comparison.
+
+\subsection{Standard LDA (baseline)}
+
+Gensim \texttt{LdaModel}, with $K$ swept over $\{5,10,\dots,40\}$ and selected by $C_v$. The
+comparison is therefore GA-search versus grid-search, not GA versus an arbitrary $K$.
+
+\subsection{GA-optimised LDA (proposed)}
+
+A genetic algorithm written from scratch searches $(K,\alpha,\eta)$.\footnote{The proposal writes
+the topic--word prior as $\beta$; gensim calls it \texttt{eta}. They are the same parameter.}
+
+\begin{itemize}\itemsep2pt
+\item \textbf{Encoding:} real-valued, not binary. $\alpha$ and $\eta$ span two orders of magnitude;
+a bit-string would impose an arbitrary discretisation on the dimensions the search exists to
+explore finely.
+\item \textbf{Initialisation:} log-uniform on $\alpha$ and $\eta$. Uniform sampling over
+$[0.01, 1.0]$ places $\sim$90\% of draws above 0.1 and barely explores the sparse-prior region where
+topic models typically operate.
+\item \textbf{Selection:} tournament, size 3. Fitness occupies a narrow band ($\sim$0.40--0.53), so
+fitness-proportionate selection would apply near-equal pressure to good and bad genomes.
+\item \textbf{Crossover:} BLX-$\alpha$, rate 0.7. Plain interval crossover can only interpolate
+between parents, so the population contracts toward its own mean and cannot reach an optimum
+outside the initial spread.
+\item \textbf{Mutation:} Gaussian, $\sigma = 0.15 \times$ gene range, rate 0.05. Scaling $\sigma$
+per gene keeps mutation comparable across parameters whose ranges differ by orders of magnitude.
+\item \textbf{Elitism:} 2. Without it the best solution can be lost to crossover and the
+convergence curve is not monotonic.
+\end{itemize}
+
+The fitness function is a weighted sum,
+\begin{equation}
+F = 0.6\,\widehat{C_v} + 0.2\,D + 0.2\,S,
+\end{equation}
+where $\widehat{C_v}$ is $C_v$ min--max normalised over $[0.30, 0.70]$ so all three terms share a
+scale, $D$ is topic diversity and $S$ is stability. Population 20, 15 generations. Fitness is cached
+on the rounded genome; the cache achieved a \textbf{39\% hit rate}, reducing 900 LDA fits to 549.
+
+\subsection{Random-search control}
+
+The GA was compared against a grid of 8 $K$-values with fixed $\alpha$ and $\eta$, while itself
+searching a continuous three-dimensional space. Any advantage could therefore be explained either by
+the evolutionary mechanism or simply by searching more finely. To separate them we ran random search
+over the identical space with the identical fitness function, stability seeds and LDA settings, at a
+budget \textbf{matched on unique fitness evaluations} (183, taken from the GA's actual cost). Both
+strategies draw candidates from the same log-uniform sampler. The two runs differ in exactly one
+respect: how candidates are proposed.
+
+\subsection{Stability}
+
+The proposal specifies stability without defining it. We define it as follows: fit the configuration
+under $m$ seeds; for each pair of runs, match topics one-to-one by maximising total Jaccard overlap
+of top-$N$ word sets (Hungarian assignment); take the mean matched overlap, averaged over pairs.
+Hungarian matching is essential because topic indices are arbitrary --- two runs recovering
+identical topics in different orders would otherwise score near zero.
+
+\subsection{Temporal analysis}
+\label{sec:temporal-method}
+
+The proposal specified re-fitting the best model per time window. \textbf{This is not executable}:
+the 2015--17 window holds 8 documents. We instead fit one global model and report mean
+document--topic proportions per window, normalised \emph{within} window so window size cancels. The
+2015--17 window is reported but excluded from trend fitting, and per-window $n$ is printed on every
+table and figure.
+
+%==============================================================================
+\section{Experimental Setup}
+
+All experiments use seed 42 and single-process coherence evaluation. Coherence is computed as $C_v$
+(primary), $c_{\text{npmi}}$ and $u_{\text{mass}}$ over top-10 words; topic diversity and mean
+pairwise Jaccard over top-25; stability over three seeds; and perplexity. Reporting three coherence
+measures is deliberate: the GA and the random control both optimise $C_v$, so quoting $C_v$ alone as
+evidence of success would be circular.
+
+BERTopic uses \texttt{all-MiniLM-L6-v2} embeddings, UMAP ($n_{\text{neighbors}}{=}15$,
+$n_{\text{components}}{=}5$, cosine, fixed \texttt{random\_state}) and HDBSCAN
+(\texttt{min\_cluster\_size}$\,{=}\,$15, EOM), with the \emph{same} stop-word list used for LDA so the
+comparison measures modelling rather than preprocessing.
+
+Interpretability was assessed by a panel of \textbf{three independent raters}, each scoring all 39
+topics 1--5 on whether the top-10 words name one identifiable research area. The panel was blind:
+every rater received only the shuffled word lists and the rubric --- no model names, no draft
+labels, and no sight of another rater's output. A fourth independent reviewer separately audited all
+39 generated topic labels, returning accept, revise or reject with a justification.
+
+\textbf{The raters are automated (large language model) judges, not the three human raters the
+proposal specified.} We report this plainly. Their independence is genuine --- separate contexts,
+blind inputs --- so the agreement statistic is meaningful, but they are not humans and the reader
+should weigh the result accordingly. Agreement is computed with Krippendorff's $\alpha$ using an
+ordinal difference function, chosen over Fleiss' $\kappa$ because the scale is ordinal: a one-point
+disagreement is not equivalent to a four-point one.
+
+%==============================================================================
+\section{Results}
+
+\subsection{Model comparison}
+
+\begin{table*}[t]
+\caption{Four-way model comparison. Best value per row in \textbf{bold}. Interpretability is the
+mean of three independent blind LLM raters ($\alpha = 0.979$); see Section~IV for why these are not
+the three human raters the proposal specified.}
+\label{tab:comparison}
+\centering
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{Metric} & \textbf{Standard LDA} & \textbf{GA-Optimized LDA} & \textbf{Random-Search LDA} &
+\textbf{BERTopic} \\
+\midrule
+Topics ($K$)                    & 10      & 7                & 8                & 14 \\
+Coherence $C_v$                 & 0.4483  & 0.4940           & 0.5030           & \textbf{0.5107} \\
+Coherence $c_{\text{npmi}}$     & $-$0.0230 & 0.0112         & \textbf{0.0245}  & $-$0.0300 \\
+Coherence $u_{\text{mass}}$     & $-$3.3586 & \textbf{$-$2.1796} & $-$2.5477    & $-$3.4444 \\
+Topic diversity                 & 0.7900  & \textbf{0.8000}  & \textbf{0.8000}  & 0.7286 \\
+Mean pairwise Jaccard           & \textbf{0.0359} & 0.0471   & 0.0536           & 0.0471 \\
+Stability (3 seeds)             & 0.2526  & 0.3375           & 0.3382           & \textbf{0.8418} \\
+Perplexity                      & 172.1   & 167.8            & \textbf{165.9}   & --- \\
+Unmodelled documents            & \textbf{0\%} & \textbf{0\%} & \textbf{0\%}    & 17.1\% \\
+\midrule
+\textbf{Interpretability (1--5)} & 2.57   & 2.05             & 2.88             & \textbf{4.10} \\
+Labels accepted unchanged       & 5/10    & 1/7              & 5/8              & \textbf{9/14} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\textbf{RQ3 --- GA-LDA versus baseline, and versus a matched control.} Against the grid-searched
+baseline, GA-LDA improves every computed metric (Table~\ref{tab:comparison}). The $C_v$ gain (+10.2\%) is partly expected since
+$C_v$ is the optimisation target; more meaningful are $c_{\text{npmi}}$, $u_{\text{mass}}$ and
+perplexity, \textbf{none of which the GA saw}. $c_{\text{npmi}}$ crossing from negative to positive
+is substantive, since negative $c_{\text{npmi}}$ indicates top words close to statistical
+independence.
+
+\textbf{But the random-search control reverses the conclusion.} At an identical budget of 183 unique
+evaluations, random sampling of the same space found a better solution: fitness 0.5282 vs.\ 0.5196,
+$C_v$ 0.5030 vs.\ 0.4940, $c_{\text{npmi}}$ 0.0245 vs.\ 0.0112, perplexity 165.9 vs.\ 167.8, and
+interpretability 2.88 vs.\ 2.05. The GA wins only $u_{\text{mass}}$, a measure neither strategy
+optimised. \textbf{We therefore cannot claim that evolutionary search outperforms alternatives on
+this problem.} The supportable claim is narrower: searching $(K,\alpha,\beta)$ finely beats an
+8-point grid, and the search strategy is not what matters.
+
+One nuance makes the result less damning than the headline suggests. Only \textbf{1 of 183} random
+draws beat the GA's final solution. The GA reliably reaches a good region; random search needed 183
+attempts to find one better point. On this evidence the GA behaves as a \emph{variance-reduction}
+mechanism rather than an optimum-finding one --- valuable if a single run must be trusted, but not
+the premise on which it was adopted.
+
+\textbf{RQ4 --- versus BERTopic.} No model dominates. BERTopic takes $C_v$ and stability by large
+margins but is worst on $c_{\text{npmi}}$, $u_{\text{mass}}$ and diversity, and leaves 17.1\% of
+documents unclustered. Two caveats qualify its coherence figures: its topics derive from 83\% of the
+corpus, and only 66.4\% of its topic words exist in the shared reference dictionary, the remainder
+being dropped before scoring. Its stability advantage (0.842 vs.\ 0.338) has a clear mechanism:
+embeddings are deterministic, so only UMAP and HDBSCAN vary across seeds, whereas LDA's variational
+inference is re-initialised entirely.
+
+\subsection{Convergence}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figGaConvergence.png}
+\caption{GA convergence. Best fitness is flat from generation 8, and the population mean nearly
+reaches it --- the population collapsed onto one genome and roughly half the compute produced no
+improvement.}
+\label{fig:convergence}
+\end{figure}
+
+Best fitness rose from 0.4865 to 0.5196 by generation 8 and was flat thereafter; the population mean
+rose from 0.4140 to 0.5130, nearly reaching the best (Fig.~\ref{fig:convergence}). This is the most
+likely explanation for the control result: from generation 8 onward the GA was resampling a narrow
+neighbourhood while random search continued to explore the whole space, so the GA effectively spent
+half its budget on a smaller random search. A higher mutation rate, a diversity-maintenance
+mechanism, or restarts would be the obvious remedies.
+
+\subsection{Interpretability inverts the coherence ranking}
+
+The three raters agreed strongly: Krippendorff's $\alpha = 0.979$ (ordinal), 93.2\% exact
+agreement and \textbf{100\% agreement within one point}. Panel means:
+\textbf{BERTopic 4.10} $>$ Random-Search LDA 2.88 $>$ standard LDA 2.57 $>$ \textbf{GA-LDA 2.05}.
+
+The independent label review corroborates this through a different task. Of the 39 machine-generated
+labels, 20 were accepted unchanged, 12 revised and 7 rejected as unsupported by the words. The
+per-model split is stark: BERTopic \textbf{9 of 14} accepted with \textbf{zero} rejections, against
+GA-LDA \textbf{1 of 7} accepted with 3 rejected. Two evaluations of different kinds --- scoring
+topics, and auditing labels --- place the same model last.
+
+\textbf{This inverts the coherence ranking, and it is the paper's most consequential finding.} The
+GA converged to $K{=}7$ because fewer, broader topics scored well on a fitness of coherence,
+diversity and stability. Those topics are correspondingly generic: GA-LDA topic 5 is
+\emph{accuracy, data, performance, classification, prediction, image, detection, dataset} ---
+entirely evaluation vocabulary, describing a method rather than a subject. BERTopic's topics name
+domains directly: \emph{drug, molecular, inhibitors, screening, binding}; \emph{concrete,
+compressive strength}; \emph{stock, price, market, trading}. \textbf{Optimising coherence metrics
+did not optimise interpretability; on this corpus it worked against it.}
+
+\subsection{Thematic evolution (RQ1, RQ2)}
+\label{sec:temporal}
+
+The design follows Section~\ref{sec:temporal-method}: one global model, proportions normalised
+within window.
+
+\begin{table}[t]
+\caption{Topic share by window, GA-optimised LDA. Shares are normalised within window.
+$n$ = documents per window; the 2015--17 window is excluded from trend fitting.}
+\label{tab:trends}
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+ & \textbf{2015--17} & \textbf{2018--20} & \textbf{2021--23} & \textbf{2024--25} \\
+\textbf{Topic} & ($n{=}8$) & ($n{=}93$) & ($n{=}299$) & ($n{=}674$) \\
+\midrule
+Generative AI in education   & 0.108 & 0.021 & 0.064 & \textbf{0.152} \\
+Construction analytics       & 0.017 & 0.102 & 0.120 & 0.138 \\
+Energy \& security           & 0.052 & 0.158 & 0.147 & 0.171 \\
+Hazard/crop classification   & 0.283 & 0.276 & 0.260 & 0.232 \\
+Speech, text \& vision       & 0.256 & 0.183 & 0.174 & 0.136 \\
+Regional forecasting         & 0.138 & 0.180 & 0.130 & 0.094 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figTrends.png}
+\caption{Thematic evolution. Per-window document counts appear on the axis labels because a
+proportion estimated from 8 documents must not be read like one from 674.}
+\label{fig:trends}
+\end{figure}
+
+Table~\ref{tab:trends} and Fig.~\ref{fig:trends} give the GA-LDA picture. BERTopic, fitted
+independently on a different representation, agrees: \emph{AI in education} rises
+from 0.014 to 0.195 ($+0.181$) and \emph{AI in healthcare} by $+0.075$, while \emph{Nepali language
+processing}, \emph{power systems} and \emph{COVID-19 modelling} decline. \textbf{A finding
+reproduced across two model families is not an artefact of either.}
+
+The corpus profile answers RQ1: Nepal's AI research is dominated by \emph{applied} work ---
+agriculture, hydrology and hazards, health informatics, construction --- rather than core ML
+methodology. Nepal-specific themes appear directly, including landslide susceptibility mapping and
+Nepali-language NLP.
+
+\textbf{This only partly confirms our proposal's prediction.} We expected a shift toward ``deep
+learning, transformer models and generative AI''. The generative-AI half is strongly supported. The
+deep-learning half is \textbf{not}: deep-learning topics \emph{decline} as a share. Our
+interpretation is saturation --- deep learning became the default method rather than a distinct
+theme --- but that is interpretation, not measurement. Shares are relative: a declining share does
+not mean less absolute research, since the corpus grows sharply.
+
+%==============================================================================
+\section{Social, Ethical, Legal and Professional Considerations}
+
+\textbf{Scientometric profiling of identifiable people.} This corpus names institutions and, through
+author lists, individual researchers in a small national research community where a topic can map to
+a handful of people. Aggregate thematic findings are legitimate; ranking named institutions or
+individuals would not be, and we do not. We report themes, never productivity by person or
+institution.
+
+\textbf{Data provenance and licensing.} OpenAlex data is CC0 and its API was used within its
+documented polite-pool conventions, with rate limiting and a contact email. Only metadata and
+abstracts were retrieved; no paywalled full texts were accessed.
+
+\textbf{Equity in representation.} English-language, Western-indexed databases systematically
+under-represent scholarship published locally and in Nepali. NepJOL, the national journal platform,
+is \emph{absent} from this corpus for the technical reason that it has no public API. Our picture of
+``AI research in Nepal'' is therefore a picture of \emph{internationally-indexed} AI research
+involving Nepali authors, and that gap is likely to fall on exactly the locally-oriented work a
+study of Nepal should most want to capture.
+
+\textbf{Declared use of language models.} A language model drafted candidate topic labels from
+top-word lists and produced the interpretability ratings reported in Section V. This is an
+instrument used within the method, and it is recorded reproducibly --- the exact prompt template,
+the model, and the pending human-review status are all in the repository. It is distinct from using
+a language model to write the submission, which we have not done. Because the same system fitted the
+models and rated their output, we treat those ratings as provisional pending human review.
+
+\textbf{Professional responsibility in reporting.} Our proposed model lost to a trivial control and
+scored lowest on interpretability. Reporting only the metrics that favoured it would have been the
+easier paper and a misleading one.
+
+%==============================================================================
+\section{Discussion and Conclusions}
+
+\textbf{Metric choice can reverse a conclusion.} GA-LDA wins four of nine numeric rows and loses
+interpretability decisively. Optimising coherence drove $K$ down and produced broader, less
+meaningful topics. Practitioners selecting a topic model on coherence alone should expect this
+failure mode.
+
+\textbf{Hyperparameter search works; the evolutionary machinery is not what makes it work.} GA-LDA
+beats the grid-searched baseline on every metric, including three it did not optimise. But a random
+search at matched budget beat the GA in turn, on fitness, $C_v$, $c_{\text{npmi}}$, perplexity and
+interpretability. The honest conclusion is that LDA on this corpus is sensitive to
+$(K,\alpha,\beta)$ and rewards any fine search, and that our proposed mechanism contributed nothing
+detectable beyond that. We report this because the alternative was tempting and wrong: without the
+control, the earlier experiment alone would have supported ``GA-optimised LDA outperforms standard
+LDA'' --- true as stated, and misleading as an argument for genetic algorithms.
+
+\textbf{Embeddings are markedly more stable on a small corpus} (0.842 vs.\ 0.338). For a
+1{,}074-document corpus this is a strong practical argument for BERTopic --- though 17.1\% of
+documents go unmodelled, which is unacceptable where document-level assignment is required, as in
+our temporal analysis.
+
+\textbf{Limitations.} (i) Absolute stability for every LDA variant is low (0.25--0.34): even the
+best model recovers about a third of the same structure across seeds, which qualifies every
+topic-level claim here. (ii) The 2015--17 window holds 8 documents; its trend line is indicative
+only. (iii) NepJOL's absence biases coverage against locally-published work. (iv) Interpretability rests on
+automated raters: three independent LLM judges rather than the three humans the proposal specified.
+Their agreement is high ($\alpha = 0.979$), but high agreement among models sharing a training
+distribution is weaker evidence than agreement among independent people. (v) The GA was run once with one parameter setting; a fairer test of
+evolutionary search would tune its mutation rate and population size, and repeat both searches over
+multiple seeds to compare distributions rather than single runs.
+
+\textbf{Conclusion.} On a small regional corpus, fine hyperparameter search improves LDA measurably
+over grid search, but our genetic algorithm achieved nothing that random sampling at the same cost
+did not. Meanwhile the model that best serves the actual research purpose --- reading what a field
+is about --- is BERTopic, which the coherence metrics ranked ambiguously and the interpretability
+assessment ranked first. Both of our headline methodological expectations were wrong in the same
+direction: the metrics we optimised were not measuring what we cared about. Both model families
+nevertheless agree that generative AI in education is the fastest-rising theme in Nepal-affiliated
+AI research, and that the field is predominantly applied rather than methodological.
+
+%==============================================================================
+\section*{Individual Contributions}
+
+\textbf{Bibek Paudyal (250288)} --- corpus acquisition: OpenAlex and Semantic Scholar clients,
+Nepal-affiliation and AI-relevance filtering, deduplication, corpus validation and freezing.
+
+\textbf{Sajan Mahat (250289)} --- modelling: standard LDA and the $K$ sweep, the genetic algorithm
+(chromosome encoding, operators, multi-objective fitness, caching), BERTopic, and the random-search
+control.
+
+\textbf{Siddhartha Bhatta (250620)} --- evaluation and analysis: the coherence, diversity and
+stability metric harness, temporal evolution analysis, topic labelling, figures, and the manuscript.
+
+All three members reviewed the topic labels and the final results.
+
+%==============================================================================
+\section*{Code and Reproducibility}
+
+All code is available at \url{https://github.com/bpdyl/ai-research-topic-modeling} (branch
+\texttt{core-development}), together with a single end-to-end notebook that runs unmodified in
+Google Colab. Every experiment writes a timestamped directory containing the exact configuration
+used, the git commit and its metrics, so any number in this paper is traceable to the run that
+produced it. All seeds are fixed at 42, and 72 unit tests cover corpus filtering, preprocessing,
+acronym preservation and every genetic operator.
+
+%==============================================================================
+\begin{thebibliography}{9}
+\balance
+
+\bibitem{agrawal2018}
+A.~Agrawal, W.~Fu, and T.~Menzies, ``What is wrong with topic modeling? (and how to fix it using
+search-based software engineering),'' \emph{Information and Software Technology}, vol.~98,
+pp.~74--88, 2018.
+
+\bibitem{yu2023}
+J.~Yu and Y.~Xiang, ``Discovering topics and trends in the field of artificial intelligence: Using
+LDA topic modeling,'' \emph{Expert Systems with Applications}, 2023.
+
+\bibitem{agri2025}
+``Mapping the evolution of artificial intelligence in agriculture: A large-scale BERTopic
+analysis,'' \emph{AgriEngineering}, vol.~8, no.~8, art.~312, MDPI.
+
+\bibitem{haq2019}
+M.~I.~U. Haq, Q.~Li, and S.~Hassan, ``Text mining techniques to capture facts for cloud computing
+adoption and big data processing,'' \emph{IEEE Access}, vol.~7, pp.~162254--162267, 2019.
+
+\bibitem{grootendorst2022}
+M.~Grootendorst, ``BERTopic: Neural topic modeling with a class-based TF-IDF procedure,''
+\emph{arXiv:2203.05794}, 2022.
+
+\bibitem{roder2015}
+M.~R\"{o}der, A.~Both, and A.~Hinneburg, ``Exploring the space of topic coherence measures,'' in
+\emph{Proc. 8th ACM Int. Conf. Web Search and Data Mining (WSDM)}, 2015, pp.~399--408.
+
+\bibitem{chang2009}
+J.~Chang, J.~Boyd-Graber, S.~Gerrish, C.~Wang, and D.~Blei, ``Reading tea leaves: How humans
+interpret topic models,'' in \emph{Advances in Neural Information Processing Systems~22}, 2009.
+
+\bibitem{dieng2020}
+A.~B. Dieng, F.~J.~R. Ruiz, and D.~M. Blei, ``Topic modeling in embedding spaces,''
+\emph{Transactions of the Association for Computational Linguistics}, vol.~8, pp.~439--453, 2020.
+
+\end{thebibliography}
+
+\end{document}

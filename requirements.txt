@@ -1,0 +1,66 @@
+# ══════════════════════════════════════════════════════════════════════
+# Pinned environment for the topic-modeling pipeline (Task 1).
+#
+# Verified working on Python 3.12.10 / Windows, 2026-09-05.
+#
+#   python -m venv aml-venv
+#   aml-venv\Scripts\activate           # Windows
+#   pip install -r requirements.txt
+#   python -c "import scipy.linalg; print('ok')"   # <-- gate, see note below
+#
+# The scraper has its own, much lighter requirements: see scraper/requirements.txt
+# ══════════════════════════════════════════════════════════════════════
+
+# ── Core scientific stack ─────────────────────────────────────────────
+numpy==2.5.2
+scipy==1.18.1
+pandas==3.0.5
+scikit-learn==1.9.0
+
+# ── Configuration ─────────────────────────────────────────────────────
+PyYAML==6.0.3
+
+# ── LDA / GA-LDA ──────────────────────────────────────────────────────
+# gensim supplies LdaModel and CoherenceModel (c_v, c_npmi, u_mass).
+gensim==4.4.0
+nltk==3.10.3
+
+# ── BERTopic benchmark ────────────────────────────────────────────────
+# torch is pinned to the CPU build. Install it from the PyTorch CPU index:
+#   pip install torch==2.14.0+cpu --index-url https://download.pytorch.org/whl/cpu
+# If that index is unavailable, plain `pip install torch` also works — the
+# pipeline never needs CUDA.
+torch==2.14.0+cpu
+transformers==5.16.1
+sentence-transformers==6.0.1
+bertopic==0.17.4
+umap-learn==0.5.12
+hdbscan==0.8.44
+numba==0.67.0
+
+# ── Figures ───────────────────────────────────────────────────────────
+matplotlib==3.11.1
+seaborn==0.13.2
+wordcloud==1.9.6
+pyLDAvis==3.4.1
+plotly==7.0.0
+
+# ── Tests ─────────────────────────────────────────────────────────────
+pytest==9.1.1
+
+# ══════════════════════════════════════════════════════════════════════
+# NLTK data (not installable via pip — run once after installing):
+#
+#   python -c "import nltk; [nltk.download(r) for r in ['punkt_tab','stopwords','wordnet','omw-1.4']]"
+#
+# ── Two environment notes that cost us time; please read ──────────────
+#
+# 1. Do NOT create the venv with --system-site-packages on top of a conda
+#    install. Keep it standalone so this file fully describes the environment.
+#
+# 2. If `import scipy.linalg` takes minutes rather than ~2 seconds, the problem
+#    is the machine, not the packages: on-access antivirus scanning of large
+#    BLAS/LAPACK DLLs under memory pressure. Check whether non-Python system
+#    queries are also hanging, and reboot. A Defender exclusion for the venv
+#    directory prevents recurrence.
+# ══════════════════════════════════════════════════════════════════════

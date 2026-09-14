@@ -1,0 +1,264 @@
+{
+  "run_id": "20260905_210546_build_corpus",
+  "raw_records": 1693,
+  "filters": {
+    "n_in": 1693,
+    "n_out": 1074,
+    "total_dropped": 619,
+    "steps": [
+      {
+        "name": "year_range",
+        "reason": "DEC-012: restrict to 2015-2025 to match the proposal's stated span. Also cuts preprint-server content (2026 papers are disproportionately preprints that have not yet cleared review) and eases the recency skew.",
+        "kept": 1228,
+        "dropped": 465,
+        "dropped_examples": [
+          "A Review on Retrieval-Augmented Generation: Architectures, Research Challenges, and Emerging Frontiers",
+          "An Explainable Agentic AI-Based Decision Support System for Ethical and Risk-Aware Business Contract Vulnerabi",
+          "SAGE-32B: Agentic Reasoning via Iterative Distillation"
+        ]
+      },
+      {
+        "name": "require_abstract",
+        "reason": "Title-only records carry too little text to produce a meaningful document-topic distribution and degrade coherence (RISK-012).",
+        "kept": 1102,
+        "dropped": 126,
+        "dropped_examples": [
+          "Optical Character Recognition for Nepali, English Character and Simple Sketch Using Neural Network",
+          "Natural language processing for Nepali text: a review",
+          "DSCN-net: a deep Siamese capsule neural network model for automatic diagnosis of malaria parasites detection"
+        ]
+      },
+      {
+        "name": "min_raw_tokens",
+        "reason": "Drop documents under 30 whitespace tokens in title+abstract. These are editorials and commentaries (e.g. 'Artificial Intelligence and Radiology', 1-word abstract) with no topical content (RISK-012).",
+        "kept": 1088,
+        "dropped": 14,
+        "dropped_examples": [
+          "Artificial Intelligence in Pathology and Medicine",
+          "Automatic Identification of Nepalese Tourism Related Tweets using Machine Learning Algorithms",
+          "Artificial Intelligence in Medical Science: Perspective from a Medical Student"
+        ]
+      },
+      {
+        "name": "exclude_patterns",
+        "reason": "DEC-018: drop documents matching known false positives of the scraper's AI-relevance regex. 'Computer vision syndrome' is an ophthalmic condition, not AI research; all matches were verified by hand to contain no AI-method vocabulary.",
+        "kept": 1074,
+        "dropped": 14,
+        "dropped_examples": [
+          "Knowledge, attitudes and practice of Computer Vision Syndrome among medical students and its impact on ocular ",
+          "Computer vision syndrome, musculoskeletal, and stress-related problems among visual display terminal users in ",
+          "Magnitude and Determinants of Computer Vision Syndrome (CVS) among IT Workers in Kathmandu, Nepal"
+        ]
+      }
+    ]
+  },
+  "corpus": {
+    "n_documents": 1074,
+    "temporal": {
+      "years": {
+        "2015": 1,
+        "2016": 4,
+        "2017": 3,
+        "2018": 13,
+        "2019": 29,
+        "2020": 51,
+        "2021": 65,
+        "2022": 91,
+        "2023": 143,
+        "2024": 248,
+        "2025": 426
+      },
+      "by_window": {
+        "2015-2017": 8,
+        "2018-2020": 93,
+        "2021-2023": 299,
+        "2024-2025": 674
+      },
+      "documents_outside_windows": 0,
+      "note": "DEC-013: one global model is fitted on the whole corpus; these windows slice the REPORTING of topic proportions only. Per-window n must appear on every temporal table and figure."
+    },
+    "venue_composition": {
+      "published": 1004,
+      "preprint_server": 36,
+      "no_venue_recorded": 34,
+      "pct_verifiably_published": 93.5,
+      "top_preprint_venues": [
+        [
+          "Zenodo (CERN European Organization for Nuclear Research)",
+          12
+        ],
+        [
+          "medRxiv",
+          8
+        ],
+        [
+          "Preprints.org",
+          6
+        ],
+        [
+          "Research Square",
+          4
+        ],
+        [
+          "arXiv (Cornell University)",
+          4
+        ],
+        [
+          "HAL (Le Centre pour la Communication Scientifique Directe)",
+          2
+        ]
+      ],
+      "distinct_venues": 560,
+      "note": "The proposal describes the corpus as peer-reviewed and venue-verified. Report this composition honestly in the paper rather than restating an unqualified peer-review claim (RISK-003)."
+    },
+    "length": {
+      "abstract_words": {
+        "min": 18,
+        "p25": 155,
+        "median": 199,
+        "p75": 239,
+        "max": 1326,
+        "mean": 209.8
+      },
+      "title_plus_abstract_words": {
+        "min": 35,
+        "p25": 166,
+        "median": 212,
+        "p75": 253,
+        "max": 1335,
+        "mean": 222.2
+      }
+    },
+    "coverage": {
+      "with_doi": 1063,
+      "with_venue": 1040,
+      "with_nepal_affiliation_string": 930,
+      "authors_per_paper": {
+        "min": 1,
+        "p25": 2,
+        "median": 4,
+        "p75": 5,
+        "max": 100,
+        "mean": 4.7
+      }
+    },
+    "text_hygiene": {
+      "leading_abstract_prefix": 69,
+      "copyright_boilerplate": 0,
+      "contains_non_ascii": 387,
+      "mostly_non_latin_script": 0,
+      "note": "These counts define the cleaning steps in preprocessing (RISK-013)."
+    },
+    "integrity": {
+      "duplicate_normalised_titles": 0,
+      "duplicate_doc_ids": 0,
+      "empty_titles": 0,
+      "empty_abstracts": 0
+    },
+    "composition": {
+      "top_primary_subfield": [
+        [
+          "Artificial Intelligence",
+          125
+        ],
+        [
+          "Computer Vision and Pattern Recognition",
+          88
+        ],
+        [
+          "Radiology, Nuclear Medicine and Imaging",
+          48
+        ],
+        [
+          "Health Informatics",
+          43
+        ],
+        [
+          "Information Systems",
+          38
+        ],
+        [
+          "Plant Science",
+          37
+        ],
+        [
+          "Electrical and Electronic Engineering",
+          32
+        ],
+        [
+          "Computer Networks and Communications",
+          31
+        ],
+        [
+          "Global and Planetary Change",
+          31
+        ],
+        [
+          "Environmental Engineering",
+          29
+        ],
+        [
+          "Management Science and Operations Research",
+          27
+        ],
+        [
+          "Civil and Structural Engineering",
+          21
+        ]
+      ],
+      "top_primary_topic": [
+        [
+          "Artificial Intelligence in Healthcare and Education",
+          43
+        ],
+        [
+          "Smart Agriculture and AI",
+          31
+        ],
+        [
+          "COVID-19 diagnosis using AI",
+          22
+        ],
+        [
+          "Network Security and Intrusion Detection",
+          21
+        ],
+        [
+          "Online Learning and Analytics",
+          20
+        ],
+        [
+          "Flood Risk Assessment and Management",
+          18
+        ],
+        [
+          "Artificial Intelligence in Healthcare",
+          17
+        ],
+        [
+          "Stock Market Forecasting Methods",
+          17
+        ],
+        [
+          "Remote Sensing in Agriculture",
+          16
+        ],
+        [
+          "AI in cancer detection",
+          15
+        ],
+        [
+          "Landslides and related hazards",
+          15
+        ],
+        [
+          "Sentiment Analysis and Opinion Mining",
+          13
+        ]
+      ],
+      "sources": {
+        "openalex": 1074
+      }
+    }
+  }
+}

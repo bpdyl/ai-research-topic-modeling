@@ -1,0 +1,4 @@
+{"k": 12, "alpha": 0.011221, "eta": 0.035486, "fitness": 0.479637, "c_v": 0.484223, "diversity": 0.753333, "stability": 0.263179, "seconds": 7.27, "cached": false}
+{"k": 19, "alpha": 0.019014, "eta": 0.016032, "fitness": 0.425532, "c_v": 0.452451, "diversity": 0.72, "stability": 0.264279, "seconds": 5.79, "cached": false}
+{"k": 39, "alpha": 0.014924, "eta": 0.069798, "fitness": 0.337596, "c_v": 0.404044, "diversity": 0.728205, "stability": 0.179445, "seconds": 12.66, "cached": false}
+{"k": 6, "alpha": 0.015395, "eta": 0.029196, "fitness": 0.486561, "c_v": 0.465675, "diversity": 0.833333, "stability": 0.35691, "seconds": 4.78, "cached": false}

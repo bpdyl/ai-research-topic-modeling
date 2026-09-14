@@ -1,0 +1,473 @@
+{
+  "experiment": "EXP-005",
+  "run_id": "20260906_081155_temporal",
+  "primary_model": "GA-Optimized LDA",
+  "primary_model_rationale": "LDA assigns a topic distribution to 100% of documents; BERTopic leaves 17.1% unclustered, so window proportions from it omit part of the corpus.",
+  "normalize_within_window": true,
+  "min_docs_for_trend_fit": 30,
+  "models": {
+    "GA-Optimized LDA": {
+      "run_id": "20260905_220137_ga_lda",
+      "windows": [
+        "2015-2017",
+        "2018-2020",
+        "2021-2023",
+        "2024-2025"
+      ],
+      "counts": [
+        8,
+        93,
+        299,
+        674
+      ],
+      "excluded_from_trend_fit": [
+        "2015-2017"
+      ],
+      "labels": [
+        "control, nepal, area",
+        "predict, power, data",
+        "system, technology, network",
+        "data, factor, analysis",
+        "ai, student, education",
+        "accuracy, data, performance",
+        "image, system, feature"
+      ],
+      "proportions": [
+        [
+          0.138269,
+          0.14464,
+          0.052395,
+          0.017004,
+          0.10829,
+          0.282967,
+          0.256435
+        ],
+        [
+          0.17999,
+          0.079982,
+          0.157849,
+          0.101905,
+          0.021129,
+          0.276432,
+          0.182712
+        ],
+        [
+          0.129671,
+          0.105569,
+          0.147521,
+          0.120256,
+          0.0637,
+          0.259628,
+          0.173656
+        ],
+        [
+          0.094137,
+          0.077496,
+          0.170479,
+          0.138164,
+          0.15182,
+          0.231729,
+          0.136175
+        ]
+      ],
+      "trends": [
+        {
+          "topic": 4,
+          "slope": 0.065345,
+          "first_window_share": 0.0211,
+          "last_window_share": 0.1518,
+          "absolute_change": 0.1307,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.1083,
+            "2018-2020": 0.0211,
+            "2021-2023": 0.0637,
+            "2024-2025": 0.1518
+          }
+        },
+        {
+          "topic": 3,
+          "slope": 0.018129,
+          "first_window_share": 0.1019,
+          "last_window_share": 0.1382,
+          "absolute_change": 0.0363,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.017,
+            "2018-2020": 0.1019,
+            "2021-2023": 0.1203,
+            "2024-2025": 0.1382
+          }
+        },
+        {
+          "topic": 2,
+          "slope": 0.006315,
+          "first_window_share": 0.1578,
+          "last_window_share": 0.1705,
+          "absolute_change": 0.0126,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.0524,
+            "2018-2020": 0.1578,
+            "2021-2023": 0.1475,
+            "2024-2025": 0.1705
+          }
+        },
+        {
+          "topic": 1,
+          "slope": -0.001243,
+          "first_window_share": 0.08,
+          "last_window_share": 0.0775,
+          "absolute_change": -0.0025,
+          "trend": "stable",
+          "by_window": {
+            "2015-2017": 0.1446,
+            "2018-2020": 0.08,
+            "2021-2023": 0.1056,
+            "2024-2025": 0.0775
+          }
+        },
+        {
+          "topic": 5,
+          "slope": -0.022351,
+          "first_window_share": 0.2764,
+          "last_window_share": 0.2317,
+          "absolute_change": -0.0447,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.283,
+            "2018-2020": 0.2764,
+            "2021-2023": 0.2596,
+            "2024-2025": 0.2317
+          }
+        },
+        {
+          "topic": 6,
+          "slope": -0.023268,
+          "first_window_share": 0.1827,
+          "last_window_share": 0.1362,
+          "absolute_change": -0.0465,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.2564,
+            "2018-2020": 0.1827,
+            "2021-2023": 0.1737,
+            "2024-2025": 0.1362
+          }
+        },
+        {
+          "topic": 0,
+          "slope": -0.042927,
+          "first_window_share": 0.18,
+          "last_window_share": 0.0941,
+          "absolute_change": -0.0859,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.1383,
+            "2018-2020": 0.18,
+            "2021-2023": 0.1297,
+            "2024-2025": 0.0941
+          }
+        }
+      ]
+    },
+    "BERTopic": {
+      "run_id": "20260906_080709_bertopic",
+      "windows": [
+        "2015-2017",
+        "2018-2020",
+        "2021-2023",
+        "2024-2025"
+      ],
+      "counts": [
+        8,
+        93,
+        299,
+        674
+      ],
+      "excluded_from_trend_fit": [
+        "2015-2017"
+      ],
+      "labels": [
+        "nepali, system, image",
+        "water, data, forest",
+        "ai, digital, education",
+        "detection, learning, network",
+        "images, cancer, model",
+        "ai, intelligence, artificial intelligence",
+        "detection, models, leaf",
+        "disease, pandemic, health",
+        "power, energy, system",
+        "agriculture, yield, crop",
+        "stock, price, market",
+        "drug, molecular, inhibitors",
+        "lattice, materials, properties",
+        "concrete, strength, construction"
+      ],
+      "proportions": [
+        [
+          0.4,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.194444,
+          0.277778,
+          0.013889,
+          0.125,
+          0.055556,
+          0.027778,
+          0.055556,
+          0.083333,
+          0.097222,
+          0.027778,
+          0.041667,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.196787,
+          0.13253,
+          0.084337,
+          0.104418,
+          0.140562,
+          0.048193,
+          0.044177,
+          0.056225,
+          0.060241,
+          0.044177,
+          0.032129,
+          0.008032,
+          0.028112,
+          0.02008
+        ],
+        [
+          0.150709,
+          0.148936,
+          0.195035,
+          0.085106,
+          0.074468,
+          0.102837,
+          0.058511,
+          0.04078,
+          0.030142,
+          0.021277,
+          0.021277,
+          0.030142,
+          0.021277,
+          0.019504
+        ]
+      ],
+      "trends": [
+        {
+          "topic": 2,
+          "slope": 0.090573,
+          "first_window_share": 0.0139,
+          "last_window_share": 0.195,
+          "absolute_change": 0.1811,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0139,
+            "2021-2023": 0.0843,
+            "2024-2025": 0.195
+          }
+        },
+        {
+          "topic": 5,
+          "slope": 0.03753,
+          "first_window_share": 0.0278,
+          "last_window_share": 0.1028,
+          "absolute_change": 0.0751,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0278,
+            "2021-2023": 0.0482,
+            "2024-2025": 0.1028
+          }
+        },
+        {
+          "topic": 11,
+          "slope": 0.015071,
+          "first_window_share": 0.0,
+          "last_window_share": 0.0301,
+          "absolute_change": 0.0301,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0,
+            "2021-2023": 0.008,
+            "2024-2025": 0.0301
+          }
+        },
+        {
+          "topic": 12,
+          "slope": 0.010638,
+          "first_window_share": 0.0,
+          "last_window_share": 0.0213,
+          "absolute_change": 0.0213,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0,
+            "2021-2023": 0.0281,
+            "2024-2025": 0.0213
+          }
+        },
+        {
+          "topic": 13,
+          "slope": 0.009752,
+          "first_window_share": 0.0,
+          "last_window_share": 0.0195,
+          "absolute_change": 0.0195,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0,
+            "2021-2023": 0.0201,
+            "2024-2025": 0.0195
+          }
+        },
+        {
+          "topic": 4,
+          "slope": 0.009456,
+          "first_window_share": 0.0556,
+          "last_window_share": 0.0745,
+          "absolute_change": 0.0189,
+          "trend": "rising",
+          "by_window": {
+            "2015-2017": 0.2,
+            "2018-2020": 0.0556,
+            "2021-2023": 0.1406,
+            "2024-2025": 0.0745
+          }
+        },
+        {
+          "topic": 6,
+          "slope": 0.001478,
+          "first_window_share": 0.0556,
+          "last_window_share": 0.0585,
+          "absolute_change": 0.003,
+          "trend": "stable",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0556,
+            "2021-2023": 0.0442,
+            "2024-2025": 0.0585
+          }
+        },
+        {
+          "topic": 9,
+          "slope": -0.003251,
+          "first_window_share": 0.0278,
+          "last_window_share": 0.0213,
+          "absolute_change": -0.0065,
+          "trend": "stable",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0278,
+            "2021-2023": 0.0442,
+            "2024-2025": 0.0213
+          }
+        },
+        {
+          "topic": 10,
+          "slope": -0.010195,
+          "first_window_share": 0.0417,
+          "last_window_share": 0.0213,
+          "absolute_change": -0.0204,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.0417,
+            "2021-2023": 0.0321,
+            "2024-2025": 0.0213
+          }
+        },
+        {
+          "topic": 3,
+          "slope": -0.019947,
+          "first_window_share": 0.125,
+          "last_window_share": 0.0851,
+          "absolute_change": -0.0399,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.125,
+            "2021-2023": 0.1044,
+            "2024-2025": 0.0851
+          }
+        },
+        {
+          "topic": 7,
+          "slope": -0.021277,
+          "first_window_share": 0.0833,
+          "last_window_share": 0.0408,
+          "absolute_change": -0.0426,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.2,
+            "2018-2020": 0.0833,
+            "2021-2023": 0.0562,
+            "2024-2025": 0.0408
+          }
+        },
+        {
+          "topic": 0,
+          "slope": -0.021868,
+          "first_window_share": 0.1944,
+          "last_window_share": 0.1507,
+          "absolute_change": -0.0437,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.4,
+            "2018-2020": 0.1944,
+            "2021-2023": 0.1968,
+            "2024-2025": 0.1507
+          }
+        },
+        {
+          "topic": 8,
+          "slope": -0.03354,
+          "first_window_share": 0.0972,
+          "last_window_share": 0.0301,
+          "absolute_change": -0.0671,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.2,
+            "2018-2020": 0.0972,
+            "2021-2023": 0.0602,
+            "2024-2025": 0.0301
+          }
+        },
+        {
+          "topic": 1,
+          "slope": -0.064421,
+          "first_window_share": 0.2778,
+          "last_window_share": 0.1489,
+          "absolute_change": -0.1288,
+          "trend": "declining",
+          "by_window": {
+            "2015-2017": 0.0,
+            "2018-2020": 0.2778,
+            "2021-2023": 0.1325,
+            "2024-2025": 0.1489
+          }
+        }
+      ]
+    }
+  }
+}
