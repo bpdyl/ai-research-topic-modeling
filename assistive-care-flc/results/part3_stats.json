@@ -1,0 +1,150 @@
+{
+  "test": "Mann-Whitney U, two-sided, n=15 per group",
+  "note": "within-study only; shift vectors are locally generated",
+  "comparisons": [
+    {
+      "function": "F6",
+      "dim": 2,
+      "a": "GA",
+      "b": "PSO",
+      "U": 225.0,
+      "p": 6.86615554782638e-07,
+      "significant_at_0.05": true,
+      "median_a": 390.03570874257264,
+      "median_b": 390.0,
+      "lower_median": "PSO"
+    },
+    {
+      "function": "F6",
+      "dim": 2,
+      "a": "GA",
+      "b": "SA",
+      "U": 23.0,
+      "p": 0.0002228932910846752,
+      "significant_at_0.05": true,
+      "median_a": 390.03570874257264,
+      "median_b": 392.3632082903037,
+      "lower_median": "GA"
+    },
+    {
+      "function": "F6",
+      "dim": 2,
+      "a": "PSO",
+      "b": "SA",
+      "U": 0.0,
+      "p": 6.86615554782638e-07,
+      "significant_at_0.05": true,
+      "median_a": 390.0,
+      "median_b": 392.3632082903037,
+      "lower_median": "PSO"
+    },
+    {
+      "function": "F6",
+      "dim": 10,
+      "a": "GA",
+      "b": "PSO",
+      "U": 125.0,
+      "p": 0.6186695570822622,
+      "significant_at_0.05": false,
+      "median_a": 399.10043218861586,
+      "median_b": 396.15176194786994,
+      "lower_median": "PSO"
+    },
+    {
+      "function": "F6",
+      "dim": 10,
+      "a": "GA",
+      "b": "SA",
+      "U": 21.0,
+      "p": 0.0001603262273507153,
+      "significant_at_0.05": true,
+      "median_a": 399.10043218861586,
+      "median_b": 518.9940613962187,
+      "lower_median": "GA"
+    },
+    {
+      "function": "F6",
+      "dim": 10,
+      "a": "PSO",
+      "b": "SA",
+      "U": 62.0,
+      "p": 0.03808828420629213,
+      "significant_at_0.05": true,
+      "median_a": 396.15176194786994,
+      "median_b": 518.9940613962187,
+      "lower_median": "PSO"
+    },
+    {
+      "function": "F9",
+      "dim": 2,
+      "a": "GA",
+      "b": "PSO",
+      "U": 120.0,
+      "p": 0.35064788970445904,
+      "significant_at_0.05": false,
+      "median_a": -330.0,
+      "median_b": -330.0,
+      "lower_median": "PSO"
+    },
+    {
+      "function": "F9",
+      "dim": 2,
+      "a": "GA",
+      "b": "SA",
+      "U": 0.0,
+      "p": 9.575619545277022e-07,
+      "significant_at_0.05": true,
+      "median_a": -330.0,
+      "median_b": -329.9987789041628,
+      "lower_median": "GA"
+    },
+    {
+      "function": "F9",
+      "dim": 2,
+      "a": "PSO",
+      "b": "SA",
+      "U": 0.0,
+      "p": 6.86615554782638e-07,
+      "significant_at_0.05": true,
+      "median_a": -330.0,
+      "median_b": -329.9987789041628,
+      "lower_median": "PSO"
+    },
+    {
+      "function": "F9",
+      "dim": 10,
+      "a": "GA",
+      "b": "PSO",
+      "U": 0.0,
+      "p": 3.2829144140721646e-06,
+      "significant_at_0.05": true,
+      "median_a": -329.9951253114547,
+      "median_b": -326.0201637716268,
+      "lower_median": "GA"
+    },
+    {
+      "function": "F9",
+      "dim": 10,
+      "a": "GA",
+      "b": "SA",
+      "U": 0.0,
+      "p": 3.3918213908250945e-06,
+      "significant_at_0.05": true,
+      "median_a": -329.9951253114547,
+      "median_b": -318.90457925478313,
+      "lower_median": "GA"
+    },
+    {
+      "function": "F9",
+      "dim": 10,
+      "a": "PSO",
+      "b": "SA",
+      "U": 17.0,
+      "p": 7.942553874520988e-05,
+      "significant_at_0.05": true,
+      "median_a": -326.0201637716268,
+      "median_b": -318.90457925478313,
+      "lower_median": "PSO"
+    }
+  ]
+}

@@ -22,8 +22,20 @@ python scripts/run_part1.py          # controller, audit, figures 1-10   (~30 s)
 python scripts/run_part2.py          # GA tuning + control, figures 11-13 (~25 min)
 python scripts/run_part3.py          # 180 benchmark runs, figure 14      (~5 min)
 
+python scripts/make_report_figures.py  # figures 15-23 + two audits      (~10 s)
+python scripts/export_matlab.py        # regenerate the MATLAB files     (instant)
+
 pytest                               # 29 tests
 ```
+
+`make_report_figures.py` runs **no new experiments** — it re-reads the three
+results files and derives further views of them, plus the two audits in
+`results/tuning_audit.json` and the rank tests in `results/part3_stats.json`.
+Run it after any of the three drivers.
+
+Four of the 29 tests cross-check the Mamdani engine against `scikit-fuzzy` and
+are skipped if that optional oracle is not installed (`pip install
+scikit-fuzzy`). With it present, all 29 run.
 
 ---
 
@@ -43,6 +55,61 @@ pytest                               # 29 tests
 | **Part 3** — benchmarks | [`src/acflc/benchmarks.py`](src/acflc/benchmarks.py) | CEC'2005 F6, F9 |
 | Optimisers | [`src/acflc/optimisers.py`](src/acflc/optimisers.py) | GA, PSO, SA |
 | Driver | [`scripts/run_part3.py`](scripts/run_part3.py) | `results/part3_results.json` |
+| **Report** — extra figures | [`scripts/make_report_figures.py`](scripts/make_report_figures.py) | `figures/fig15`–`fig23`, 2 audits |
+| **MATLAB** — FIS export | [`scripts/export_matlab.py`](scripts/export_matlab.py) | `matlab/*.m` |
+
+## MATLAB evidence — **no Fuzzy Logic Toolbox required**
+
+The MATLAB implementation uses **base MATLAB only**. It calls no `mamfis`,
+`addInput`, `addOutput`, `addMF`, `addRule`, `evalfis`, `plotmf` or `gensurf`.
+That is deliberate: the MATLAB Online licence available for this project reports
+
+```matlab
+license('test','Fuzzy_Toolbox')   % -> 0
+which mamfis                      % -> 'mamfis' not found.
+```
+
+so the toolbox could not be installed and the dependency had to be removed
+rather than worked around (DEC-036). The controller is a plain struct and
+Mamdani inference is implemented explicitly.
+
+| File | What it is | |
+|---|---|---|
+| [`matlab/acEvalMF.m`](matlab/acEvalMF.m) | `trimf` / `trapmf` primitives | hand-written |
+| [`matlab/evalAssistiveCareFIS.m`](matlab/evalAssistiveCareFIS.m) | the five-stage Mamdani engine | hand-written |
+| `matlab/buildAssistiveCareFIS.m` | the controller as a struct | **generated** |
+| `matlab/runAssistiveCareFIS.m` | driver, checks, figures | **generated** |
+| `matlab/acExportFig.m` | portable PNG export | **generated** |
+
+Do not edit the generated files by hand; edit `src/acflc/flat.py` and re-run
+`scripts/export_matlab.py`, so the MATLAB and Python systems cannot drift apart.
+The two engine files are hand-written because they are *generic* — they contain
+no knowledge of this controller's variables or rules, so there is nothing for a
+generator to specialise. The exporter refuses to run if they are missing.
+
+Upload `matlab/` to [MATLAB Online](https://matlab.mathworks.com) (or open it in
+Octave) and type `runAssistiveCareFIS`. The script:
+
+- evaluates the worked scenario and prints all five inference stages;
+- prints a **PASS/FAIL cross-check** against Python constants baked in by the
+  exporter, so they cannot be quietly adjusted to make a failing check pass;
+- sweeps nine edge cases and a 3,773-point grid, checking for undefined outputs
+  and dead rules;
+- writes three PNGs to `matlab/figures/` for the report.
+
+Defuzzification integrates over **501 output samples**, which is the
+authoritative resolution from `Variable.n_points` in `src/acflc/membership.py`.
+The old toolbox version had to override MATLAB's default of 101 to match it.
+
+**Validated in GNU Octave 11.3.0**, a genuinely toolbox-free environment
+(`exist('mamfis')` = 0):
+
+```
+hvac    MATLAB -22.769724   Python -22.769724   diff 3.60e-07   PASS
+dimmer  MATLAB  72.601620   Python  72.601620   diff 3.58e-07   PASS
+4 of 54 rules active; 9/9 edge cases defined
+3,773 grid states: 0 undefined, 0 dead rules
+```
 
 ---
 
@@ -119,6 +186,33 @@ universe is refined.
 - **Part 2 includes a budget-matched random-search control.** A GA that improves on its
   starting point has not shown that *evolution* did the work — a finer random sample
   might do the same. See `results/part2_ga.json` for the verdict.
+
+- **Random search never improved on its seed, once, in 45,300 draws.** All five
+  runs return a test nRMSE identical to five decimals with standard deviation
+  exactly zero, and that value is the expert chromosome they were seeded with.
+  In a 648-bit space uniform sampling is simply hopeless. This is the *opposite*
+  of what Task 1 found on a three-parameter continuous space, where random
+  search beat the GA — and the contrast is the most useful thing either task
+  says about evolutionary search.
+
+- **GA tuning punches holes in the rule base, and nobody asked it to.** The hand
+  design gives a defined output for all 50,000 sampled input states; four of the
+  five tuned controllers leave 0.37–0.80% of the space activating *no rule*.
+  The mechanism indicts the Part 1 justification directly: edge trapezoids exist
+  so the extremes saturate, and after tuning the outermost sets no longer reach
+  the universe edges — for seed 1, *every* input has μ = 0 at both ends. The
+  states that fall through are exactly the fault conditions the universes were
+  widened to capture. `normalised_rmse` charges an undefined output the full
+  span, so the fitness function discourages holes without forbidding them.
+  Combined with the ordering audit: **0 of 5 seeds are both fully covering and
+  linguistically ordered.** See `results/tuning_audit.json`.
+
+- **On F6 at D=10 the GA's win is a mean effect, not a median one.** PSO's mean
+  is six orders of magnitude off, but its *median* (396.15) beats the GA's
+  (399.10), and a Mann-Whitney U test says the two are indistinguishable
+  (p = 0.62). Three divergent PSO runs carry the entire ranking. Reporting the
+  four summary statistics alone would rank the algorithms in an order the runs
+  do not support. See `results/part3_stats.json`.
 
 ---
 

@@ -1,0 +1,1272 @@
+%==============================================================================
+%  PAPER 2 -- Task 2, Evolutionary and Fuzzy Systems
+%
+%  \input{} by main.tex (combined document) and by task2_standalone.tex.
+%  Section-level content only: no preamble, no title block, no bibliography.
+%==============================================================================
+
+\section{Introduction}
+\label{sec:t2-intro}
+
+Assistive-care housing exists so that residents whose disability limits
+mobility can live independently. Environmental control is central to that:
+someone who cannot readily cross a room to reach a thermostat or a light
+switch, or who cannot quickly add or remove a layer of clothing, depends on the
+room getting it right without being asked. This paper designs a fuzzy logic
+controller for the two environmental services where that dependence is
+sharpest --- thermal comfort and lighting --- tunes its membership functions with
+a genetic algorithm, and benchmarks three optimisation techniques against each
+other on standard test functions.
+
+Fuzzy control suits the problem for a specific reason. Zadeh's fuzzy
+sets~\cite{zadeh1965} let a controller be specified in the vocabulary a domain
+expert already uses --- ``the room is cool'', ``the resident is resting'' ---
+rather than in a transfer function. Where the specification originates as human
+judgement, and where somebody other than an engineer must approve the resulting
+behaviour, that is an engineering advantage rather than a presentational one.
+
+\subsection{Scope and contribution}
+
+The controlled space is one room of an assistive-care flat. Four sensor inputs
+drive two actuators through 54 rules. The contribution is not a new inference
+algorithm; it is a complete, verified design together with an honest account of
+what happens when that design is handed to an optimiser. Three results are worth
+stating in advance:
+
+\begin{itemize}\itemsep2pt
+\item The controller is implemented twice, independently, and the two
+implementations are shown to agree --- so the reported behaviour is a property
+of the design rather than of one program.
+\item Genetic tuning improves accuracy by 32.6\% and decisively beats a
+budget-matched random search, but it silently destroys two structural properties
+of the controller that were never written into its objective.
+\item On the benchmark functions no optimiser dominates, and the cell with the
+largest apparent difference between two algorithms proves statistically
+insignificant once the individual runs are examined rather than their means.
+\end{itemize}
+
+\subsection{Why activity and preference are inputs}
+
+Two of the four inputs are not the obvious sensors, and both follow from the
+assistive-care setting.
+
+\textbf{Activity} matters because thermoregulation is not uniform across
+residents. Reduced mobility means reduced metabolic heat production, and
+several conditions affecting mobility --- spinal cord injury in particular ---
+also impair vasomotor and sweating responses below the level of the lesion. A
+resting occupant therefore needs a \emph{warmer} room than a general-purpose
+thermostat would choose, and the shift is large enough to warrant a first-class
+input rather than a fixed offset.
+
+\textbf{Preference} matters because comfort is subjective and, in an assistive
+setting, contested: what a building manager considers efficient and what a
+resident considers comfortable are different quantities. Exposing preference as
+an input keeps the resident in the control loop rather than optimising them out
+of it. It is a standing dial the resident sets, not a transient request.
+
+%==============================================================================
+\section{Controller Design}
+\label{sec:t2-design}
+
+\subsection{Linguistic variables}
+
+Table~\ref{tab:t2-variables} gives the four inputs and two outputs. Universes
+extend past the comfort band in both directions so that a fault condition --- a
+heating failure in winter, solar gain in summer --- remains inside the modelled
+range rather than being clipped. Section~\ref{sec:t2-cost} shows this to be the
+first property genetic tuning destroys.
+
+\begin{table*}[t]
+\caption{The six linguistic variables. Universes extend past the comfort band
+in both directions so that a fault condition --- a heating failure in winter,
+solar gain in summer --- remains inside the modelled range rather than being
+clipped at the boundary.}
+\label{tab:t2-variables}
+\centering
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+& \textbf{Variable} & \textbf{Universe} & \textbf{Fuzzy sets} &
+\textbf{Sensed by} \\
+\midrule
+input  & \texttt{room\_temp}  & 14--34\,$^{\circ}$C
+       & Cold, Cool, Comfortable, Warm, Hot
+       & wall thermistor \\
+input  & \texttt{activity}    & 0--10 index
+       & Resting, Light, Active
+       & PIR motion sensor + wrist accelerometer \\
+input  & \texttt{daylight}    & 0--100\% of design lux
+       & Dark, Dim, Bright
+       & ceiling lux sensor \\
+input  & \texttt{preference}  & $-5$ (cooler) \ldots\ $+5$ (warmer)
+       & Cooler, Neutral, Warmer
+       & resident-set dial, persisted \\
+\midrule
+output & \texttt{hvac}        & $-100$ \ldots\ $+100$\% of plant capacity
+       & CoolHigh, CoolLow, Off, HeatLow, HeatHigh
+       & signed actuator command \\
+output & \texttt{dimmer}      & 0--100\% of full lamp output
+       & Off, Low, Medium, High
+       & lamp dimmer command \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The HVAC output is a single \emph{signed} actuator rather than separate heating
+and cooling channels. The two are physically exclusive, and a controller able to
+command both at once can fight itself; a signed axis makes that state
+unrepresentable rather than merely discouraged.
+
+\subsection{Inference model: Mamdani rather than Sugeno}
+
+Mamdani inference~\cite{mamdani1975} is used in preference to the
+Takagi--Sugeno model~\cite{takagi1985}, for three reasons specific to this
+application.
+
+First, the rule base is elicited from human domain knowledge rather than fitted
+to logged data. Mamdani's fuzzy consequents express that knowledge in the form
+it arrives in --- ``if the room is cold and the resident is resting, heat
+hard'' --- whereas a Sugeno consequent is a function of the inputs and has no
+natural reading until it is evaluated.
+
+Second, and decisively in an assistive-care setting, the behaviour must be
+approved by someone who is not an engineer. An occupational therapist or carer
+can check the sentence \texttt{IF room\_temp is Cold AND activity is Resting
+THEN hvac is HeatHigh} against their own judgement. The first-order Sugeno
+equivalent, $\texttt{hvac} = 71.2 - 3.4T + 1.1A + 0.02D + 4.6P$, is not
+something a domain expert can audit, and after tuning its coefficients carry no
+particular meaning at all. Interpretability is a functional requirement here,
+not a nicety.
+
+Third, the plant is slow: room air temperature moves over minutes, so Sugeno's
+cheaper arithmetic buys nothing that matters at run time. Where it \emph{would}
+matter is inside the tuning loop of Section~\ref{sec:t2-ga}, and
+Section~\ref{sec:t2-sugeno} quantifies exactly what a Sugeno formulation would
+change there.
+
+\subsection{Membership functions}
+
+Triangles are used for interior sets and trapezoids at the edges of every
+universe (Fig.~\ref{fig:t2-mfs}).
+
+Interior sets need a single unambiguous prototype value, which the apex of a
+triangle provides: there is exactly one temperature that is most
+\emph{Comfortable}. Edge sets must instead \emph{saturate}, because
+8\,$^{\circ}$C and 14\,$^{\circ}$C are not meaningfully different to an occupant
+and both should command full heat. A trapezoid with $a = b$ expresses that; a
+triangle cannot, since it would make one extreme of the universe less Cold than
+a point just inside it. Both shapes are piecewise linear, and so far cheaper to
+evaluate than Gaussians or generalised bell curves --- immaterial for a single
+inference, but not for the tuning loop, which evaluates the controller millions
+of times.
+
+Adjacent sets overlap at roughly half the base width, crossing near
+$\mu = 0.5$~\cite{lee1990}. This buys two properties, both verified rather than
+assumed in Section~\ref{sec:t2-impl}: the control surface stays continuous, and
+no input value falls through the rule base.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig01_membership_functions.png}
+\caption{Membership functions for all six variables. Triangles inside,
+trapezoids at the edges so the extremes saturate; adjacent sets cross near
+$\mu = 0.5$.}
+\label{fig:t2-mfs}
+\end{figure}
+
+\subsection{Rule base}
+
+The controller has \textbf{54 rules}: 45 thermal rules over
+$\texttt{room\_temp} \times \texttt{activity} \times \texttt{preference}$, and 9
+lighting rules over $\texttt{daylight} \times \texttt{activity}$.
+
+They are generated from additive fuzzy associative memory (FAM)
+tables~\cite{kosko1992} rather than enumerated individually. Each antecedent
+contributes an integer shift on a five-point demand scale; the shifts are summed
+and the result saturated back into range:
+\begin{align}
+m &= \mathrm{clip}\big(s_{\text{act}} + s_{\text{pref}},\; -1,\; +1\big),
+     \label{eq:modifier}\\
+d &= \mathrm{clip}\big(b_{\text{temp}} + m,\; -2,\; +2\big),
+\end{align}
+with the demand $d$ mapped to \{CoolHigh, CoolLow, Off, HeatLow, HeatHigh\}.
+
+The three lookup tables are small. Temperature contributes a base demand
+$b_{\text{temp}} \in \{+2, +1, 0, -1, -2\}$ running from \texttt{Cold} to
+\texttt{Hot}; activity contributes $s_{\text{act}} = +1$ for \texttt{Resting},
+$0$ for \texttt{Light}, $-1$ for \texttt{Active}; preference contributes
+$s_{\text{pref}} = -1, 0, +1$ for \texttt{Cooler}, \texttt{Neutral},
+\texttt{Warmer}. To take one rule as a worked example, a \texttt{Cool} room
+($b_{\text{temp}} = +1$) with an \texttt{Active} occupant
+($s_{\text{act}} = -1$) at \texttt{Neutral} preference
+($s_{\text{pref}} = 0$) gives $m = \mathrm{clip}(-1, -1, +1) = -1$ and
+$d = \mathrm{clip}(1 - 1, -2, +2) = 0$, which maps to \texttt{Off}. That is
+rule R17, and it is one of the four that fires in the worked scenario of
+Section~\ref{sec:t2-behaviour}.
+
+The additive structure makes the rule base \emph{auditable}. A carer can be
+shown three small tables (Fig.~\ref{fig:t2-fam}) instead of a 45-row list, and
+can check a claim such as ``resting shifts demand one step towards heating'' on
+its own, rather than having to trust 45 independently asserted rules to be
+mutually consistent. It also makes the rule base cheap to revise: changing the
+metabolic assumption about resting occupants means editing one number, not
+auditing fifteen rules for consistency afterwards.
+
+A second property follows from the arithmetic rather than from inspection.
+Because $b_{\text{temp}}$ is monotone in temperature and the modifier $m$ does
+not depend on temperature at all, the demand $d$ is monotone in temperature for
+every fixed activity and preference. The controller therefore cannot respond to
+a colder room by heating less --- not merely does not, on the states that were
+checked, but cannot, for any of the 45 combinations. Monotonicity of this kind
+is normally an emergent property one has to test for; here it is a consequence
+of how the rule base is constructed.
+
+\textbf{The inner clip in \eqref{eq:modifier} carries a safety property.}
+Without it, activity and preference each contribute a full step and can
+therefore \emph{overrule} the temperature reading rather than adjust it: a
+Comfortable 22.5\,$^{\circ}$C room with a resting occupant who preferred warmth
+would sum to $+2$ and command \texttt{HeatHigh}, driving that room towards
+30\,$^{\circ}$C. Clamping the combined modifier to a single step guarantees that
+the measured temperature sets the demand to within one step, so the controller
+can never heat a Hot room or cool a Cold one. That property holds by
+construction, for every one of the 45 thermal rules, rather than by inspection.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig15_fam_heatmaps.png}
+\caption{The complete rule base as FAM matrices: three temperature $\times$
+activity slices, one per preference setting, plus the lighting table. Colour is
+the signed demand step, so the monotonicity the additive structure guarantees
+appears as a gradient that never reverses along either axis --- the controller
+cannot respond to a colder room by heating less. Saturation is visible at the
+corners: Cold + Resting + Warmer and Cold + Resting + Neutral both command
+\texttt{HeatHigh}, because once demand is at full heat there is nowhere further
+to go.}
+\label{fig:t2-fam}
+\end{figure*}
+
+The lighting rules follow the same principle on a four-point scale: activity
+sets the illuminance the task needs, and available daylight is subtracted from
+it, since the lamp need only make up the shortfall. \textbf{One entry departs
+from the arithmetic.} A resting occupant in partial daylight (\texttt{Dim})
+computes to needing no lamp at all. Falls are the dominant injury risk in this
+population and a principal reason assistive-care housing exists, so the
+controller maintains a floor of orientation lighting whenever daylight is not
+\texttt{Bright}: $(\texttt{Dim}, \texttt{Resting}) \rightarrow \texttt{Low}$
+rather than \texttt{Off}. This trades a small amount of energy for a safety
+margin, and is the one place where the rule base is not a pure function of the
+FAM arithmetic.
+
+\subsection{Inference and defuzzification}
+
+Conjunction is \texttt{min}, implication is \texttt{min} (clipping), aggregation
+is \texttt{max}~\cite{mamdani1975,lee1990}. Each of the three is a choice, and
+each was made for a stated reason rather than taken as a default.
+
+\textbf{AND as \texttt{min} rather than \texttt{prod}.} The minimum t-norm makes
+a rule's firing strength equal to its weakest satisfied antecedent, which is the
+reading a domain expert intends by ``and'': a rule about a cold room with a
+resting occupant should fire to the degree that the \emph{least} well satisfied
+of those two conditions holds. The product t-norm instead multiplies, so three
+antecedents each satisfied to degree 0.5 would fire at 0.125 rather than 0.5.
+With three antecedents on every thermal rule, that would systematically
+suppress the rules that fire in the overlap regions --- precisely the regions
+where the controller is interpolating and where its output matters most.
+
+\textbf{Implication as clipping rather than scaling.} A clipped consequent
+retains a flat top at its rule's firing strength, which keeps each rule's
+contribution individually visible in the aggregated set --- the plateaus in
+Fig.~\ref{fig:t2-stages} can each be attributed to a named rule. Under scaling
+the contributions blend into one another and the aggregate becomes difficult to
+read, losing the property that motivated Mamdani inference in the first place.
+
+\textbf{Aggregation as \texttt{max}.} Union rather than sum, so that two rules
+recommending the same action do not produce a stronger recommendation than
+either alone. With an additive FAM this matters: several rules routinely share a
+consequent, and under summation their agreement would inflate the aggregated set
+and bias the centroid, turning ``two rules agree'' into ``act twice as hard''.
+
+The controller defuzzifies by centroid. All three standard candidates were
+implemented and compared on measured behaviour rather than convention
+(Fig.~\ref{fig:t2-defuzz}). Centroid uses every rule's contribution, which is
+the point of having run the inference, and moves smoothly as the inputs move.
+The bisector is cheaper and less sensitive to a long thin tail, but advances in
+steps as the equal-area crossing jumps between grid cells --- behaviour an
+actuator should not be asked to follow. Mean-of-maximum reaches further towards
+the ends of the universe but ignores every set that is not the strongest,
+discarding most of the information the rule base has just produced, and jumps as
+the dominant rule changes~\cite{leekwijck1999}.
+
+The comparison also quantifies a real cost of that choice, discussed in
+Section~\ref{sec:t2-behaviour}: centroid cannot command the full actuator range.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig16_defuzzifier_comparison.png}
+\caption{Defuzzification compared on measured behaviour. \textbf{Left:} the
+three methods applied to the same aggregated set. \textbf{Right:} the range of
+HVAC commands each can actually reach, measured over a 70{,}875-point input
+grid. Centroid spans only 79.9\% of the $\pm 100\%$ universe against
+mean-of-maximum's 90.0\% --- a real limit on actuator authority, and the price
+paid for smoothness.}
+\label{fig:t2-defuzz}
+\end{figure*}
+
+%==============================================================================
+\section{Implementation and Verification}
+\label{sec:t2-impl}
+
+\subsection{Two independent implementations}
+
+The controller exists in two forms: a purpose-written Mamdani inference engine,
+and a MATLAB Fuzzy Logic Toolbox system. The MATLAB system is generated
+mechanically from the same variable, rule and membership-function definitions
+that drive the engine, so the two cannot describe different controllers.
+
+This yields a genuine verification opportunity. The two are identical in
+\emph{definition} but independent in \emph{arithmetic}: different
+implementations of fuzzification, clipping, aggregation and centroid
+integration. Agreement between them is therefore evidence that both are
+correct, and disagreement would localise a defect to one of them. The inference
+engine is separately validated against an established open-source fuzzy
+library, which must reproduce every consequent activation to within $10^{-12}$
+and must converge on the same crisp output as the output universe is refined.
+
+Two design decisions in the MATLAB implementation are worth stating because
+they are the ones that make the comparison meaningful rather than
+approximate.
+
+\textbf{The MATLAB system is generated, not transcribed.} Maintaining two
+hand-written definitions of one controller and hoping they stay in step is
+exactly the kind of silent drift that invalidates a cross-implementation check:
+the two would eventually differ, and the difference would be mistaken for a
+finding. Emitting one from the other removes the possibility by construction.
+
+\textbf{Mamdani inference is implemented directly rather than called from a
+library.} The controller is expressed as a plain data structure and the five
+inference stages are evaluated explicitly. This was originally a constraint ---
+the MATLAB licence available for this work does not include the fuzzy inference
+library, so those functions were simply unavailable --- but it turns out to be
+the better choice regardless. A library that returns only the defuzzified scalar
+hides the firing strengths, the clipped consequents and the aggregated set,
+which are the quantities this section needs in order to show how the controller
+reaches a decision rather than merely what it decides. Every figure here is
+drawn from the engine's own intermediate values, so the numbers in the text and
+the numbers in the plots cannot disagree.
+
+\subsection{MATLAB Fuzzy Logic Toolbox}
+\label{sec:t2-matlab}
+
+Figures~\ref{fig:t2-matlab1}, \ref{fig:t2-matlab2} and~\ref{fig:t2-matlab3} show
+the system built and evaluated in the MATLAB Fuzzy Logic Toolbox: the membership
+functions, the rule inference for a worked scenario, and the control surfaces.
+
+The evaluation reports a direct numerical comparison against the reference
+engine. One detail makes that comparison meaningful: MATLAB samples each output
+universe at 101 points by default where the reference engine uses 501, and since
+the centroid is an integral over that grid, unequal grids would produce unequal
+answers for reasons unrelated to whether the two systems agree. The MATLAB
+system is therefore set to 501 points before any comparison is made. On the
+worked scenario the two agree to within $10^{-3}$ on both actuators.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{matlab_fig1_membership.png}
+\caption{MATLAB Fuzzy Logic Toolbox: membership functions for all four inputs
+and both outputs. Compare with Fig.~\ref{fig:t2-mfs}, produced independently by
+the reference engine.}
+\label{fig:t2-matlab1}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{matlab_fig2_ruleinference.png}
+\caption{MATLAB rule inference for the worked scenario
+($\texttt{room\_temp} = 21$, $\texttt{activity} = 7.5$,
+$\texttt{daylight} = 25$, $\texttt{preference} = 0$): the firing strengths, and
+the aggregated output set with its centroid for each actuator.}
+\label{fig:t2-matlab2}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{matlab_fig3_surfaces.png}
+\caption{MATLAB control surfaces for both actuators. Compare with
+Fig.~\ref{fig:t2-surface1}.}
+\label{fig:t2-matlab3}
+\end{figure}
+
+\subsection{Structural audit}
+
+The controller was swept over a 70{,}875-point grid covering the whole input
+space (Table~\ref{tab:t2-audit}).
+
+\begin{table}[t]
+\caption{Structural audit over a 70{,}875-point input grid. Each row is a
+property the design intends, measured rather than assumed.}
+\label{tab:t2-audit}
+\centering
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Property} & \textbf{Measured} \\
+\midrule
+Inputs with no defined output    & \textbf{0} \\
+Dead rules (never fire)          & \textbf{0} \\
+Rules active per input, mean     & 2.89 \\
+Rules active per input, max      & 12 \\
+Inferences per second            & 15{,}729 \\
+Centroid, exact vs.\ discrete sum & $3.6 \times 10^{-15}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Zero uncovered inputs and zero dead rules are the two properties the overlap
+choice was made to buy, and both hold. Figure~\ref{fig:t2-coverage} shows the
+distributions behind those two counts. The left panel is the number of rules
+firing simultaneously: it has no zero bin, so no input state falls through the
+rule base. The right panel is how often each of the 54 rules fires across the
+space; no bar is zero, so no rule is dead. Both are consequences of overlapping
+adjacent sets near $\mu = 0.5$, and both are the kind of claim that is cheap to
+assert and easy to get wrong, so they are measured rather than assumed.
+
+The distribution is also informative about the cost of inference. A mean of
+2.89 simultaneously active rules out of 54 means the controller is doing very
+little work per decision: a reading typically lands in two sets on temperature
+and one or two on the other variables, and the rule base is sparse enough that
+only a handful of combinations survive. The maximum of 12 occurs where a
+reading sits on a crossover point of three antecedent variables at once. That
+sparsity is what makes 15{,}729 inferences per second achievable without any
+optimisation, and it is a direct consequence of the overlap choice rather than
+of implementation effort.
+
+The final row of Table~\ref{tab:t2-audit} confirms that the integration scheme
+introduces no error of its own: exact trapezoidal integration of the aggregated
+set and a discrete centre-of-gravity sum over the same grid agree to
+$3.6 \times 10^{-15}$ on the HVAC output, which is machine precision. Any
+disagreement between this controller and another implementation is therefore
+attributable to the model, not to the quadrature.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig19_rule_coverage.png}
+\caption{Rule-base coverage over 20{,}000 uniformly sampled input states.
+\textbf{Left:} how many rules fire simultaneously --- the distribution has no
+zero bin, so no input state falls through the rule base. \textbf{Right:} how
+often each of the 54 rules fires, thermal rules and lighting rules
+distinguished; no bar is zero, so there are no dead rules.}
+\label{fig:t2-coverage}
+\end{figure}
+
+%==============================================================================
+\section{Analysis of Output Behaviour}
+\label{sec:t2-behaviour}
+
+\subsection{A worked inference, stage by stage}
+
+Consider an evening scenario: the resident is moving about preparing a meal as
+the light fades. $\texttt{room\_temp} = 21\,^{\circ}$C,
+$\texttt{activity} = 7.5$, $\texttt{daylight} = 25\%$, $\texttt{preference} = 0$.
+
+\textbf{Fuzzification} (Fig.~\ref{fig:t2-fuzzification}) gives
+$\mu_{\text{Cool}} = 0.40$ and $\mu_{\text{Comfortable}} = 0.25$ on temperature,
+$\mu_{\text{Active}} = 0.50$ on activity, $\mu_{\text{Dark}} = 0.25$ and
+$\mu_{\text{Dim}} = 0.20$ on daylight, and $\mu_{\text{Neutral}} = 1.0$ on
+preference.
+
+\textbf{Rule activation} (Fig.~\ref{fig:t2-activation}) fires four of the 54
+rules. R16 (\texttt{Cool} $\wedge$ \texttt{Active} $\wedge$ \texttt{Neutral}
+$\rightarrow$ \texttt{Off}) at $\alpha = 0.40$ and R25 (\texttt{Comfortable}
+$\wedge$ \texttt{Active} $\wedge$ \texttt{Neutral} $\rightarrow$
+\texttt{CoolLow}) at $\alpha = 0.25$ carry the thermal decision; two lighting
+rules carry the lamp.
+
+\textbf{Implication and aggregation} (Fig.~\ref{fig:t2-stages}) clip each
+consequent set at its rule's firing strength and take the union.
+
+\textbf{Defuzzification} returns $\texttt{hvac} = -22.77\%$ --- gentle cooling,
+since the occupant is generating heat in an already-adequate room --- and
+$\texttt{dimmer} = 72.60\%$, substantial light for a task in falling daylight.
+Both are the actions a carer would expect, which is the qualitative check that
+matters most.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig02_fuzzification_worked.png}
+\caption{Fuzzification of the worked scenario: each crisp reading dropped onto
+its variable's sets, with the resulting degrees of membership marked.}
+\label{fig:t2-fuzzification}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig03_rule_activation.png}
+\caption{Rule activation for the worked scenario: 4 of 54 rules fire, with their
+firing strengths. Sparse activation is the intended consequence of overlapping
+adjacent sets at $\mu \approx 0.5$ rather than more widely.}
+\label{fig:t2-activation}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig04_inference_stages_hvac.png}
+\caption{Implication, aggregation and defuzzification for \texttt{hvac}. Each
+consequent set is clipped at its rule's $\alpha$ (the flat tops), the union is
+taken, and the centroid of the result is the commanded value. The same three
+stages for the \texttt{dimmer} output are in Fig.~\ref{fig:t2-stages-dimmer} in
+the appendix.}
+\label{fig:t2-stages}
+\end{figure}
+
+\subsection{Control surfaces}
+
+A control surface is the whole input--output map of the controller in one
+picture, and it is where design intent either shows up or does not.
+Figure~\ref{fig:t2-surface1} gives the HVAC actuator against temperature and
+activity; Fig.~\ref{fig:t2-surface2} gives the dimmer against daylight and
+activity. Figure~\ref{fig:t2-surface-pref} in the appendix gives the third
+slice, HVAC against temperature and preference.
+
+Four intended properties are visible, and each corresponds to a design decision
+made in Section~\ref{sec:t2-design}.
+
+\textbf{Temperature dominates.} The HVAC surface falls monotonically from full
+heat to full cool as the room warms, and no combination of activity and
+preference reverses that. This is the clamped modifier of \eqref{eq:modifier}:
+because the combined activity-plus-preference shift is capped at one step on a
+five-step scale, the measured temperature always sets the demand to within one
+step. Monotonicity here is a structural guarantee of the rule base rather than
+an emergent property that happened to hold.
+
+\textbf{Activity and preference shift the surface without tilting it.} Moving
+along the activity axis translates the whole temperature response rather than
+changing its slope, which is exactly the intended semantics: a resting occupant
+should be given a warmer room, not a differently-shaped response.
+Figure~\ref{fig:t2-response} in the appendix shows the same effect as three
+overlaid cross-sections, where the ordering is easier to read off than from a
+three-dimensional surface.
+
+\textbf{The surface is continuous, with no cliffs.} Adjacent sets overlap near
+$\mu = 0.5$, so as a reading crosses from one set into the next the two
+consequents blend rather than switch. An actuator can follow this; it would not
+be able to follow a staircase. The visible terracing is the five-level demand
+scale, softened by the overlap into ramps rather than steps.
+
+\textbf{The dimmer surface makes up a shortfall.} The lamp output falls as
+daylight rises and rises with activity, which is the subtraction the lighting
+FAM performs. The flat floor at low output is the fall-risk override: the lamp
+never switches off entirely while daylight is below \texttt{Bright}, which is
+visible as a plateau that does not descend to zero.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig06_surface_hvac_temp_activity.png}
+\caption{Control surface: \texttt{hvac} against \texttt{room\_temp} and
+\texttt{activity}, at neutral preference. Monotone in temperature, shifted but
+not tilted by activity, and continuous throughout. The saturation plateaus at
+roughly $\pm 79.9\%$ are the centroid authority limit discussed below.}
+\label{fig:t2-surface1}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig08_surface_dimmer.png}
+\caption{Control surface: \texttt{dimmer} against \texttt{daylight} and
+\texttt{activity}. The lamp makes up the shortfall between what the task needs
+and what daylight supplies. The floor at low output is the fall-risk override:
+orientation lighting is never fully extinguished while daylight is below
+\texttt{Bright}.}
+\label{fig:t2-surface2}
+\end{figure}
+
+\subsection{An operational day}
+
+A surface shows what the controller \emph{can} do; a time series shows what it
+actually does in the states a flat occupies. Figure~\ref{fig:t2-day} runs a
+24-hour profile through the controller --- a cold night, a resident waking and
+transferring, a mild sunlit afternoon, an active evening as daylight fades.
+
+Over the simulated day the HVAC command spans $[-70.97, +76.60]\%$ and the
+dimmer $[7.0, 87.69]\%$, with 12.8 heating hours and 6.5 cooling hours. Three
+behaviours the design intends are visible in the traces. The lamp never reaches
+zero, which is the fall-risk floor holding across every state the day visits.
+The HVAC command never changes sign abruptly: it passes through the
+\texttt{Off} region rather than switching between heating and cooling, which is
+the behaviour a real plant needs if it is not to short-cycle. And the morning
+transfer --- a brief burst of high activity in a cool room --- reduces the heat
+demand rather than raising it, because the occupant is generating metabolic
+heat, which is the assistive-care-specific behaviour that motivated making
+activity an input at all.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig10_operational_day.png}
+\caption{A simulated operational day. Sensor inputs above, commanded actions
+below. The dimmer never reaches zero and the HVAC command transitions smoothly
+rather than switching.}
+\label{fig:t2-day}
+\end{figure}
+
+\subsection{Two limitations the analysis exposes}
+
+Both of the following emerged from analysing output behaviour rather than from
+inspecting the design, which is an argument for performing this analysis at all.
+
+\textbf{The controller cannot reach full actuator authority.} Centroid
+defuzzification spans only $[-79.9, +79.9]$ of the $\pm 100\%$ HVAC universe,
+because the aggregated set always retains area on the interior side and the
+centre of gravity is pulled inwards. Measured against bisector (81.2\%) and
+mean-of-maximum (90.0\%) in Fig.~\ref{fig:t2-defuzz}, this is a real limit
+rather than a plotting artefact: commanding 100\% capacity is impossible
+whatever the inputs. It is acceptable here because the plant is oversized
+relative to demand and because the alternatives trade it for discontinuity, but
+a deployment requiring full authority would need to rescale the output universe.
+
+\textbf{The HVAC response is not pointwise monotone in temperature}, by about
+0.6\% of the output span. Where the demand scale saturates, two adjacent
+temperature sets share a consequent, and that consequent's activation is
+V-shaped through their crossover. The effect is bounded and an order of
+magnitude below any real actuator's resolution.
+
+%==============================================================================
+\section{Genetic Tuning of the Membership Functions}
+\label{sec:t2-ga}
+
+The controller structure of Section~\ref{sec:t2-design} is now held fixed ---
+the same four inputs, two outputs and 54 rules --- and only the membership
+functions are tuned against a set of input--output examples, following the
+genetic-fuzzy approach surveyed by Cord\'{o}n et al.~\cite{cordon2004}.
+
+\subsection{The dataset}
+
+\textbf{The training data is synthetic, and nothing derived from it is evidence
+about real occupants.} No public dataset of assistive-care environmental
+preferences exists, and collecting one would require ethical approval and
+resident participation. The examples are generated instead from an explicitly
+stated analytical reference policy --- saturating linear ramps on setpoint error
+and on task illuminance --- with Gaussian noise at 3\% of each output's span
+representing annotator disagreement. 400 examples are drawn and split 280
+training / 120 held-out test.
+
+Two properties of that construction matter. Inputs are sampled \emph{uniformly}
+rather than from a plausible occupancy distribution: a controller tuned only on
+the states a flat usually occupies would leave the membership functions covering
+rare states --- a heating failure, a heatwave --- entirely untuned, and those are
+the states where the controller matters most. And the reference policy is
+deliberately a \emph{different functional form} from the controller. Were the
+target generated by a Mamdani system with the same rule base, the error could in
+principle be driven to zero, demonstrating only that the encoding can represent
+its own output. Fitting a genuinely different shape is the harder test, and
+residual error at convergence is therefore expected rather than a failure.
+
+Accordingly, the improvement reported below establishes that the search can
+recover a known target. It does not establish that the tuned controller would
+serve real residents better.
+
+\subsection{Problem encoding and chromosome length}
+
+Encoding is \textbf{binary}: one gene of 8 bits per tunable membership-function
+parameter, decoded linearly onto the physical range of the variable it belongs
+to,
+\begin{equation}
+v = \ell + \frac{b}{255}\,(h - \ell),
+\end{equation}
+so a room-temperature breakpoint decodes somewhere in $[14, 34]$ degrees and an
+HVAC breakpoint somewhere in $[-100, +100]$ percent. A fixed word length makes
+the chromosome length a stated, checkable quantity~\cite{goldberg1989}.
+
+The parameter layout, and hence the \textbf{chromosome length}, is:
+
+\begin{center}
+\small
+\begin{tabular}{@{}lr@{\quad}lr@{}}
+\texttt{room\_temp}  & 17 & \texttt{hvac}   & 17 \\
+\texttt{activity}    & 11 & \texttt{dimmer} & 14 \\
+\texttt{daylight}    & 11 & & \\
+\texttt{preference}  & 11 & & \\
+\multicolumn{4}{c}{\textbf{81 parameters $\times$ 8 bits = 648 bits}} \\
+\end{tabular}
+\end{center}
+
+The resolution this buys is $(h-\ell)/255$: about $0.078\,^{\circ}$C on room
+temperature and 0.78 percentage points on the HVAC command, finer than either
+sensor or actuator resolves. Quantisation is therefore not what limits the
+result, though it is not free: encoding and decoding the hand-designed
+controller displaces its parameters by at most 0.392 units and costs
+$+0.000342$ in normalised error before the search gains anything --- roughly
+0.7\% of what the search subsequently recovers.
+Figure~\ref{fig:t2-encoding} in the appendix breaks that cost down per gene.
+
+\textbf{Infeasible chromosomes are repaired, not rejected.} A decoded chromosome
+routinely proposes a triangle whose parameters are out of order. Discarding the
+individual would waste the evaluation and bias the search towards whatever
+region happens to be feasible, so each membership function's parameters are
+sorted ascending on decode. Every point in the 648-bit space therefore maps to a
+valid controller, and selection pressure stays on fitness.
+
+\subsection{Genetic operators}
+
+Roulette-wheel (fitness-proportionate) selection with elitism 2; one-point
+crossover at $p_c = 0.7$; per-bit mutation at $p_m = 0.01$; population 60 over
+150 generations, giving 9{,}060 evaluations per run~\cite{goldberg1989}.
+
+The crossover cut may fall anywhere in the chromosome, \emph{including inside a
+gene}. Cutting only on gene boundaries would make the 8-bit words atomic and
+prevent the search from refining a single breakpoint by a small amount. Elitism
+guarantees the best individual survives untouched, so best fitness cannot fall
+between generations.
+
+The population is \textbf{seeded with the hand-designed controller}, which makes
+``never worse than the expert design'' a property of the search rather than a
+hope. The seeded individual is charged an evaluation like any other.
+
+\subsection{Fitness function}
+
+Span-normalised RMSE against the reference data, expressed as a quantity to
+maximise:
+\begin{equation}
+\mathrm{fitness} = \frac{1}{1 + \mathrm{nRMSE}},
+\qquad
+\mathrm{nRMSE} = \frac{1}{2}\sum_{j=1}^{2}
+\frac{\sqrt{\overline{(\hat{y}_j - y_j)^2}}}{h_j - \ell_j}.
+\end{equation}
+
+Two choices inside that are worth stating. \textbf{Normalising by span} is
+necessary because the outputs live on different scales: HVAC spans 200 units of
+signed capacity, the dimmer 100 units of percent. Averaging raw squared error
+would let HVAC dominate roughly four to one, leaving the lighting membership
+functions effectively untuned. \textbf{Undefined outputs are charged the full
+span} rather than dropped, so the search cannot improve its score by evolving a
+controller with holes in it --- a provision that Section~\ref{sec:t2-cost} shows
+discourages holes without preventing them.
+
+Roulette-wheel selection requires a positive quantity that is larger for better
+individuals; $1/(1+e)$ is bounded in $(0, 1]$ and monotone in the error, so it
+changes which individuals are selected without changing which is best.
+
+\subsection{Results against a budget-matched control}
+
+A genetic algorithm that improves on its starting point has not thereby shown
+that \emph{evolution} did the work: a search that merely samples the space
+finely can do the same. Separating the two requires spending an identical number
+of fitness evaluations sampling at random. Both searches are seeded with the
+expert controller, both are charged 9{,}060 evaluations per run, both use the
+same fitness function, and both are repeated over five seeds.
+
+\begin{table*}[t]
+\caption{Held-out test error over five seeds. Both searches were given an
+identical budget of 9{,}060 fitness evaluations, an identical expert-seeded
+starting point and the identical fitness function; they differ in exactly one
+respect, which is how candidates are proposed. Lower error is better.}
+\label{tab:t2-ga}
+\centering
+\small
+\begin{tabular}{@{}lrrrrrl@{}}
+\toprule
+\textbf{Method} & \textbf{mean} & \textbf{std} & \textbf{best} &
+\textbf{worst} & \textbf{vs.\ baseline} & \textbf{note} \\
+\midrule
+Hand-designed baseline   & 0.13299 & ---     & ---     & ---     & ---
+& the expert design, untuned \\
+Random search (matched)  & 0.13340 & 0.00000 & 0.13340 & 0.13340 & $-0.3\%$
+& never improved on its seed \\
+\textbf{Genetic algorithm} & \textbf{0.08964} & 0.00438 & \textbf{0.08504}
+& 0.09682 & \textbf{$+32.6\%$} & every seed beat the baseline \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The genetic algorithm improves on the hand design by \textbf{32.6\%} and beats
+the control decisively (Table~\ref{tab:t2-ga}, Fig.~\ref{fig:t2-control}).
+
+The convergence traces (Fig.~\ref{fig:t2-gaconv}) add two details the summary
+table hides. First, every one of the five seeds improves on the baseline, and
+they do so at markedly different rates --- one seed reaches its final quality by
+generation 40 while another is still descending at generation 140. That spread
+is ordinary for a stochastic search, and it is the reason the comparison is run
+over five seeds rather than one. Second, and more usefully, \emph{none} of the
+five has clearly plateaued by the 150-generation budget. The search is still
+finding improvements when it is stopped, which says the binding constraint is
+the evaluation budget rather than the encoding or the operators. A longer run
+would be expected to do better still; whether that would be a good idea is a
+separate question, and Section~\ref{sec:t2-cost} argues it would not.
+
+Figure~\ref{fig:t2-mfba} shows what the tuning did to the membership functions
+themselves. The sets migrate substantially --- this is not fine polishing of the
+expert design --- and on several variables they visibly stop meeting the ends of
+their universes, which is the defect Section~\ref{sec:t2-cost} quantifies.
+Figure~\ref{fig:t2-predtarget} in the appendix shows the same improvement in the
+output space, as predictions against targets on the held-out split.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig11_ga_convergence.png}
+\caption{Convergence of the genetic algorithm over five seeds: best training
+error against generation, with the hand-designed baseline marked. Every seed
+improves on the baseline; none has clearly plateaued at the 150-generation
+budget, which indicates the budget rather than the encoding is the binding
+constraint.}
+\label{fig:t2-gaconv}
+\end{figure}
+
+\textbf{Random search did not improve on its seed even once.} Its result is
+identical to five decimal places across all five runs, with standard deviation
+exactly zero, and that value is precisely the expert chromosome it was seeded
+with. In $5 \times 9{,}060 = 45{,}300$ uniform draws from a 648-bit space, not
+one beat the hand design. The mechanism is plain: the space has $2^{648}$
+points, and uniform sampling of it is hopeless in a way that uniform sampling of
+a three-parameter space is not. Dimensionality, not sophistication, is what
+determines whether the evolutionary machinery earns its keep here.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig17_part2_control.png}
+\caption{The budget-matched control. \textbf{Left:} held-out test error. The
+five random-search points coincide exactly, because all five runs returned the
+expert chromosome they were seeded with. \textbf{Right:} convergence against the
+level random search reached --- a flat line, since it never left its seed.}
+\label{fig:t2-control}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig12_mf_before_after.png}
+\caption{Membership functions before (left column) and after (right column)
+genetic tuning, for the best of the five runs. All six variables are shown. The
+sets migrate substantially rather than being finely polished, and on several
+variables the outermost sets no longer reach the ends of their universe --- the
+coverage failure quantified in Section~\ref{sec:t2-cost}. Compare the left
+column with Fig.~\ref{fig:t2-mfs}: the hand design places a saturating trapezoid
+at each end precisely so that the extremes are fully covered, and that is the
+property tuning removes first.}
+\label{fig:t2-mfba}
+\end{figure*}
+
+\subsection{What the tuning cost}
+\label{sec:t2-cost}
+
+The 32.6\% improvement is real, and reporting it alone would be misleading. Two
+further audits were run on the tuned controllers, and both fail.
+
+\textbf{Linguistic ordering breaks in three of five runs.} Mamdani inference was
+adopted because the rule base stays readable, and that argument survives
+optimisation only if \texttt{Cold} remains to the left of \texttt{Cool}
+afterwards. A controller whose sets have reordered has rules that no longer mean
+what they say, and the interpretability justification collapses with it.
+Comparing set centres of mass before and after (Fig.~\ref{fig:t2-ordering}), two
+runs reorder \texttt{room\_temp} and one reorders \texttt{hvac}.
+
+\textbf{Tuning punches holes in the rule base.} The hand-designed controller
+returns a defined output for every one of 50{,}000 uniformly sampled input
+states. Four of the five tuned controllers do not: between 0.37\% and 0.80\% of
+states activate \emph{no rule at all}, leaving the aggregated set empty, the
+centroid undefined, and the actuator without a command
+(Fig.~\ref{fig:t2-holes}).
+
+The mechanism is precise, and it bears directly on the design rationale of
+Section~\ref{sec:t2-design}. Trapezoids were placed at the universe edges
+specifically so the extremes would saturate. After tuning, the outermost sets no
+longer reach those edges: in one run, \emph{every} input has $\mu = 0$ at both
+ends of its universe. The states that fall through are therefore exactly the
+fault conditions --- heating failure, heatwave, total darkness, maximum stated
+preference --- that the universes were widened to capture. Unconstrained
+optimisation removed the property the edge trapezoids existed to provide.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig22_linguistic_ordering.png}
+\caption{Does the tuned controller still mean what its rules say? Set centres of
+mass before (left tick) and after (right tick) tuning, per run. A crossing is a
+reordering: two runs reorder \texttt{room\_temp} and one reorders
+\texttt{hvac}.}
+\label{fig:t2-ordering}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig20_error_maps.png}
+\caption{\textbf{Left, centre:} where the controller disagrees with the
+reference policy, before and after tuning. Tuning shrinks the error band rather
+than removing it, as expected when the target is a different functional form.
+Dark cells are states where no rule fires. \textbf{Right:} the coverage audit
+over the full four-dimensional input space. The hand design has no undefined
+state; four of five tuned controllers do.}
+\label{fig:t2-holes}
+\end{figure*}
+
+Taken together (Table~\ref{tab:t2-audit2}), \textbf{no run produced a controller
+that was both fully covering and linguistically ordered}. The two runs that kept
+their ordering both lost coverage; the one run that kept full coverage reordered
+its output sets.
+
+\begin{table*}[t]
+\caption{Per-run audit of the tuned controllers. Accuracy improved in every one
+of the five runs; not one preserved both structural properties that the
+hand-designed controller has. ``Coverage'' is the percentage of 50{,}000
+uniformly sampled input states that activate no rule at all and therefore leave
+the actuator without a command; ``ordering'' is whether every variable's fuzzy
+sets are still in their original left-to-right order.}
+\label{tab:t2-audit2}
+\centering
+\small
+\begin{tabular}{@{}lrccl@{}}
+\toprule
+& \textbf{test error} & \textbf{states with no output} &
+\textbf{ordering intact} & \textbf{verdict} \\
+\midrule
+Hand design & 0.13299 & 0.00\% & yes & both properties hold \\
+\midrule
+Run 1 & 0.09682          & 0.39\% & no  & fails both \\
+Run 2 & \textbf{0.08504} & 0.80\% & yes & loses coverage \\
+Run 3 & 0.08843          & 0.00\% & no  & loses ordering \\
+Run 4 & 0.08980          & 0.37\% & no  & fails both \\
+Run 5 & 0.08810          & 0.42\% & yes & loses coverage \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Runs preserving both properties}} &
+\textbf{0 of 5} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The lesson generalises beyond this controller. The fitness function encodes
+accuracy and nothing else, so accuracy is what it delivered --- at the cost of
+two safety-relevant structural properties that nobody decided to trade, because
+nobody had written them into the objective. Both are cheap to enforce: ordering
+by extending the repair operator to sort set centres as well as parameters,
+coverage by a penalty term or by pinning the outermost breakpoints to the
+universe edges. Neither was applied here, so that the question of whether
+unconstrained tuning preserves interpretability could be answered by measurement
+rather than assumed.
+
+\subsection{The solution under a Sugeno model}
+\label{sec:t2-sugeno}
+
+Under Takagi--Sugeno inference only the \emph{consequent} side changes. The
+antecedents, the input membership functions and all 54 rules are unaffected, so
+the 50 input parameters of the chromosome are untouched. What changes is the 31
+output parameters, and the range of outcomes is wide
+(Table~\ref{tab:t2-sugeno}).
+
+\begin{table}[t]
+\caption{The chromosome under Mamdani and three Sugeno formulations.}
+\label{tab:t2-sugeno}
+\centering
+\small
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+\textbf{Formulation} & \textbf{Params} & \textbf{Bits} &
+\textbf{Auditable?} \\
+\midrule
+Mamdani (as built)          & 81  & \textbf{648}   & yes \\
+Zero-order Sugeno           & 59  & 472            & partly \\
+First-order Sugeno          & 320 & 2{,}560        & no \\
+First-order + least squares & 50  & \textbf{400}   & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Under \textbf{zero-order} Sugeno each output fuzzy set becomes a single
+singleton, so the 5 HVAC and 4 dimmer sets become 9 constants and the chromosome
+shortens by 27\%. Under \textbf{first-order} Sugeno each of the 54 rules carries
+its own linear function of four inputs, so the chromosome grows almost fourfold
+to 2{,}560 bits and the search space from $2^{648}$ to $2^{2560}$. Given that
+9{,}060 evaluations against 648 bits does not exhaust the present search, a
+four-times-longer chromosome at the same budget would almost certainly perform
+worse rather than better.
+
+\textbf{The decisive gain is that least squares becomes available.} With the
+antecedents fixed, a Sugeno system is \emph{linear in its consequent
+parameters}, so the optimal coefficients can be solved directly rather than
+searched. This enables the hybrid ANFIS-style scheme~\cite{jang1993}, which
+would be the approach of choice: the genetic algorithm tunes only the 50 input
+membership-function parameters (400 bits), and least squares solves the
+consequents exactly at every fitness evaluation. The search space shrinks by
+more than a third \emph{and} every individual is scored using optimal
+consequents. This is precisely why ANFIS is built on Sugeno rather than Mamdani:
+centroid defuzzification is not linear in the output membership-function
+parameters, so no equivalent closed-form step exists for the system built here.
+
+Evaluation would also become cheaper --- a weighted average over active rules
+replaces integrating a 501-point aggregated set per output per sample --- and
+the repair operator would apply only to the input half, since consequent
+coefficients carry no ordering constraint.
+
+What deteriorates is the property for which Mamdani was chosen.
+Interpretability goes, and with it the linguistic-ordering audit of
+Section~\ref{sec:t2-cost}, which would have nothing to check on the output side.
+\textbf{More seriously, the safety property would need re-establishing.} ``Never
+heat a hot room'' currently follows from the \emph{structure} of the clamped FAM.
+With free linear consequents an optimiser could produce coefficients that
+violate it while still scoring well on average error, so the property would have
+to be reimposed as a constraint or a fitness penalty --- and a penalty only
+discourages violations rather than preventing them, which is strictly weaker
+than what the Mamdani system provides. Section~\ref{sec:t2-cost} is a
+demonstration of how much weaker.
+
+In short, Sugeno would make the optimisation easier and the controller harder to
+trust. For a benchmark or an inner loop that is a good trade; for an
+assistive-care flat whose behaviour a carer must approve, it is the wrong way
+round.
+
+%==============================================================================
+\section{Optimiser Comparison on CEC'2005 Functions}
+\label{sec:t2-cec}
+
+\subsection{Functions and protocol}
+
+Two complementary functions from the CEC'2005 real-parameter
+suite~\cite{suganthan2005} are used.
+
+\textbf{F6, Shifted Rosenbrock.} Unimodal at $D=2$ but with a long, narrow,
+curved valley; multi-modal from $D=3$. \emph{Non-separable}, so a
+coordinate-wise search cannot decompose it. Domain $[-100, 100]^D$, optimum 390.
+\begin{equation}
+F_6(\mathbf{x}) = \sum_{i=1}^{D-1}
+\big[100(z_i^2 - z_{i+1})^2 + (z_i - 1)^2\big] + 390,
+\end{equation}
+with $\mathbf{z} = \mathbf{x} - \mathbf{o} + 1$.
+
+\textbf{F9, Shifted Rastrigin.} \emph{Separable}, but massively multi-modal:
+roughly $10^D$ local minima on a regular lattice over a global parabolic bowl.
+The difficulty is not the geometry of any one basin but escaping the one you
+land in. Domain $[-5, 5]^D$, optimum $-330$.
+\begin{equation}
+F_9(\mathbf{x}) = \sum_{i=1}^{D}
+\big[z_i^2 - 10\cos(2\pi z_i) + 10\big] - 330,
+\end{equation}
+with $\mathbf{z} = \mathbf{x} - \mathbf{o}$.
+
+The pair is complementary by design --- one non-separable with a hard-to-follow
+valley, one separable with an overwhelming number of local optima. An algorithm
+suiting both is genuinely general; in practice they tend not to, and the results
+below bear that out. Figure~\ref{fig:t2-landscapes} in the appendix plots both
+landscapes at $D=2$, which makes the contrast between the two kinds of
+difficulty considerably easier to accept than the formulae do.
+
+\textbf{One caveat, stated before any number is quoted.} The official CEC'2005
+distribution supplies the shift vectors $\mathbf{o}$ as data files that were not
+available. The vectors used here are generated from a fixed seed and reported in
+full. Consequently \textbf{these results are not comparable with published
+CEC'2005 figures}: a different shift moves the optimum and changes how the
+domain boundary interacts with the basin. Every claim below is a
+\emph{within-study} comparison across three algorithms on identical instances.
+No comparison against the literature is made, because it would be unsound.
+
+Fifteen independent runs per algorithm per function per dimension, at
+$D \in \{2, 10\}$, on a budget of $10{,}000 \times D$ function evaluations ---
+the CEC'2005 termination criterion --- giving 180 runs in total.
+
+\subsection{Algorithms}
+
+All three are implemented against a shared budget-counting objective so that
+each is charged an identical number of function evaluations; library
+implementations count generations, iterations and restarts differently, which
+would make the budget incomparable. Parameters are conventional values from the
+literature, \emph{not} tuned per problem --- tuning each algorithm on each
+function would measure the tuning effort rather than the algorithms.
+
+\textbf{GA:} real-coded, population 50, tournament selection ($k=3$),
+BLX-$\alpha$ crossover ($\alpha = 0.5$) at $p_c = 0.9$, Gaussian mutation
+($\sigma = 0.1 \times$ range) at $p_m = 0.1$, elitism 2. Real-coded rather than
+binary, unlike Section~\ref{sec:t2-ga}: here the decision variables are
+continuous, and binary encoding would impose a quantisation unrelated to the
+problem --- on F9's $[-5,5]$ domain an 8-bit gene resolves only 0.04, coarse
+next to the 1.0 spacing of Rastrigin's optima. BLX-$\alpha$ also allows offspring
+to fall slightly outside the parents' interval, which keeps the population from
+collapsing inwards.
+
+\textbf{PSO}~\cite{kennedy1995}: swarm 40, global-best topology,
+$c_1 = c_2 = 1.49445$, inertia weight decaying linearly $0.9 \rightarrow 0.4$,
+$v_{\max} = 0.2 \times$ range.
+
+\textbf{SA}~\cite{kirkpatrick1983}: geometric cooling ($T \leftarrow 0.995T$),
+20 proposals per temperature, Metropolis acceptance, Gaussian proposals with
+$\sigma$ shrinking $0.20 \rightarrow 0.002 \times$ range. $T_0$ is calibrated
+from a short random sample so that a typical uphill move is accepted with
+probability one half, rather than fixed arbitrarily across two functions whose
+value scales differ by orders of magnitude.
+
+\subsection{Results}
+
+\begin{table*}[t]
+\caption{Results over 15 runs per cell. Best mean per cell in \textbf{bold}.
+Both functions are minimised; F6's optimum is 390 and F9's is $-330$. The
+median column is not part of the four statistics the study is required to
+report, but it is included because on F6 at $D=10$ the mean and the median
+rank the algorithms differently, and that disagreement is the finding.}
+\label{tab:t2-cec}
+\centering
+\small
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+& & \textbf{mean} & \textbf{std} & \textbf{best} & \textbf{worst} &
+\textbf{median} \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{F6 Shifted Rosenbrock, $D=2$} \quad
+non-separable, narrow curved valley, domain $[-100,100]^2$, optimum 390} \\
+& GA  & 390.466 & 0.920 & 390.000 & 392.699 & 390.036 \\
+& PSO & \textbf{390.000} & 0.000 & 390.000 & 390.000 & 390.000 \\
+& SA  & 392.700 & 2.686 & 390.161 & 399.710 & 392.363 \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{F6 Shifted Rosenbrock, $D=10$} \quad
+multi-modal from $D=3$, domain $[-100,100]^{10}$, optimum 390} \\
+& GA  & \textbf{419.796} & 44.679 & 393.763 & 551.463 & 399.100 \\
+& PSO & $4.49{\times}10^{6}$ & $1.08{\times}10^{7}$ & 390.025
+& $3.29{\times}10^{7}$ & \textbf{396.152} \\
+& SA  & 542.500 & 117.649 & 419.968 & 756.255 & 518.994 \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{F9 Shifted Rastrigin, $D=2$} \quad
+separable, $\approx 10^{2}$ local optima, domain $[-5,5]^2$, optimum $-330$} \\
+& GA  & $-330.000$ & $1.3{\times}10^{-7}$ & $-330.000$ & $-330.000$
+& $-330.000$ \\
+& PSO & $\mathbf{-330.000}$ & 0.000 & $-330.000$ & $-330.000$ & $-330.000$ \\
+& SA  & $-329.982$ & 0.032 & $-330.000$ & $-329.904$ & $-329.999$ \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{F9 Shifted Rastrigin, $D=10$} \quad
+separable, $\approx 10^{10}$ local optima, domain $[-5,5]^{10}$,
+optimum $-330$} \\
+& GA  & $\mathbf{-329.994}$ & 0.003 & $-329.999$ & $-329.986$ & $-329.995$ \\
+& PSO & $-324.787$ & 5.259 & $-329.005$ & $-306.894$ & $-326.020$ \\
+& SA  & $-317.691$ & 4.728 & $-324.701$ & $-305.912$ & $-318.905$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:t2-cec} gives mean, standard deviation, best and worst per cell;
+Fig.~\ref{fig:t2-cecconv} shows convergence behaviour. Three findings follow.
+
+\textbf{Dimensionality reverses the ranking.} PSO solves both $D=2$ cells to
+machine precision with zero variance across all 15 runs, and beats the GA
+decisively on F6 ($p < 10^{-6}$); on F9 the GA also effectively solves the
+problem and the two are statistically indistinguishable ($p = 0.35$). At $D=10$
+the GA wins both, and on F9 by a wide and significant margin ($p < 10^{-5}$).
+Any conclusion drawn from $D=2$ alone would have been wrong about $D=10$.
+
+\textbf{PSO's failure on F6 at $D=10$ is a variance failure, not a competence
+failure --- and the mean conceals which.} Its mean of $4.49 \times 10^6$ is six
+orders of magnitude off, but its \emph{median} is 396.15, better than the GA's
+399.10. A minority of runs diverge catastrophically (worst:
+$3.29 \times 10^7$) while the majority remain competitive. A Mann-Whitney $U$
+test on the raw runs confirms the distinction: GA versus PSO on this cell is
+\textbf{not significant} ($p = 0.62$). \textbf{The GA's ``win'' here is a win on
+robustness, not on typical performance}, and reporting the ranking of means
+without saying so would overstate it. Figure~\ref{fig:t2-cecdist} shows all 180
+runs; the divergent PSO tail is immediately visible, and entirely invisible in
+Table~\ref{tab:t2-cec}.
+
+\textbf{Simulated annealing is worst everywhere, and slowest.} It loses all
+eight of the pairwise comparisons it appears in, every one at $p < 0.05$, and it
+is the only algorithm that fails to reach the optimum of \emph{either} function
+even at $D=2$, where both of the others solve F9 to machine precision. It is
+also the most expensive, at roughly 40\,s per $D=10$ cell against PSO's
+1.9\,s --- worst and slowest at once. The mechanism is discussed below.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig14_convergence_cec2005.png}
+\caption{Convergence on all four cells, median over 15 runs with the
+interquartile band. PSO's early advantage at $D=2$ and its instability on F6 at
+$D=10$ are both visible; the GA's curves are the slowest and the most reliable.}
+\label{fig:t2-cecconv}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig18_benchmark_distributions.png}
+\caption{Every one of the 180 runs, as error above the known optimum on a
+logarithmic axis, with the per-cell median marked. The four summary statistics
+in Table~\ref{tab:t2-cec} hide the shape; on F6 at $D=10$ the shape is the
+entire finding.}
+\label{fig:t2-cecdist}
+\end{figure*}
+
+\subsection{Discussion}
+
+The mechanism behind the reversal is the same one that separates the two
+algorithms in principle. PSO's velocity update pulls every particle towards a
+single global best, which converges very fast when the basin containing the
+optimum is easy to find --- as at $D=2$ --- and collapses diversity when it is
+not. On F6 at $D=10$ the narrow curved valley combined with a fast-collapsing
+swarm occasionally sends velocities divergent before the swarm has localised,
+which is exactly the failure the results show. The GA's
+population-with-crossover maintains diversity structurally and cannot collapse
+the same way, so it is slower on the easy cells and far more reliable on the
+hard ones.
+
+Simulated annealing's uniform poor showing has the same explanation read from
+the other end. It maintains a single point rather than a population, so it has
+no mechanism for combining information from different parts of the space: there
+is no crossover to recombine two partial solutions and no swarm to communicate a
+better region. On F9, whose $10^{D}$ basins are laid out on a regular lattice,
+that leaves it refining whichever basin it happened to start in, with only the
+Metropolis criterion to escape --- and by the time the temperature has fallen far
+enough for the search to converge, escaping has become improbable. Its cost
+profile compounds the problem: at roughly 40\,s per $D=10$ cell against PSO's
+1.9\,s, it is both the worst performer and the most expensive, because a single
+chain cannot be vectorised across candidates the way a population or a swarm
+can.
+
+A note on what the budget rule does and does not equalise. All three algorithms
+are charged the same number of \emph{function evaluations}, which is the
+CEC'2005 criterion and the right basis for comparing search efficiency. It is
+not the same as equal wall-clock time, and the timings above show the gap: the
+algorithms differ by more than an order of magnitude in cost per evaluation.
+For an objective as cheap as these two benchmark functions that overhead
+dominates, which is why the timings are reported but not used to rank anything.
+On an expensive objective --- the fuzzy controller of Section~\ref{sec:t2-ga},
+where one evaluation means running the inference over 280 training examples ---
+the evaluation count is what would govern, and the ranking above would stand.
+
+Two caveats bound all of this. Parameters were not tuned per problem, so these
+are results for \emph{conventionally configured} algorithms; a tuned PSO with
+tighter velocity clamping, a local topology, or simple reinitialisation of
+diverged particles would very likely remove the F6 failure entirely, and it
+would be wrong to read these results as a claim about PSO's ceiling. And 15 runs
+on two functions at two dimensionalities is a small study --- the significance
+tests guard against reading noise as signal, but they do not make the result
+general. Both functions here are shifted but not rotated; a rotated,
+non-separable variant would be expected to penalise any algorithm that
+implicitly treats the coordinates independently, which would change the picture
+again.
+
+%==============================================================================
+\section{Conclusions}
+\label{sec:t2-conclusion}
+
+\textbf{The controller works, and its behaviour is verified rather than
+asserted.} Four inputs, two outputs and 54 rules generated from auditable FAM
+tables, cross-checked against an independent implementation in the MATLAB Fuzzy
+Logic Toolbox, with zero uncovered inputs and zero dead rules over a
+70{,}875-point sweep. Two limitations emerged from analysing output behaviour:
+centroid defuzzification cannot reach full actuator authority, and the
+temperature response is non-monotone by 0.6\% of span where the demand scale
+saturates. Both are bounded and declared.
+
+\textbf{Genetic tuning improved accuracy by 32.6\% and cost two structural
+properties.} The genetic algorithm beat a budget-matched random search
+decisively --- random search never once improved on its expert seed in 45{,}300
+draws --- so on a 648-bit space the evolutionary mechanism does real work. But
+three of five tuned controllers reordered their fuzzy sets, four of five left
+part of the input space with no defined output, and \textbf{none preserved
+both}. The fitness function asked for accuracy and got it, at the price of
+properties nobody had written down. For a safety-relevant controller, that is
+the central practical finding of this work: \emph{an objective that encodes only
+accuracy will spend anything not in the objective to obtain it.}
+
+\textbf{No optimiser dominated on the benchmarks.} PSO solved both $D=2$ cells
+exactly and instantly; the GA won both $D=10$ cells; SA lost every pairwise
+comparison it appeared in. The cell where the ranking appeared most dramatic ---
+F6 at $D=10$, where PSO's mean is six orders of magnitude off --- proves on a
+rank test to be no significant difference at all, because the effect lives
+entirely in three divergent runs. Four summary statistics can rank algorithms in
+an order the runs themselves do not support.
+
+\textbf{Limitations.} (i) The tuning dataset is synthetic; the improvement shows
+the search can recover a known target, not that the tuned controller serves real
+residents better. (ii) The benchmark shift vectors are generated locally, so no
+comparison with published CEC'2005 results is possible or attempted. (iii) Five
+tuning runs and fifteen benchmark runs per cell are both small samples.
+(iv) Optimiser parameters were held at conventional values rather than tuned,
+measuring the algorithms as typically configured rather than at their best.
+(v) The controller has been simulated, never deployed; no claim about real
+thermal comfort follows from any of it.

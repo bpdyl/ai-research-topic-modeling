@@ -1,0 +1,64 @@
+{
+  "encoding": {
+    "direct": 0.13396262409246498,
+    "roundtrip": 0.13430455471453878,
+    "encoding_cost": 0.00034193062207379943,
+    "max_gene_displacement": 0.39215686274511086,
+    "ga_train_mean": 0.08646608543749683
+  },
+  "coverage": {
+    "n_states": 50000,
+    "hand_designed_undefined_pct": 0.0,
+    "per_seed_undefined_pct": {
+      "0": 0.38999999999999996,
+      "1": 0.796,
+      "2": 0.0,
+      "3": 0.374,
+      "4": 0.42
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 0,
+      "undefined_pct": 0.38999999999999996,
+      "ordering_broken_on": [
+        "room_temp"
+      ],
+      "fully_covering": false,
+      "ordering_intact": false
+    },
+    {
+      "seed": 1,
+      "undefined_pct": 0.796,
+      "ordering_broken_on": [],
+      "fully_covering": false,
+      "ordering_intact": true
+    },
+    {
+      "seed": 2,
+      "undefined_pct": 0.0,
+      "ordering_broken_on": [
+        "hvac"
+      ],
+      "fully_covering": true,
+      "ordering_intact": false
+    },
+    {
+      "seed": 3,
+      "undefined_pct": 0.374,
+      "ordering_broken_on": [
+        "room_temp"
+      ],
+      "fully_covering": false,
+      "ordering_intact": false
+    },
+    {
+      "seed": 4,
+      "undefined_pct": 0.42,
+      "ordering_broken_on": [],
+      "fully_covering": false,
+      "ordering_intact": true
+    }
+  ],
+  "seeds_passing_both": 0
+}
