@@ -616,42 +616,8 @@ def fig23_encoding_cost(flc):
 # ------------------------------------------------------------------- part 3 stats
 
 def part3_pairwise_tests():
-    """Rank tests on the Part 3 runs, because four means can mislead.
-
-    The results table ranks algorithms by mean, and on F6 at D=10 that ranking
-    is carried entirely by three PSO runs that diverged. A Mann-Whitney U test
-    on the 15 raw values per cell asks the different question -- is the
-    *typical* run better -- and on that cell the answer is that GA and PSO are
-    indistinguishable (p = 0.62) and PSO's median is in fact the lower of the
-    two. Reporting the mean ranking without this would overstate the GA.
-
-    Mann-Whitney rather than a t-test: the run distributions are heavily
-    skewed and, on the cells where an algorithm solves the problem, nearly
-    degenerate, so normality is not available.
-    """
-    from itertools import combinations
-    from scipy.stats import mannwhitneyu
-
-    d = _load("part3_results.json")
-    cells = {(c["function"], c["dim"], c["algorithm"]): np.asarray(c["values"])
-             for c in d["cells"]}
-    out = []
-    for fn in ("F6", "F9"):
-        for dim in (2, 10):
-            for a, b in combinations(("GA", "PSO", "SA"), 2):
-                x, y = cells[(fn, dim, a)], cells[(fn, dim, b)]
-                u, p = mannwhitneyu(x, y, alternative="two-sided")
-                out.append({
-                    "function": fn, "dim": dim, "a": a, "b": b,
-                    "U": float(u), "p": float(p),
-                    "significant_at_0.05": bool(p < 0.05),
-                    "median_a": float(np.median(x)),
-                    "median_b": float(np.median(y)),
-                    "lower_median": a if np.median(x) < np.median(y) else b,
-                })
-    return {"test": "Mann-Whitney U, two-sided, n=15 per group",
-            "note": "within-study only; shift vectors are locally generated",
-            "comparisons": out}
+    from acflc.statistics import benchmark_statistics
+    return benchmark_statistics(_load("part3_results.json"))
 
 
 # ------------------------------------------------------------------------ main

@@ -84,7 +84,7 @@ clipped at the boundary.}
 \label{tab:t2-variables}
 \centering
 \small
-\begin{tabular}{@{}lllll@{}}
+\begin{tabular}{@{}lp{0.12\textwidth}p{0.20\textwidth}p{0.25\textwidth}p{0.23\textwidth}@{}}
 \toprule
 & \textbf{Variable} & \textbf{Universe} & \textbf{Fuzzy sets} &
 \textbf{Sensed by} \\
@@ -318,10 +318,10 @@ paid for smoothness.}
 
 \subsection{Two independent implementations}
 
-The controller exists in two forms: a purpose-written Mamdani inference engine,
-and a MATLAB Fuzzy Logic Toolbox system. The MATLAB system is generated
-mechanically from the same variable, rule and membership-function definitions
-that drive the engine, so the two cannot describe different controllers.
+The controller exists in two forms: a purpose-written Python Mamdani inference
+engine and a custom base-MATLAB implementation. The MATLAB controller definition
+is generated from the same variables, rules and membership functions. This
+reduces transcription errors; agreement must still be checked numerically.
 
 This yields a genuine verification opportunity. The two are identical in
 \emph{definition} but independent in \emph{arithmetic}: different
@@ -339,40 +339,41 @@ approximate.
 \textbf{The MATLAB system is generated, not transcribed.} Maintaining two
 hand-written definitions of one controller and hoping they stay in step is
 exactly the kind of silent drift that invalidates a cross-implementation check:
-the two would eventually differ, and the difference would be mistaken for a
-finding. Emitting one from the other removes the possibility by construction.
+the two could eventually differ, and the difference could be mistaken for a
+finding. Regeneration and cross-implementation checks reduce this risk.
 
 \textbf{Mamdani inference is implemented directly rather than called from a
 library.} The controller is expressed as a plain data structure and the five
 inference stages are evaluated explicitly. This was originally a constraint ---
 the MATLAB licence available for this work does not include the fuzzy inference
-library, so those functions were simply unavailable --- but it turns out to be
-the better choice regardless. A library that returns only the defuzzified scalar
-hides the firing strengths, the clipped consequents and the aggregated set,
-which are the quantities this section needs in order to show how the controller
-reaches a decision rather than merely what it decides. Every figure here is
-drawn from the engine's own intermediate values, so the numbers in the text and
-the numbers in the plots cannot disagree.
+library, so those functions were unavailable. The custom engine exposes firing
+strengths, clipped consequents and aggregated sets to support the worked
+examples. Plots are derived from these intermediate values and checked against
+the numerical trace. This choice does not constitute use of the named Toolbox.
 
-\subsection{MATLAB Fuzzy Logic Toolbox}
+\subsection{Base-MATLAB implementation}
 \label{sec:t2-matlab}
 
 Figures~\ref{fig:t2-matlab1}, \ref{fig:t2-matlab2} and~\ref{fig:t2-matlab3} show
-the system built and evaluated in the MATLAB Fuzzy Logic Toolbox: the membership
-functions, the rule inference for a worked scenario, and the control surfaces.
+the MATLAB visualisations: membership functions, rule inference for a worked
+scenario, and control surfaces. They are not evidence of a Fuzzy Logic Toolbox
+implementation. The saved code uses a custom engine because that toolbox was
+unavailable on the project's licence. The brief permits a simulated system
+programmed in MATLAB, FuzzyLite or Juzzy and provides Toolbox reference links.
+The base-MATLAB implementation follows that programming-language option without
+claiming to use the Toolbox.
 
 The evaluation reports a direct numerical comparison against the reference
-engine. One detail makes that comparison meaningful: MATLAB samples each output
-universe at 101 points by default where the reference engine uses 501, and since
-the centroid is an integral over that grid, unequal grids would produce unequal
-answers for reasons unrelated to whether the two systems agree. The MATLAB
-system is therefore set to 501 points before any comparison is made. On the
-worked scenario the two agree to within $10^{-3}$ on both actuators.
+engine. Both custom implementations use 501 output samples: unequal grids could
+change centroid estimates independently of inference correctness. The recorded
+base-MATLAB code check was executed in GNU Octave, with approximately
+$3.6\times10^{-7}$ difference on the worked scenario, within the $10^{-3}$
+tolerance on both actuators. This is separate from the Python/scikit-fuzzy tests.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{matlab_fig1_membership.png}
-\caption{MATLAB Fuzzy Logic Toolbox: membership functions for all four inputs
+\caption{MATLAB visualisation: membership functions for all four inputs
 and both outputs. Compare with Fig.~\ref{fig:t2-mfs}, produced independently by
 the reference engine.}
 \label{fig:t2-matlab1}
@@ -830,7 +831,7 @@ level random search reached --- a flat line, since it never left its seed.}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{fig12_mf_before_after.png}
+\includegraphics[width=.82\textwidth,height=.72\textheight,keepaspectratio]{fig12_mf_before_after.png}
 \caption{Membership functions before (left column) and after (right column)
 genetic tuning, for the best of the five runs. All six variables are shown. The
 sets migrate substantially rather than being finely polished, and on several
@@ -971,8 +972,8 @@ shortens by 27\%. Under \textbf{first-order} Sugeno each of the 54 rules carries
 its own linear function of four inputs, so the chromosome grows almost fourfold
 to 2{,}560 bits and the search space from $2^{648}$ to $2^{2560}$. Given that
 9{,}060 evaluations against 648 bits does not exhaust the present search, a
-four-times-longer chromosome at the same budget would almost certainly perform
-worse rather than better.
+four-times-longer chromosome increases the search burden at the same budget;
+its actual performance would require a separate experiment.
 
 \textbf{The decisive gain is that least squares becomes available.} With the
 antecedents fixed, a Sugeno system is \emph{linear in its consequent
@@ -992,8 +993,9 @@ the repair operator would apply only to the input half, since consequent
 coefficients carry no ordering constraint.
 
 What deteriorates is the property for which Mamdani was chosen.
-Interpretability goes, and with it the linguistic-ordering audit of
-Section~\ref{sec:t2-cost}, which would have nothing to check on the output side.
+The present output-set interpretation and linguistic-ordering audit of
+Section~\ref{sec:t2-cost} would no longer apply directly. Sugeno rules can still
+be inspected, but would require a different account of their output behaviour.
 \textbf{More seriously, the safety property would need re-establishing.} ``Never
 heat a hot room'' currently follows from the \emph{structure} of the clamped FAM.
 With free linear consequents an optimiser could produce coefficients that
@@ -1003,270 +1005,9 @@ discourages violations rather than preventing them, which is strictly weaker
 than what the Mamdani system provides. Section~\ref{sec:t2-cost} is a
 demonstration of how much weaker.
 
-In short, Sugeno would make the optimisation easier and the controller harder to
-trust. For a benchmark or an inner loop that is a good trade; for an
-assistive-care flat whose behaviour a carer must approve, it is the wrong way
-round.
+Sugeno offers a computationally attractive alternative. For this assistive-care
+scenario, it would need explicit behavioural constraints and a suitable audit
+before an accuracy gain could justify replacing the inspectable Mamdani design.
 
 %==============================================================================
-\section{Optimiser Comparison on CEC'2005 Functions}
-\label{sec:t2-cec}
-
-\subsection{Functions and protocol}
-
-Two complementary functions from the CEC'2005 real-parameter
-suite~\cite{suganthan2005} are used.
-
-\textbf{F6, Shifted Rosenbrock.} Unimodal at $D=2$ but with a long, narrow,
-curved valley; multi-modal from $D=3$. \emph{Non-separable}, so a
-coordinate-wise search cannot decompose it. Domain $[-100, 100]^D$, optimum 390.
-\begin{equation}
-F_6(\mathbf{x}) = \sum_{i=1}^{D-1}
-\big[100(z_i^2 - z_{i+1})^2 + (z_i - 1)^2\big] + 390,
-\end{equation}
-with $\mathbf{z} = \mathbf{x} - \mathbf{o} + 1$.
-
-\textbf{F9, Shifted Rastrigin.} \emph{Separable}, but massively multi-modal:
-roughly $10^D$ local minima on a regular lattice over a global parabolic bowl.
-The difficulty is not the geometry of any one basin but escaping the one you
-land in. Domain $[-5, 5]^D$, optimum $-330$.
-\begin{equation}
-F_9(\mathbf{x}) = \sum_{i=1}^{D}
-\big[z_i^2 - 10\cos(2\pi z_i) + 10\big] - 330,
-\end{equation}
-with $\mathbf{z} = \mathbf{x} - \mathbf{o}$.
-
-The pair is complementary by design --- one non-separable with a hard-to-follow
-valley, one separable with an overwhelming number of local optima. An algorithm
-suiting both is genuinely general; in practice they tend not to, and the results
-below bear that out. Figure~\ref{fig:t2-landscapes} in the appendix plots both
-landscapes at $D=2$, which makes the contrast between the two kinds of
-difficulty considerably easier to accept than the formulae do.
-
-\textbf{One caveat, stated before any number is quoted.} The official CEC'2005
-distribution supplies the shift vectors $\mathbf{o}$ as data files that were not
-available. The vectors used here are generated from a fixed seed and reported in
-full. Consequently \textbf{these results are not comparable with published
-CEC'2005 figures}: a different shift moves the optimum and changes how the
-domain boundary interacts with the basin. Every claim below is a
-\emph{within-study} comparison across three algorithms on identical instances.
-No comparison against the literature is made, because it would be unsound.
-
-Fifteen independent runs per algorithm per function per dimension, at
-$D \in \{2, 10\}$, on a budget of $10{,}000 \times D$ function evaluations ---
-the CEC'2005 termination criterion --- giving 180 runs in total.
-
-\subsection{Algorithms}
-
-All three are implemented against a shared budget-counting objective so that
-each is charged an identical number of function evaluations; library
-implementations count generations, iterations and restarts differently, which
-would make the budget incomparable. Parameters are conventional values from the
-literature, \emph{not} tuned per problem --- tuning each algorithm on each
-function would measure the tuning effort rather than the algorithms.
-
-\textbf{GA:} real-coded, population 50, tournament selection ($k=3$),
-BLX-$\alpha$ crossover ($\alpha = 0.5$) at $p_c = 0.9$, Gaussian mutation
-($\sigma = 0.1 \times$ range) at $p_m = 0.1$, elitism 2. Real-coded rather than
-binary, unlike Section~\ref{sec:t2-ga}: here the decision variables are
-continuous, and binary encoding would impose a quantisation unrelated to the
-problem --- on F9's $[-5,5]$ domain an 8-bit gene resolves only 0.04, coarse
-next to the 1.0 spacing of Rastrigin's optima. BLX-$\alpha$ also allows offspring
-to fall slightly outside the parents' interval, which keeps the population from
-collapsing inwards.
-
-\textbf{PSO}~\cite{kennedy1995}: swarm 40, global-best topology,
-$c_1 = c_2 = 1.49445$, inertia weight decaying linearly $0.9 \rightarrow 0.4$,
-$v_{\max} = 0.2 \times$ range.
-
-\textbf{SA}~\cite{kirkpatrick1983}: geometric cooling ($T \leftarrow 0.995T$),
-20 proposals per temperature, Metropolis acceptance, Gaussian proposals with
-$\sigma$ shrinking $0.20 \rightarrow 0.002 \times$ range. $T_0$ is calibrated
-from a short random sample so that a typical uphill move is accepted with
-probability one half, rather than fixed arbitrarily across two functions whose
-value scales differ by orders of magnitude.
-
-\subsection{Results}
-
-\begin{table*}[t]
-\caption{Results over 15 runs per cell. Best mean per cell in \textbf{bold}.
-Both functions are minimised; F6's optimum is 390 and F9's is $-330$. The
-median column is not part of the four statistics the study is required to
-report, but it is included because on F6 at $D=10$ the mean and the median
-rank the algorithms differently, and that disagreement is the finding.}
-\label{tab:t2-cec}
-\centering
-\small
-\begin{tabular}{@{}llrrrrr@{}}
-\toprule
-& & \textbf{mean} & \textbf{std} & \textbf{best} & \textbf{worst} &
-\textbf{median} \\
-\midrule
-\multicolumn{7}{@{}l}{\textbf{F6 Shifted Rosenbrock, $D=2$} \quad
-non-separable, narrow curved valley, domain $[-100,100]^2$, optimum 390} \\
-& GA  & 390.466 & 0.920 & 390.000 & 392.699 & 390.036 \\
-& PSO & \textbf{390.000} & 0.000 & 390.000 & 390.000 & 390.000 \\
-& SA  & 392.700 & 2.686 & 390.161 & 399.710 & 392.363 \\
-\midrule
-\multicolumn{7}{@{}l}{\textbf{F6 Shifted Rosenbrock, $D=10$} \quad
-multi-modal from $D=3$, domain $[-100,100]^{10}$, optimum 390} \\
-& GA  & \textbf{419.796} & 44.679 & 393.763 & 551.463 & 399.100 \\
-& PSO & $4.49{\times}10^{6}$ & $1.08{\times}10^{7}$ & 390.025
-& $3.29{\times}10^{7}$ & \textbf{396.152} \\
-& SA  & 542.500 & 117.649 & 419.968 & 756.255 & 518.994 \\
-\midrule
-\multicolumn{7}{@{}l}{\textbf{F9 Shifted Rastrigin, $D=2$} \quad
-separable, $\approx 10^{2}$ local optima, domain $[-5,5]^2$, optimum $-330$} \\
-& GA  & $-330.000$ & $1.3{\times}10^{-7}$ & $-330.000$ & $-330.000$
-& $-330.000$ \\
-& PSO & $\mathbf{-330.000}$ & 0.000 & $-330.000$ & $-330.000$ & $-330.000$ \\
-& SA  & $-329.982$ & 0.032 & $-330.000$ & $-329.904$ & $-329.999$ \\
-\midrule
-\multicolumn{7}{@{}l}{\textbf{F9 Shifted Rastrigin, $D=10$} \quad
-separable, $\approx 10^{10}$ local optima, domain $[-5,5]^{10}$,
-optimum $-330$} \\
-& GA  & $\mathbf{-329.994}$ & 0.003 & $-329.999$ & $-329.986$ & $-329.995$ \\
-& PSO & $-324.787$ & 5.259 & $-329.005$ & $-306.894$ & $-326.020$ \\
-& SA  & $-317.691$ & 4.728 & $-324.701$ & $-305.912$ & $-318.905$ \\
-\bottomrule
-\end{tabular}
-\end{table*}
-
-Table~\ref{tab:t2-cec} gives mean, standard deviation, best and worst per cell;
-Fig.~\ref{fig:t2-cecconv} shows convergence behaviour. Three findings follow.
-
-\textbf{Dimensionality reverses the ranking.} PSO solves both $D=2$ cells to
-machine precision with zero variance across all 15 runs, and beats the GA
-decisively on F6 ($p < 10^{-6}$); on F9 the GA also effectively solves the
-problem and the two are statistically indistinguishable ($p = 0.35$). At $D=10$
-the GA wins both, and on F9 by a wide and significant margin ($p < 10^{-5}$).
-Any conclusion drawn from $D=2$ alone would have been wrong about $D=10$.
-
-\textbf{PSO's failure on F6 at $D=10$ is a variance failure, not a competence
-failure --- and the mean conceals which.} Its mean of $4.49 \times 10^6$ is six
-orders of magnitude off, but its \emph{median} is 396.15, better than the GA's
-399.10. A minority of runs diverge catastrophically (worst:
-$3.29 \times 10^7$) while the majority remain competitive. A Mann-Whitney $U$
-test on the raw runs confirms the distinction: GA versus PSO on this cell is
-\textbf{not significant} ($p = 0.62$). \textbf{The GA's ``win'' here is a win on
-robustness, not on typical performance}, and reporting the ranking of means
-without saying so would overstate it. Figure~\ref{fig:t2-cecdist} shows all 180
-runs; the divergent PSO tail is immediately visible, and entirely invisible in
-Table~\ref{tab:t2-cec}.
-
-\textbf{Simulated annealing is worst everywhere, and slowest.} It loses all
-eight of the pairwise comparisons it appears in, every one at $p < 0.05$, and it
-is the only algorithm that fails to reach the optimum of \emph{either} function
-even at $D=2$, where both of the others solve F9 to machine precision. It is
-also the most expensive, at roughly 40\,s per $D=10$ cell against PSO's
-1.9\,s --- worst and slowest at once. The mechanism is discussed below.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{fig14_convergence_cec2005.png}
-\caption{Convergence on all four cells, median over 15 runs with the
-interquartile band. PSO's early advantage at $D=2$ and its instability on F6 at
-$D=10$ are both visible; the GA's curves are the slowest and the most reliable.}
-\label{fig:t2-cecconv}
-\end{figure*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{fig18_benchmark_distributions.png}
-\caption{Every one of the 180 runs, as error above the known optimum on a
-logarithmic axis, with the per-cell median marked. The four summary statistics
-in Table~\ref{tab:t2-cec} hide the shape; on F6 at $D=10$ the shape is the
-entire finding.}
-\label{fig:t2-cecdist}
-\end{figure*}
-
-\subsection{Discussion}
-
-The mechanism behind the reversal is the same one that separates the two
-algorithms in principle. PSO's velocity update pulls every particle towards a
-single global best, which converges very fast when the basin containing the
-optimum is easy to find --- as at $D=2$ --- and collapses diversity when it is
-not. On F6 at $D=10$ the narrow curved valley combined with a fast-collapsing
-swarm occasionally sends velocities divergent before the swarm has localised,
-which is exactly the failure the results show. The GA's
-population-with-crossover maintains diversity structurally and cannot collapse
-the same way, so it is slower on the easy cells and far more reliable on the
-hard ones.
-
-Simulated annealing's uniform poor showing has the same explanation read from
-the other end. It maintains a single point rather than a population, so it has
-no mechanism for combining information from different parts of the space: there
-is no crossover to recombine two partial solutions and no swarm to communicate a
-better region. On F9, whose $10^{D}$ basins are laid out on a regular lattice,
-that leaves it refining whichever basin it happened to start in, with only the
-Metropolis criterion to escape --- and by the time the temperature has fallen far
-enough for the search to converge, escaping has become improbable. Its cost
-profile compounds the problem: at roughly 40\,s per $D=10$ cell against PSO's
-1.9\,s, it is both the worst performer and the most expensive, because a single
-chain cannot be vectorised across candidates the way a population or a swarm
-can.
-
-A note on what the budget rule does and does not equalise. All three algorithms
-are charged the same number of \emph{function evaluations}, which is the
-CEC'2005 criterion and the right basis for comparing search efficiency. It is
-not the same as equal wall-clock time, and the timings above show the gap: the
-algorithms differ by more than an order of magnitude in cost per evaluation.
-For an objective as cheap as these two benchmark functions that overhead
-dominates, which is why the timings are reported but not used to rank anything.
-On an expensive objective --- the fuzzy controller of Section~\ref{sec:t2-ga},
-where one evaluation means running the inference over 280 training examples ---
-the evaluation count is what would govern, and the ranking above would stand.
-
-Two caveats bound all of this. Parameters were not tuned per problem, so these
-are results for \emph{conventionally configured} algorithms; a tuned PSO with
-tighter velocity clamping, a local topology, or simple reinitialisation of
-diverged particles would very likely remove the F6 failure entirely, and it
-would be wrong to read these results as a claim about PSO's ceiling. And 15 runs
-on two functions at two dimensionalities is a small study --- the significance
-tests guard against reading noise as signal, but they do not make the result
-general. Both functions here are shifted but not rotated; a rotated,
-non-separable variant would be expected to penalise any algorithm that
-implicitly treats the coordinates independently, which would change the picture
-again.
-
-%==============================================================================
-\section{Conclusions}
-\label{sec:t2-conclusion}
-
-\textbf{The controller works, and its behaviour is verified rather than
-asserted.} Four inputs, two outputs and 54 rules generated from auditable FAM
-tables, cross-checked against an independent implementation in the MATLAB Fuzzy
-Logic Toolbox, with zero uncovered inputs and zero dead rules over a
-70{,}875-point sweep. Two limitations emerged from analysing output behaviour:
-centroid defuzzification cannot reach full actuator authority, and the
-temperature response is non-monotone by 0.6\% of span where the demand scale
-saturates. Both are bounded and declared.
-
-\textbf{Genetic tuning improved accuracy by 32.6\% and cost two structural
-properties.} The genetic algorithm beat a budget-matched random search
-decisively --- random search never once improved on its expert seed in 45{,}300
-draws --- so on a 648-bit space the evolutionary mechanism does real work. But
-three of five tuned controllers reordered their fuzzy sets, four of five left
-part of the input space with no defined output, and \textbf{none preserved
-both}. The fitness function asked for accuracy and got it, at the price of
-properties nobody had written down. For a safety-relevant controller, that is
-the central practical finding of this work: \emph{an objective that encodes only
-accuracy will spend anything not in the objective to obtain it.}
-
-\textbf{No optimiser dominated on the benchmarks.} PSO solved both $D=2$ cells
-exactly and instantly; the GA won both $D=10$ cells; SA lost every pairwise
-comparison it appeared in. The cell where the ranking appeared most dramatic ---
-F6 at $D=10$, where PSO's mean is six orders of magnitude off --- proves on a
-rank test to be no significant difference at all, because the effect lives
-entirely in three divergent runs. Four summary statistics can rank algorithms in
-an order the runs themselves do not support.
-
-\textbf{Limitations.} (i) The tuning dataset is synthetic; the improvement shows
-the search can recover a known target, not that the tuned controller serves real
-residents better. (ii) The benchmark shift vectors are generated locally, so no
-comparison with published CEC'2005 results is possible or attempted. (iii) Five
-tuning runs and fifteen benchmark runs per cell are both small samples.
-(iv) Optimiser parameters were held at conventional values rather than tuned,
-measuring the algorithms as typically configured rather than at their best.
-(v) The controller has been simulated, never deployed; no claim about real
-thermal comfort follows from any of it.
+\input{task2_cec}

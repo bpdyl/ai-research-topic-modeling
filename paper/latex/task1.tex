@@ -1,0 +1,533 @@
+\paperhead
+{Optimized Topic Modeling of Nepal-Affiliated AI Research:\\
+Comparing Search Strategies and Tracking Themes, 2015--2025}
+{%
+Mapping a regional research literature requires models whose topics are both measurable and
+meaningful. We analyse 1,074 scholarly records retrieved as Nepal-affiliated AI research from
+2015--2025, comparing grid-selected latent Dirichlet allocation (LDA), genetic-algorithm-optimised
+LDA, a budget-matched random-search control, and BERTopic. GA-LDA improves coherence over the
+standard baseline ($C_v$: 0.4483 to 0.4940), but random search finds a better solution in the
+single matched-budget experiment (fitness 0.5282 versus 0.5196). BERTopic achieves the highest
+$C_v$ (0.5107) and three-seed topic stability (0.8418), while leaving 17.1\% of documents
+unassigned. Three blinded LLM judgments favour BERTopic and rate GA-LDA below standard LDA,
+showing that improved coherence need not coincide with improved automated interpretability.
+An additional label audit identifies several GA topics as generic rather than domain-specific.
+Fixed-model temporal analysis shows increasing education-related topic share after 2020 under
+both representations. However, unequal window sizes, differing assignment coverage and a
+residual non-AI record limit interpretation, particularly for the eight-record earliest window.
+The results support reporting multiple quality measures, explicit coverage and qualitative
+checks rather than selecting a model from coherence alone.%
+}
+{topic modelling, latent Dirichlet allocation, genetic algorithms, BERTopic, Nepal, scientometrics}
+
+\section{Introduction}
+\label{sec:t1-intro}
+
+A growing publication list does not by itself explain what a research community studies.
+Researchers choosing a project, institutions planning research support and readers entering a
+field need to distinguish recurring applications from emerging themes. Reading individual
+papers remains essential, but an overview becomes difficult when relevant work is scattered
+across engineering, health, education, agriculture and other disciplinary venues. Topic
+modelling offers a complementary way to organise this literature: it identifies patterns in
+document text that can be inspected, labelled and compared across publication periods.
+
+This study examines research with at least one Nepal-based institutional affiliation. That
+definition concerns the affiliation recorded on a publication, rather than an author's
+nationality or ethnicity. It includes internationally co-authored work when a Nepal affiliation
+is present and excludes diaspora-only work without one. The distinction matters because
+``research in Nepal'' can otherwise refer to authorship, study location, language or national
+identity. Our evidence supports a view of indexed Nepal-affiliated literature, not a complete
+census of all AI activity in the country.
+
+Latent Dirichlet allocation (LDA)~\cite{blei2003} represents documents as mixtures of topics and
+topics as distributions over words. Its use in scientific literature analysis~\cite{griffiths2004}
+provides an interpretable starting point for this application. Large-scale AI mapping already
+includes temporal and country-level comparisons~\cite{yu2023}; the question here is how useful
+different topic models are within a smaller regional corpus with heterogeneous applications and
+uneven temporal coverage. We investigate this particular setting without claiming that Nepal
+has never been studied or that regional analysis is itself novel.
+
+Three methodological difficulties motivate the comparison. First, topic count and prior settings
+can change the granularity of an LDA summary: a broad topic may score consistently while failing
+to name a recognisable research area. Second, an embedding-based model may separate specific
+domains while declining to assign atypical documents, complicating comparisons with a model
+that represents every record. Third, publication growth and database coverage can be mistaken
+for thematic change unless topic prevalence is normalised and sample sizes remain visible.
+These are practical model-selection questions, not simply a contest to maximise one score.
+
+We therefore compare a conventional LDA baseline, an evolutionary hyperparameter search,
+a random-search control and BERTopic on the same frozen corpus. The study contributes a
+documented regional dataset, an explicit test of whether the evolutionary mechanism adds value
+beyond search effort, and a temporal interpretation qualified by assignment coverage and topic
+quality. The genetic algorithm is an application of established methods rather than a new
+optimisation algorithm. The paper first positions the comparison in related work, then describes
+the corpus and methods, before examining quantitative results alongside the words and documents
+that give those results meaning.
+
+\section{Related Work}
+\label{sec:t1-related}
+
+\subsection{Mapping scientific literature}
+Griffiths and Steyvers~\cite{griffiths2004} demonstrate how probabilistic topics can organise
+scientific publications. Yu and Xiang~\cite{yu2023} apply LDA to 177,204 AI documents from
+1990--2021, extracting 40 topics and aggregating them by year, publication source and country or
+region. Their work establishes that topic prevalence can provide a structured account of AI
+research. Our contribution differs in scale and emphasis: a Nepal-affiliated corpus is analysed
+through competing representations and explicit evaluation of their limitations. A global model's
+topic vocabulary cannot be assumed to offer the most useful resolution for this narrower collection.
+
+\subsection{Search and embedding-based topic models}
+Agrawal, Fu and Menzies~\cite{agrawal2018} investigate instability in topic modelling and use
+search-based optimisation to improve model configurations. This motivates searching LDA's
+hyperparameters instead of fixing them arbitrarily. However, improvement over a small grid does
+not isolate the contribution of an evolutionary algorithm. Random search is an established
+hyperparameter-selection baseline~\cite{bergstra2012}; matching its space, objective and number
+of unique evaluations to the GA makes the comparison more informative.
+
+BERTopic~\cite{grootendorst2022} combines document embeddings with clustering and class-based
+TF-IDF topic representations. Its components include Sentence-BERT~\cite{reimers2019},
+UMAP~\cite{mcinnes2018} and HDBSCAN~\cite{campello2013}. Capilitan et al.~\cite{agri2026}
+illustrate its application to a large agricultural AI literature, showing the relevance of
+embedding-based thematic mapping to an applied domain. Its usefulness on our collection is an
+empirical question: density clustering can discover specific groups but may leave some records
+outside those groups. We use hard assignments for temporal reporting; this is a choice in our
+implementation, not a claim that BERTopic cannot produce probability estimates.
+
+\subsection{Evaluation beyond a single score}
+Chang et al.~\cite{chang2009} show why statistical fit and human interpretation should not be
+treated as equivalent. Word co-occurrence approaches~\cite{newman2010,mimno2011} and the
+$C_v$ framework of R\"oder et al.~\cite{roder2015} provide measurable aspects of topic quality,
+while topic diversity~\cite{dieng2020} addresses repeated vocabulary across topics. None alone
+establishes that a topic names a useful research domain. We therefore combine coherence,
+diversity, stability, document coverage and blinded automated judgments. The latter are explicitly
+provisional: this experiment does not replicate a human interpretation study. The combined
+evaluation asks which compromises each model makes and whether those compromises suit a
+regional literature review.
+
+\section{Problem and Dataset}
+\label{sec:t1-data}
+
+\subsection{Research questions}
+\textbf{RQ1:} Which themes are identifiable in the retrieved Nepal-affiliated literature?
+\textbf{RQ2:} How does their prevalence change between publication windows?
+\textbf{RQ3:} Does GA-LDA improve on grid-selected LDA and on budget-matched random search?
+\textbf{RQ4:} How do these configurations compare with BERTopic in quality and coverage?
+
+\subsection{Retrieval and inclusion}
+Records were retrieved from OpenAlex~\cite{priem2022} using a Nepal-affiliation country filter,
+AI-related topic subfields and a supplementary keyword pass for applied work indexed elsewhere.
+The inclusion rule required a Nepal-based institutional affiliation and AI-related vocabulary in
+the title or abstract. The analysis uses concatenated titles and abstracts rather than full texts.
+The filtering sequence is reported in Table~\ref{tab:funnel}.
+
+\begin{table}[t]
+\caption{Frozen corpus inclusion sequence.}
+\label{tab:funnel}\centering\small
+\begin{tabular}{@{}lr@{}}\toprule
+Stage & Records remaining\\\midrule
+OpenAlex retrieval & 1,693\\
+Publication year through 2025 & 1,228\\
+Abstract available & 1,102\\
+At least 30 title/abstract words & 1,088\\
+Exclude computer vision syndrome & 1,074\\\bottomrule
+\end{tabular}
+\end{table}
+
+OpenAlex's structured affiliation metadata made it suitable for the geographical inclusion rule.
+This departs from the proposal's planned Semantic Scholar-led, multi-source collection: NepJOL,
+IEEE and Springer were not separately harvested into this analysis. Indexing through OpenAlex
+may nevertheless include records from those publishers or outlets. The absence of direct
+supplementation limits coverage; it is not proof that every local publication is absent, nor that
+supplementary harvesting is technically impossible.
+
+The corpus contains 560 distinct nonempty venue names and a median title/abstract length of
+212 words. Venue metadata classifies 1,004 records as published, 36 as preprint-server records
+and 34 as lacking a venue. Thus, 93.5\% have publication-venue evidence, but the dataset is not a
+verified wholly peer-reviewed collection as originally proposed. Recorded affiliation strings
+are available for 1,072 records. An earlier 30-record affiliation check reported no incorrect
+Nepal affiliations; that limited check does not establish complete AI relevance or coverage.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figCorpusByYear.png}
+\caption{Publication counts in the frozen corpus. The last window contains 674 of 1,074 records;
+growth reflects both research activity and retrieval coverage.}
+\label{fig:years}\end{figure}
+
+\subsection{Quality checks and temporal coverage}
+The four windows contain 8, 93, 299 and 674 records respectively (Fig.~\ref{fig:years}). These
+counts make the earliest window unsuitable for a separately fitted topic model. Fourteen
+``computer vision syndrome'' papers were removed because their use of that phrase concerned
+screen-related eye conditions rather than computer vision methods. This illustrates why keyword
+matching requires inspection of context.
+
+A subsequent document check found another ambiguity: a 2016 medical-education paper discusses
+students' ``deep learning'' approaches, not machine learning. It remains in the archived training
+corpus, so the comparison is reported as a study of the frozen retrieval rather than a perfectly
+adjudicated AI dataset. We record its identifier and quantify its influence on the earliest window
+in Section~\ref{sec:temporal}. Policy and ethics papers about AI are also retained. These
+qualifications prevent apparent thematic precision from concealing uncertainty in inclusion.
+
+Affiliation validity and subject relevance are separate questions. An institution can be correctly
+identified while the record is included for the wrong sense of a technical phrase. A useful
+adjudication process therefore checks the abstract's methods as well as title keywords, records
+the reason for each disputed inclusion, and preserves identifiers for reproducible exclusions.
+Here the residual error is disclosed rather than removed only from the model with an unfavorable
+score. Revising the training corpus would require rerunning the entire comparison, since even one
+document can change vocabulary frequencies, cluster membership or selected hyperparameters.
+
+\section{Methods}
+\label{sec:t1-methods}
+
+Figure~\ref{fig:pipeline} summarises the shared corpus and model-specific representations.
+\begin{figure*}[t]\centering
+\includegraphics[width=.98\textwidth]{figPipeline.pdf}
+\caption{End-to-end analysis. All models use the same records, while representations differ to suit
+the model. Label assessment and temporal interpretation follow, rather than define, training.}
+\label{fig:pipeline}\end{figure*}
+
+\subsection{Text preparation and feature extraction}
+Cleaning normalises Unicode, removes leading abstract markers, URLs and DOI strings, and
+consolidates parenthesised acronym glosses. LDA's branch lowercases and tokenises the text,
+removes stop words, applies noun/verb lemmatisation and detects bigram/trigram phrases. Technical
+acronyms such as AI, ML, NLP and CNN are protected from the minimum-length filter and lemmatiser.
+The dictionary retains terms appearing in at least five documents and at most half the corpus,
+yielding 3,018 terms and no empty documents. LDA receives integer bag-of-words counts; the
+pipeline also exports TF-IDF features, but these are not used to train the probabilistic model.
+
+The domain stop-word list removes publication boilerplate and frequent generic research-process
+terms. Its development used measured document frequency alongside semantic judgment; frequency
+alone cannot distinguish a generic term from an important subject. For example, ``level'' and
+``value'' were retained because they can carry hydrological or statistical meaning. Terms such as
+``data'', ``accuracy'' and ``performance'' also remain. Their persistence in some topics is therefore
+a limitation of the representation, not evidence that cleaning removed them successfully.
+
+BERTopic receives cleaned natural sentences for embedding. Removing function words and word
+order before sentence encoding would discard information the encoder expects. The topic-word
+representation uses the configured stop words, but tokenisation and phrase vocabularies still
+differ between branches. Shared documents and a shared stop list do not make preprocessing
+identical; this difference is considered when interpreting coherence.
+
+\subsection{LDA baseline and genetic search}
+LDA is fitted with Gensim~\cite{rehurek2010} using variational inference~\cite{hoffman2010}.
+The baseline selects $K$ from $\{5,10,\ldots,40\}$ by maximum $C_v$, with symmetric document
+priors and the library's default topic-word prior. The selected value is $K=10$
+(Fig.~\ref{fig:coherence-k}); it is a searched baseline, not an arbitrary topic count.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figCoherenceVsK.png}
+\caption{Baseline topic-count sweep. Selection uses $C_v$ only; the displayed diversity is D@10
+and is a diagnostic rather than a selection criterion.}
+\label{fig:coherence-k}\end{figure}
+
+The genetic algorithm~\cite{holland1975} searches $(K,\alpha,\eta)$, where Gensim's $\eta$ is
+the topic-word Dirichlet prior often denoted $\beta$. Topic count ranges from 5 to 40, and each
+scalar prior ranges from 0.01 to 1.0. Initial priors are sampled log-uniformly to cover sparse
+and dense settings. Chromosomes use an integer topic count and real-valued priors. Tournament
+selection, blend crossover, Gaussian mutation and two-member elitism generate subsequent
+populations. Mutation is scaled to the gene range; bounds and valid integer topic counts are
+enforced after variation.
+
+Fitness scalarises three objectives:
+\begin{equation}
+ \begin{aligned}
+ F&=0.6\widehat{C_v}+0.2D_{25}+0.2S_{10},\\
+ \widehat{C_v}&=\operatorname{clip}\!\left(\frac{C_v-0.30}{0.40},0,1\right).
+ \end{aligned}
+\end{equation}
+Here $D_{25}$ is the fraction of unique words across top-25 lists, and $S_{10}$ is matched
+top-10-word stability. The weights express a preference for coherence; they are not learned and
+no Pareto frontier is estimated. Alternative weights could select different configurations.
+The historical GA evaluates 20 individuals over 15 generations; caching duplicate genomes
+reduces 300 candidate requests to 183 unique evaluations, each requiring three LDA fits.
+
+\subsection{Random search and BERTopic}
+Random search uses the same hyperparameter bounds, log-uniform initial sampling rule, fitness,
+LDA settings and stability seeds. Its budget is 183 unique configurations, matched to the GA's
+actual evaluations. This controls for searching a larger space than the eight-point baseline.
+The strategies differ in how subsequent candidates are proposed; matching evaluations does not
+imply identical wall-clock overhead or equal performance over repeated search runs.
+
+BERTopic uses \texttt{all-MiniLM-L6-v2} embeddings, UMAP with 15 neighbours and five output
+dimensions, and HDBSCAN with minimum cluster size 15 and excess-of-mass cluster selection.
+Its 14 non-outlier clusters provide the topics used here. The outlier label is retained in
+coverage calculations instead of being reassigned to improve apparent completeness.
+
+\subsection{Stability and temporal summaries}
+Across each pair of fitted seeds, topic word sets are matched one-to-one by maximising total
+Jaccard overlap with Hungarian assignment. The score averages matched overlap across topics and
+seed pairs, penalising unequal topic counts by their size ratio. This avoids treating arbitrary
+topic indices as meaningful. It measures reproducibility of top words, not agreement of document
+assignments or complete topic distributions.
+
+One global model defines each topic vocabulary across all years. LDA's temporal share is the mean
+document-topic mass within a window. BERTopic's share is the fraction of assigned documents in a
+cluster; zero-mass outlier rows are excluded. Its denominator therefore differs from LDA's. We
+show assigned and total counts for every window and exclude 2015--2017 from trend fitting.
+This replaces the proposal's per-window refitting: prevalence changes are measured under fixed
+topics, without claiming to identify topic births or changes in topic meaning.
+
+\subsection{Automated thematic labelling}
+All 39 topics have archived LLM-assisted draft labels, followed by an automated label audit.
+The drafts were produced in an assistant session, not through provider API calls. This fulfils
+the proposal's automated-labelling step; it does not establish human validation.
+
+A Streamlit app exposes the process through a wrapper for OpenAI,
+Claude and Gemini. It previews top words and up to four representative titles, generates
+structured labels with rationale and evidence identifiers, and records prompts, source hashes,
+requested/resolved models, responses and usage. Random-search topics use words only because
+their archived run lacks document-topic assignments. Failed batches can resume; named human
+reviews and partial exports remain explicit. Provider adapters were tested with simulated
+responses; no new live API run was made because credentials were unavailable. The reported
+results retain their archived labels and judgments.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+The archived search seed is 42, with seeds 42--44 used for stability. LDA uses ten passes,
+100 iterations and batches of 500 documents. GA settings are population 20, 15 generations,
+tournament size three, crossover probability 0.7, mutation probability 0.05 and mutation scale
+0.15 times the gene range. Coherence is evaluated in a single process. The comparison reports
+$C_v$, $c_{\mathrm{npmi}}$ and $u_{\mathrm{mass}}$ on top-10 words, and diversity/Jaccard on
+top-10 lists. \textbf{The reported D@10 differs from D@25 inside search fitness}; both cutoffs
+are explicit so the table is not mistakenly read as the fitness decomposition.
+
+Perplexity is evaluated on the training corpus and is an in-sample variational diagnostic.
+Metrics not used in fitness provide additional views, but are not independent held-out tests.
+The original three-seed stability also reuses selection seeds. A separate fixed-configuration
+check on seeds 100--109 is reported as a sensitivity analysis, not as repeated optimisation or
+out-of-sample accuracy. No chronological prediction task is claimed.
+
+For BERTopic coherence, words missing from the shared LDA dictionary are dropped; 93 of 140
+topic words remain. The resulting scores therefore compare different effective word-list
+lengths, an important limitation of numerical ranking. A topic with fewer than two retained
+words would be omitted by the scorer. Embedding-based topic quality should not be inferred
+from the filtered score alone.
+
+The interpretability instrument presents shuffled top-10 lists and a 1--5 rubric to three
+blinded LLM judgments. Model names, candidate labels and other judgments are withheld. A
+separate automated reviewer assesses all 39 candidate labels as accept, revise or reject.
+The records identify the judging model as \texttt{claude-opus-5}; separate contexts are recorded,
+but sampling settings are not fully preserved. Thus the aggregation is reproducible from saved
+ratings, whereas an identical fresh judgment cannot be guaranteed. Ordinal Krippendorff's
+$\alpha$~\cite{krippendorff2004} measures agreement. Shared model biases remain possible, and
+these ratings are not a substitute for human validation.
+
+To assess sampling sensitivity of the education trend, we resample documents within the
+2018--2020 and 2024--2025 windows 2,000 times and take percentile intervals for the difference
+in mean share. These intervals condition on the fitted model and, for BERTopic, assigned
+documents. They exclude uncertainty from retrieval, topic fitting, labelling and outlier selection.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Model comparison and search behaviour}
+\begin{table*}[t]
+\caption{Archived model comparison. Arrows indicate preferred metric direction, not universal
+model utility. Stability uses the original three seeds; perplexity is in-sample.}
+\label{tab:comparison}\centering\small
+\begin{tabular}{@{}lrrrr@{}}\toprule
+Metric & Standard LDA & GA-LDA & Random-search LDA & BERTopic\\\midrule
+Topics & 10 & 7 & 8 & 14\\
+$C_v\uparrow$ & .4483 & .4940 & .5030 & \textbf{.5107}\\
+$c_{\mathrm{npmi}}\uparrow$ & -.0230 & .0112 & \textbf{.0245} & -.0300\\
+$u_{\mathrm{mass}}\uparrow$ & -3.3586 & \textbf{-2.1796} & -2.5477 & -3.4444\\
+Diversity D@10 $\uparrow$ & .7900 & \textbf{.8000} & \textbf{.8000} & .7286\\
+Within-model Jaccard J@10 $\downarrow$ & \textbf{.0359} & .0471 & .0536 & .0471\\
+Stability S@10 $\uparrow$ & .2526 & .3375 & .3382 & \textbf{.8418}\\
+In-sample perplexity $\downarrow$ & 172.1 & 167.8 & \textbf{165.9} & n/a\\
+Unassigned documents & 0\% & 0\% & 0\% & 17.1\%\\
+Mean LLM rating (1--5) & 2.57 & 2.05 & 2.88 & \textbf{4.10}\\
+Labels accepted unchanged & 5/10 & 1/7 & 5/8 & 9/14\\\bottomrule
+\end{tabular}\end{table*}
+
+For RQ3, GA-LDA improves $C_v$ by 10.2\% relative to the grid baseline and also improves the
+other coherence measures, reported diversity, original-seed stability and in-sample perplexity
+(Table~\ref{tab:comparison}). It does not improve every metric: standard LDA has less pairwise
+topic overlap and a higher automated interpretability score. Coverage is unchanged.
+
+Random search finds the better scalarised fitness, 0.5282 versus 0.5196, with $K=8$ rather than
+the GA's $K=7$. Figure~\ref{fig:search} compares incumbent fitness at the same cumulative number
+of unique evaluations. The GA stops improving at generation eight, whereas the random run
+eventually finds one candidate exceeding the GA result. This supports a conclusion about the
+observed runs only. It does not establish that random search generally wins, that GA reduces
+variance, or that evolutionary search contributes nothing in other settings.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figSearchBudget.pdf}
+\caption{Best-so-far search fitness against actual unique evaluations, reconstructed from the
+saved candidate histories. Each curve represents one search run; no uncertainty band is implied.}
+\label{fig:search}\end{figure}
+
+For RQ4, BERTopic leads in $C_v$ and original-seed stability but has lower diversity and poorer
+$c_{\mathrm{npmi}}$ and $u_{\mathrm{mass}}$. It leaves 184 documents unassigned. Its top words
+are comparatively reproducible across the three seeds, but filtered vocabulary and different
+representations qualify direct metric comparisons. No single row resolves the practical choice
+between complete document representation and more specific clusters.
+
+\input{task1_seed_results}
+
+\subsection{Interpreting the topics}
+The panel's ordinal agreement is $\alpha=0.9787$, with 93.2\% pairwise exact agreement and all
+rating pairs within one point. The ordering is BERTopic, random search, standard LDA, then
+GA-LDA (Fig.~\ref{fig:quality}). This is \emph{not} a complete reversal of $C_v$: the first two
+models retain their ranks, while the two remaining LDA configurations exchange positions.
+The narrower finding is useful: GA-LDA's coherence gain over standard LDA does not translate
+into a higher rating under this automated rubric.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figQualityTradeoff.pdf}
+\caption{Model-level coherence and automated interpretation scores. Four descriptive points do
+not establish a correlation or causal effect of optimisation.}
+\label{fig:quality}\end{figure}
+
+\begin{figure*}[t]\centering
+\includegraphics[width=.95\textwidth]{figTopicExamples.pdf}
+\caption{Actual top-10 lists illustrate what aggregate scores can hide: a generic evaluation
+topic, an education-related topic and a domain-specific drug-discovery cluster.}
+\label{fig:examples}\end{figure*}
+
+Figure~\ref{fig:examples} shows why. GA topic 5 is dominated by evaluation and prediction
+vocabulary and cannot confidently be called a crop or hazard theme. Other clusters name more
+specific domains. The label audit accepts 20 labels, revises 12 and rejects seven
+(Fig.~\ref{fig:labels}). Only one of seven GA labels is accepted unchanged, compared with nine
+of fourteen BERTopic labels. This separate task corroborates a difficulty in assigning useful
+labels, although its judgments can share biases with the rating panel. Broad topics and low
+ratings are associated in this comparison; a controlled topic-count ablation would be needed
+to attribute the difference to $K$ alone.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figLabelAudit.pdf}
+\caption{Automated review outcomes, with counts shown rather than treating models with different
+numbers of topics as equally sized samples. Human label validation remains outstanding.}
+\label{fig:labels}\end{figure}
+
+\subsection{Themes and temporal prevalence}
+\label{sec:temporal}
+The audited labels identify applied domains including medical imaging, drug discovery,
+cybersecurity, construction materials, water/land modelling and Nepali text processing. These
+provide an answer to RQ1 at the resolution supported by the retrieved corpus. Mixed GA topics
+remain labelled as mixed; they are not recast as specific applications to make a cleaner narrative.
+
+\begin{figure*}[t]\centering
+\includegraphics[width=.98\textwidth]{figTemporalGA.pdf}
+\caption{GA-LDA topic mass by window, using audited labels and all seven topics. Values are
+percentages over all documents. The dashed boundary separates the eight-record descriptive window.}
+\label{fig:temporal-ga}\end{figure*}
+\begin{figure*}[t]\centering
+\includegraphics[width=.98\textwidth]{figTemporalBT.pdf}
+\caption{BERTopic cluster prevalence conditional on assignment. Assigned counts are 5, 72, 249
+and 564; total counts are 8, 93, 299 and 674. These denominators differ from Fig.~\ref{fig:temporal-ga}.}
+\label{fig:temporal-bt}\end{figure*}
+
+For RQ2, GA's education-related share rises from 2.1\% in 2018--2020 to 15.2\% in 2024--2025,
+an increase of approximately 13.1 percentage points. BERTopic's education cluster rises from
+1.4\% to 19.5\% of assigned records, approximately 18.1 points. Conditional bootstrap intervals
+are 10.7--15.4 and 13.7--22.2 points respectively. Both fitted representations therefore indicate
+an education-related increase across these endpoints, although the values are not directly
+interchangeable and the intervals do not address shared coverage bias.
+
+\begin{figure*}[t]\centering
+\includegraphics[width=.95\textwidth]{figCoverageSensitivity.pdf}
+\caption{Assignment coverage and a denominator sensitivity check for BERTopic's education
+cluster. The grey region marks the eight-record early window. Counting outliers in the total
+reduces the estimated level, while the later-window increase persists.}
+\label{fig:coverage}\end{figure*}
+
+Figure~\ref{fig:coverage} makes this denominator effect explicit. BERTopic assigns 62.5\% of
+the earliest records, 77.4\% in 2018--2020, 83.3\% in 2021--2023 and 83.7\% in 2024--2025.
+Its changing coverage could therefore influence a temporal comparison conditioned on assignment.
+When the education cluster is instead expressed as a fraction of \emph{all} retrieved documents,
+including outliers in the denominator, its share rises from approximately 1.1\% to 16.3\%
+between the later endpoints. The increase persists under this alternative summary, although
+outliers still have unknown thematic membership. Counting them as not assigned to education
+does not establish that none is about education; it measures the observed cluster's corpus share.
+
+This check separates two possible explanations for the displayed rise: a greater fraction of
+papers being assigned somewhere, and a larger observed education cluster. It strengthens the
+descriptive finding without implying that the cluster is a complete or unbiased inventory of
+educational AI. Reading its representative documents and adjudicating unassigned records would
+be needed to assess that stronger claim. The same distinction should accompany any proposed
+comparison of thematic prevalence across model families.
+
+The earliest GA education share requires particular caution. The non-AI medical-education
+record receives 0.721 education-topic mass. Excluding that record from reporting alone reduces
+the earliest share from about 10.8\% to 2.1\%, without retraining. This is a sensitivity check,
+not a corrected model fit. It demonstrates that a modern label applied retrospectively to a
+fixed topic cannot establish early generative-AI activity. The entire earliest window remains
+descriptive rather than evidence for a decade-long trajectory.
+
+Declining relative shares for some image/text and mixed forecasting topics do not imply falling
+publication counts: the corpus grows sharply. Likewise, a broad education cluster cannot be
+equated wholly with generative AI. The defensible interpretation concerns topic prevalence in
+the retrieved literature, not a causal account of changes in national research priorities.
+
+\section{Social, Ethical, Legal and Professional Considerations}
+\label{sec:selp}
+The study concerns an identifiable research community. Affiliation is used for inclusion, not
+to infer nationality or rank individual researchers. Findings are reported at topic level;
+neither publication counts nor topic scores are measures of a person's research quality.
+
+OpenAlex supplies openly available scholarly metadata. The collection uses metadata and
+abstracts rather than bypassing paywalls, and the scraper records source identifiers with
+rate-limited requests. Metadata availability should not be read as blanket permission to
+redistribute every underlying text; provenance and applicable source terms remain relevant.
+Direct supplementation of locally published and Nepali-language scholarship was not completed,
+which may underrepresent precisely the work of local interest.
+
+LLMs assisted topic labelling, automated assessment and manuscript preparation. Their outputs
+are fallible: generated labels were revised or rejected, and the current report distinguishes
+automated judgments from human review. The authors remain responsible for the submission,
+its sources and its interpretation. Claims of perfectly independent judges or guaranteed fresh
+reproduction of a judgment are avoided. Recorded ratings, prompts and review status support
+inspection of the process without representing it as a human study.
+
+Professional reporting also requires retaining unfavorable results. The matched control and
+generic topics are therefore reported alongside positive coherence changes. Archived outputs
+are not silently overwritten when data-quality concerns arise; changes to inclusion or training
+would require a new versioned experiment and a renewed comparison.
+
+\section{Discussion and Conclusions}
+\label{sec:t1-conclusion}
+The comparison illustrates a distinction between improving a metric and improving a useful
+regional summary. Fine hyperparameter search improves several LDA diagnostics relative to the
+grid baseline, but the observed GA does not outperform the matched random-search run. Neither
+result establishes a universal ordering of optimisers. BERTopic provides more recognisable
+domain labels under the automated rubric, at the cost of incomplete document assignment and
+a coherence vocabulary that only partly overlaps the common reference dictionary.
+
+For literature exploration, BERTopic's specific clusters are useful starting points for reading.
+For summaries requiring a distribution for every record, LDA offers complete representation,
+but its mixed topics should retain cautious labels. The practical recommendation is to inspect
+topic words and representative documents alongside metrics and coverage, rather than allowing
+the highest score to determine the interpretation automatically.
+
+The limitations are substantive. The frozen corpus contains a known residual relevance error,
+has sparse early coverage and does not exhaust local sources. Stability tests concern word lists
+on the same corpus, automated ratings are not human validation, and only one complete run of
+each search strategy is compared. Further work should adjudicate ambiguous records, rerun all
+models on the revised corpus, repeat matched searches, examine sensitivity to fitness weights
+and topic count, and obtain human judgments using the existing blinded instrument.
+
+Within these limits, the study provides a reproducible comparison and evidence of increased
+education-related prevalence in the later windows. Its main methodological lesson is that
+coherence, interpretability, stability and coverage answer different questions. Making their
+definitions and disagreements visible produces a more credible account of regional research
+than selecting one model and treating its labels as established facts.
+
+\balance
+\section*{Individual Contributions}
+Bibek Paudyal (250288), Sajan Mahat (250289) and Siddhartha Bhatta (250620) contributed equally
+to the group project. Corpus preparation, model development, evaluation, interpretation and
+report preparation were collaborative activities, with shared responsibility for the work as a
+whole rather than exclusive ownership of individual stages. This statement describes group
+participation; it does not constitute a separate human topic-rating exercise.
+
+\section*{Code and Reproducibility}
+The project repository~\cite{repo1} contains the implementation and experiment records. The
+report figures use pinned run identifiers and audited labels; their source hashes and derived
+window statistics are saved with the figure manifest. The notebook's quick mode checks pipeline
+execution and does not reproduce final numbers. Full settings reproduce the computational
+protocol, while automated assessments are reaggregated from saved judgments. The additional
+seed analysis and official Task 2 benchmark revision are recorded separately from earlier runs.
+
+\input{task1_references}

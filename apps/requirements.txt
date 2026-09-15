@@ -1,0 +1,3 @@
+# Standalone viewer/generator; no training libraries or provider SDKs required.
+streamlit>=1.40,<2
+numpy>=1.26,<3

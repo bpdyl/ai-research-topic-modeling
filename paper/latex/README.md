@@ -76,7 +76,7 @@ cp ../../assistive-care-flc/figures/*.png figures/
 ## Notes on the brief
 
 - The brief asks for **one file per task**, which `task2_standalone.tex` covers
-  for Task 2; use `main_bkp.tex` (the pre-merge version) or Paper 1 of
+  for Task 2; use `task2_standalone.tex` or Paper 1 of
   `main.tex` for Task 1.
 - Task 1 is capped at **6 pages / 4,000 words**; `wordcount.py` currently reports
   ~3,870 including the abstract. Task 2 has **no stated length limit**.

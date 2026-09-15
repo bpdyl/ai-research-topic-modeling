@@ -2,6 +2,16 @@
 
 Tracking thematic evolution and trends in Nepal, 2015–2025.
 
+**Report revision, 15 September 2026:** see [revision notes](paper/REVISION_NOTES.md)
+for the validated claims, approved formatting, new sensitivity analyses, official
+CEC2005 rerun and reproduction commands. Historical summaries below should be
+read alongside that revision. Final separate reports are in `output/pdf/`.
+
+**Automated topic labelling:** [Streamlit app instructions](apps/README.md) explain
+how to inspect all 39 archived labels and generate/review new labels using OpenAI,
+Claude or Gemini. The saved historical labels were assistant-session outputs;
+the new app adds actual provider API adapters and run provenance.
+
 **Module:** ST7085CEM — Advanced Machine Learning, Softwarica College of IT & E-Commerce
 (affiliated to Coventry University) · **Task 1**
 

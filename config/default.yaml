@@ -149,6 +149,7 @@ lda:
   multicore: false
 
 ga:
+  diversity_top_n: 25       # original search objective; distinct from reported D@10
   population_size: 20
   generations: 15
   crossover_rate: 0.7      # justify with a citation in the paper, not by taste
@@ -195,7 +196,7 @@ evaluation:
   # C_v is what the GA optimises, so reporting only C_v is circular (RISK-007).
   # c_npmi and u_mass are independent checks the GA never saw.
   coherence_measures: ["c_v", "c_npmi", "u_mass"]
-  diversity_top_n: 25
+  diversity_top_n: 10         # final comparison D@10; GA objective uses ga.diversity_top_n
   stability_seeds: 10          # wider than the GA's inner loop
   # OQ-012: three human raters score each topic 1-5; report mean plus
   # inter-rater agreement. Cannot be automated — schedule it.

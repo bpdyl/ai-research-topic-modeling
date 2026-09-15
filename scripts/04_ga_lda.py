@@ -106,7 +106,7 @@ def main() -> int:
         weights=gcfg["fitness_weights"],
         stability_seeds=stability_seeds,
         top_n=ecfg["top_n_words"],
-        diversity_top_n=ecfg["diversity_top_n"],
+        diversity_top_n=cfg["ga"].get("diversity_top_n", 25),
         coherence_processes=processes,
         fit_kwargs=fit_kwargs,
         trace_path=run.file("fitness_trace.jsonl"),

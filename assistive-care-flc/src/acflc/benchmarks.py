@@ -25,36 +25,22 @@ The pair is chosen to be complementary: one non-separable with a hard-to-follow
 valley, one separable with an overwhelming number of local optima. An algorithm
 that suits both is genuinely general; in practice they tend not to.
 
-On the shift vectors -- read this before comparing with published results
---------------------------------------------------------------------------
-The official CEC'2005 distribution ships the shift vectors `o` as data files.
-Those files are not available on this machine, so the vectors used here are
-**generated from a fixed seed and written out in full** to
-`results/part3_shift_vectors.json`, and the generator is below.
-
-That has one consequence and it matters: the numbers here are **not directly
-comparable to published CEC'2005 results**, because a different shift moves
-the optimum to a different place and changes how the boundary interacts with
-the basin. Everything the report claims is a *within-study* comparison between
-three algorithms on identical instances, which is what Part 3 actually asks
-for. Any comparison against the literature would be unsound and is not made.
-
-Both functions keep their official bias terms (+390, -330) so that the reported
-optima match the suite's documented values, and both are shifted away from the
-origin, which is the point of the shift: an algorithm that initialises at or
-searches symmetrically about the centre of the domain gets no free advantage.
+Official shift vectors
+----------------------
+The CEC2005 ASCII data from P-N-Suganthan/CEC2005 are vendored in
+data/cec2005/. The first D entries are used, matching the reference MATLAB
+implementation. The source and file hashes are recorded beside the data.
+Earlier runs with local shifts are retained in results/archive-local-shifts/.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 
-#: Seed for the shift vectors. Fixed so every run of Part 3 uses identical
-#: problem instances and results are reproducible.
-SHIFT_SEED = 20260912
-
+DATA = Path(__file__).resolve().parents[2] / "data" / "cec2005"
 
 @dataclass(frozen=True)
 class Benchmark:
@@ -81,17 +67,11 @@ class Benchmark:
         raise NotImplementedError
 
 
-def _make_shift(dim, lo, hi, index, fraction=0.8):
-    """A reproducible shift vector inside the search domain.
-
-    Drawn uniformly from the middle `fraction` of the range so the optimum is
-    never pinned against a boundary, which would let an algorithm that clamps
-    to the bounds find it by accident. `index` decorrelates the two functions.
-    """
-    rng = np.random.default_rng(SHIFT_SEED + 1000 * index)
-    half = fraction * (hi - lo) / 2.0
-    centre = (hi + lo) / 2.0
-    return rng.uniform(centre - half, centre + half, size=dim)
+def _official_shift(dim, filename):
+    values = np.loadtxt(DATA / filename).reshape(-1)
+    if not 2 <= dim <= len(values):
+        raise ValueError(f"dimension must be between 2 and {len(values)}")
+    return values[:dim].copy()
 
 
 class ShiftedRosenbrock(Benchmark):
@@ -100,7 +80,7 @@ class ShiftedRosenbrock(Benchmark):
     def __init__(self, dim):
         super().__init__(
             key="F6", name="Shifted Rosenbrock", lo=-100.0, hi=100.0,
-            bias=390.0, dim=dim, shift=_make_shift(dim, -100.0, 100.0, 0),
+            bias=390.0, dim=dim, shift=_official_shift(dim, "rosenbrock_func_data.txt"),
             properties=("multi-modal (D>2)", "shifted", "non-separable",
                         "scalable", "narrow curved valley"),
         )
@@ -119,7 +99,7 @@ class ShiftedRastrigin(Benchmark):
     def __init__(self, dim):
         super().__init__(
             key="F9", name="Shifted Rastrigin", lo=-5.0, hi=5.0,
-            bias=-330.0, dim=dim, shift=_make_shift(dim, -5.0, 5.0, 1),
+            bias=-330.0, dim=dim, shift=_official_shift(dim, "rastrigin_func_data.txt"),
             properties=("multi-modal", "shifted", "separable", "scalable",
                         "very many local optima"),
         )
@@ -166,9 +146,7 @@ class BudgetedObjective:
     def __call__(self, X) -> np.ndarray:
         X = np.atleast_2d(np.asarray(X, dtype=float))
         if self.exhausted:
-            # Return the true values but stop counting; algorithms are expected
-            # to check `exhausted`, and this keeps a sloppy one from crashing.
-            return self.fn(X)
+            raise RuntimeError("function-evaluation budget exhausted")
 
         remaining = self.budget - self.used
         if len(X) > remaining:

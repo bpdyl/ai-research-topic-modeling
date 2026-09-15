@@ -13,8 +13,8 @@ Reported per cell: mean, standard deviation, best and worst of the final
 objective value, plus the error against the known optimum, plus the mean
 best-so-far convergence curve.
 
-Seeding is `run index + 1000 x algorithm index`, fixed, so the whole table is
-reproducible and every algorithm sees the same 15 starting conditions.
+Seeding is `run + 1000*algorithm_index + 7919*D + 104729*function_index`, so the table is
+reproducible; streams differ by algorithm, function, dimension and repetition.
 """
 
 from __future__ import annotations
@@ -62,8 +62,8 @@ def main():
         "runs": args.runs, "evals_per_dim": args.evals_per_dim,
         "functions": FUNCS, "dims": DIMS, "algorithms": ALGOS,
         "budget_rule": "10000 x D function evaluations, identical for all algorithms",
-        "shift_note": "shift vectors generated locally (see acflc/benchmarks.py); "
-                      "results are NOT comparable with published CEC'2005 numbers",
+        "shift_note": "official CEC2005 ASCII shifts; first D entries; see data/cec2005/provenance.json",
+        "seeding": "run + 1000*algorithm_index + 7919*D + 104729*function_index",
     }, "cells": [], "algorithm_parameters": {
         k: v for k, (_, v) in op.ALGORITHMS.items()}}
 
@@ -126,9 +126,11 @@ def main():
                     "values": [float(x) for x in v],
                     "seconds": secs,
                 })
-                convergence[(fkey, dim, akey)] = (grid, np.mean(curves, axis=0))
+                convergence[(fkey, dim, akey)] = (grid, np.asarray(curves))
 
     out["shift_vectors"] = shifts
+    out["convergence"] = {f"{f}_{d}_{a}": {"evaluations": g.tolist(), "runs": c.tolist()}
+                          for (f, d, a), (g, c) in convergence.items()}
     (RES / "part3_results.json").write_text(json.dumps(out, indent=2))
     (RES / "part3_shift_vectors.json").write_text(json.dumps(shifts, indent=2))
 
@@ -168,15 +170,18 @@ def make_figures(convergence):
             ax = axes[r, c]
             fn = bm.make(fkey, dim)
             for i, akey in enumerate(ALGOS):
-                grid, curve = convergence[(fkey, dim, akey)]
-                ax.plot(grid, curve - fn.optimum, color=PALETTE[i], lw=1.6,
-                        label=akey)
+                grid, curves = convergence[(fkey, dim, akey)]
+                errors = np.maximum(curves - fn.optimum, 1e-12)
+                curve = np.median(errors, axis=0)
+                ax.plot(grid, curve, color=PALETTE[i], lw=1.6, label=akey)
+                lo_band, hi_band = np.percentile(errors, [25, 75], axis=0)
+                ax.fill_between(grid, lo_band, hi_band, color=PALETTE[i], alpha=.15)
             ax.set_yscale("log")
             ax.set_xlabel("function evaluations")
             ax.set_ylabel("error above optimum  $f - f^*$")
             ax.set_title(f"{fkey} {fn.name},  D={dim}", fontsize=9, loc="left")
             ax.legend(fontsize=8)
-    fig.suptitle("Mean best-so-far convergence over 15 runs "
+    fig.suptitle("Median convergence and interquartile band "
                  "(equal evaluation budget)", fontsize=10)
     fig.tight_layout()
     fig.savefig(FIG / "fig14_convergence_cec2005.png")

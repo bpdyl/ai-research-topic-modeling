@@ -94,7 +94,10 @@ def doc_topic_matrix(model, corpus, num_topics: int | None = None):
 
 
 def perplexity(model, corpus) -> float:
-    """Per-word held-out perplexity (lower is better).
+    """Per-word variational perplexity on the supplied corpus (lower is better).
+
+    This is held-out only if the caller supplies documents excluded from fitting.
+    The historical experiment drivers supply the training corpus.
 
     Reported as a secondary check only. Perplexity is known to correlate poorly
     — sometimes negatively — with human judgements of topic quality

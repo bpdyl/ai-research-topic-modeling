@@ -1,7 +1,7 @@
 {
   "_provenance": {
     "panel": "THREE INDEPENDENT LLM RATERS (claude-opus-5), separate contexts, blind to model identity",
-    "NOT_HUMAN": "These are NOT the three human raters the proposal specifies. They are three independent automated raters. Inter-rater agreement between them is real and computable, but they are LLM judges and the paper says so.",
+    "NOT_HUMAN": "These are automated judgments, not human ratings. They are three independent automated raters. Inter-rater agreement between them is real and computable, but they are LLM judges and the paper says so.",
     "independence": "Each rater received only the shuffled top-10 word lists and the rating rubric. No rater saw another's output, the model names, or the draft labels.",
     "rated_on": "2026-09-06",
     "n_items": 39

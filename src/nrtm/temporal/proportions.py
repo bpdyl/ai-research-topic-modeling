@@ -94,8 +94,9 @@ def topic_trends(proportions, windows: Sequence[str], counts: Sequence[int],
         else:
             slope = float("nan")
 
-        first, last = series[usable[0]], series[usable[-1]] if usable else (np.nan, np.nan)
-        change = float(last - first) if usable else float("nan")
+        first = series[usable[0]] if usable else np.nan
+        last = series[usable[-1]] if usable else np.nan
+        change = float(last - first)
 
         if slope != slope:
             label = "unknown"

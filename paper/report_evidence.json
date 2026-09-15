@@ -1,0 +1,407 @@
+{
+  "pinned_runs": {
+    "Standard LDA": "20260905_231154_lda_baseline",
+    "GA-Optimized LDA": "20260905_220137_ga_lda",
+    "Random-Search LDA": "20260906_112958_random_search",
+    "BERTopic": "20260906_080709_bertopic"
+  },
+  "input_sha256": {
+    "data\\processed\\final_topic_labels.json": "a1feb338d3dac9fb8657571f81e4e61203c42d9aa6dd1b9d0e521ab59ff8cd4b",
+    "data\\processed\\interpretability_panel.json": "9329aa5ced0d12409f3892506213b32ab195af6e2edc12da40027a523189d00a",
+    "data\\processed\\corpus_frozen.jsonl": "d046705dfc5ac7232d102685c72bb782003a643fa899accaa2d4a05dcfea2772",
+    "results\\runs\\20260905_231154_lda_baseline\\lda_baseline.json": "2a3993c2a2ad5cc1fd0a52456d1781084ca29860c7a06a14a634076860f82ba0",
+    "results\\runs\\20260905_220137_ga_lda\\ga_lda.json": "00e9ba037933ac06a70ea5775f5874e70eacfcb8c65ed2c460df12a47e8fba6f",
+    "results\\runs\\20260906_112958_random_search\\random_search.json": "2846644d8c3a7e8e5b13a06442127fca357cda54981c3df08db3bb9c35446e24",
+    "results\\runs\\20260906_080709_bertopic\\bertopic.json": "5856abf33302f4957275782b3b24890165ec740ed50ebc116aabaff565a384b9",
+    "results\\runs\\20260905_220137_ga_lda\\doc_topics.npy": "53caa329195e9b8b63cce342e347bfc6c41a2b1de549baa6b8ef237de041cca2",
+    "results\\runs\\20260906_080709_bertopic\\doc_topics.npy": "19c9dc02d48a819a3082816795fd4b220535c665e03b18e6952fdff21396f7b8",
+    "results\\runs\\20260905_220137_ga_lda\\fitness_trace.jsonl": "b5bc97dd40f3a28a1d8d76fec4fcaf968176ed345073e8ac8261418a887c4f15"
+  },
+  "temporal": {
+    "GA-Optimized LDA": {
+      "run": "20260905_220137_ga_lda",
+      "windows": [
+        "2015-2017",
+        "2018-2020",
+        "2021-2023",
+        "2024-2025"
+      ],
+      "n_total": [
+        8,
+        93,
+        299,
+        674
+      ],
+      "n_assigned": [
+        8,
+        93,
+        299,
+        674
+      ],
+      "shares": [
+        [
+          0.13826937232871772,
+          0.14463999173959732,
+          0.052395280617819374,
+          0.017003981901714718,
+          0.10828983563711847,
+          0.2829665838278141,
+          0.2564349539472183
+        ],
+        [
+          0.1799901603273072,
+          0.07998191711195132,
+          0.15784925062828983,
+          0.10190542047866191,
+          0.021129446639078033,
+          0.2764315912937138,
+          0.1827122135209979
+        ],
+        [
+          0.12967070937263556,
+          0.10556887823346764,
+          0.14752056912319553,
+          0.12025587835291938,
+          0.06369956216412914,
+          0.25962807673652777,
+          0.17365632601712477
+        ],
+        [
+          0.09413657753161923,
+          0.07749599764986385,
+          0.1704790095077597,
+          0.1381640541421972,
+          0.15182016218049013,
+          0.23172871878967338,
+          0.13617548019839648
+        ]
+      ],
+      "shares_all_documents": [
+        [
+          0.13826937472913414,
+          0.14463999425061047,
+          0.05239528152742423,
+          0.017003982196911238,
+          0.1082898375170771,
+          0.28296658874023706,
+          0.2564349583990406
+        ],
+        [
+          0.17999016009997176,
+          0.07998191701093067,
+          0.15784925042891934,
+          0.10190542034995091,
+          0.02112944661239062,
+          0.27643159094456865,
+          0.18271221329022438
+        ],
+        [
+          0.1296707098736322,
+          0.10556887864134427,
+          0.147520569693157,
+          0.12025587881754081,
+          0.0636995624102392,
+          0.25962807773962854,
+          0.17365632668806452
+        ],
+        [
+          0.09413657748093414,
+          0.0774959976081384,
+          0.17047900941597025,
+          0.1381640540678068,
+          0.151820162098747,
+          0.2317287186649058,
+          0.13617548012507677
+        ]
+      ],
+      "labels": {
+        "1": "Generic Predictive Modelling (low coherence)",
+        "5": "Generic ML Evaluation Vocabulary (low coherence)",
+        "4": "Generative AI in Education",
+        "3": "Construction Risk and Quality Analytics",
+        "2": "AI Systems, Networks and Security Threats",
+        "0": "Mixed Control / Health / Regional Terms (low coherence)",
+        "6": "Image, Text and Video Recognition"
+      },
+      "education_delta_bootstrap_95pct": [
+        0.10729556283005869,
+        0.15392665059889768
+      ],
+      "bootstrap_note": "2,000 resamples within each endpoint window, conditional on fitted model and assigned documents; 2018\u20132020 to 2024\u20132025",
+      "early_documents": [
+        {
+          "id": "https://openalex.org/W2590524343",
+          "year": 2017,
+          "title": "Stereoscopic Correspondence of Particles for 3-Dimensional Particle Tracking Velocimetry by using Genetic Algorithm",
+          "education_mass": 0.00242
+        },
+        {
+          "id": "https://openalex.org/W2490768842",
+          "year": 2016,
+          "title": "GPU-Based Level Set Method for MRI Brain Tumor Segmentation using Modified Probabilistic Clustering",
+          "education_mass": 0.00345
+        },
+        {
+          "id": "https://openalex.org/W2748925811",
+          "year": 2017,
+          "title": "Online Social Network Analysis Using Machine Learning Techniques",
+          "education_mass": 0.08553
+        },
+        {
+          "id": "https://openalex.org/W2376053470",
+          "year": 2016,
+          "title": "Fuzzy Clustering Based Blind Adaptive OFDM System",
+          "education_mass": 0.04461
+        },
+        {
+          "id": "https://openalex.org/W2754678544",
+          "year": 2017,
+          "title": "Identification of Novel Serodiagnostic Signatures of Typhoid Fever Using a Salmonella Proteome Array",
+          "education_mass": 0.0031
+        },
+        {
+          "id": "https://openalex.org/W2291375252",
+          "year": 2016,
+          "title": "Learning approach among health sciences students in a medical college in Nepal: a cross-sectional study",
+          "education_mass": 0.72082
+        },
+        {
+          "id": "https://openalex.org/W2328812530",
+          "year": 2016,
+          "title": "Computer Vision Based Hand Gesture Recognition For Speech Disabled Persons",
+          "education_mass": 0.00498
+        },
+        {
+          "id": "https://openalex.org/W2194495952",
+          "year": 2015,
+          "title": "Analysis and Design of a Self-Tuned Neuro-Fuzzy Based IM Drives",
+          "education_mass": 0.00141
+        }
+      ]
+    },
+    "BERTopic": {
+      "run": "20260906_080709_bertopic",
+      "windows": [
+        "2015-2017",
+        "2018-2020",
+        "2021-2023",
+        "2024-2025"
+      ],
+      "n_total": [
+        8,
+        93,
+        299,
+        674
+      ],
+      "n_assigned": [
+        5,
+        72,
+        249,
+        564
+      ],
+      "shares": [
+        [
+          0.4,
+          0.0,
+          0.0,
+          0.0,
+          0.2,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.19444444444444445,
+          0.2777777777777778,
+          0.013888888888888888,
+          0.125,
+          0.05555555555555555,
+          0.027777777777777776,
+          0.05555555555555555,
+          0.08333333333333333,
+          0.09722222222222222,
+          0.027777777777777776,
+          0.041666666666666664,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.19678714859437751,
+          0.13253012048192772,
+          0.08433734939759036,
+          0.10441767068273092,
+          0.14056224899598393,
+          0.04819277108433735,
+          0.04417670682730924,
+          0.05622489959839357,
+          0.060240963855421686,
+          0.04417670682730924,
+          0.0321285140562249,
+          0.008032128514056224,
+          0.028112449799196786,
+          0.020080321285140562
+        ],
+        [
+          0.15070921985815602,
+          0.14893617021276595,
+          0.1950354609929078,
+          0.0851063829787234,
+          0.07446808510638298,
+          0.10283687943262411,
+          0.05851063829787234,
+          0.040780141843971635,
+          0.030141843971631204,
+          0.02127659574468085,
+          0.02127659574468085,
+          0.030141843971631204,
+          0.02127659574468085,
+          0.01950354609929078
+        ]
+      ],
+      "shares_all_documents": [
+        [
+          0.25,
+          0.0,
+          0.0,
+          0.0,
+          0.125,
+          0.0,
+          0.0,
+          0.125,
+          0.125,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.15053763440860216,
+          0.21505376344086022,
+          0.010752688172043012,
+          0.0967741935483871,
+          0.043010752688172046,
+          0.021505376344086023,
+          0.043010752688172046,
+          0.06451612903225806,
+          0.07526881720430108,
+          0.021505376344086023,
+          0.03225806451612903,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.16387959866220736,
+          0.11036789297658862,
+          0.07023411371237458,
+          0.08695652173913043,
+          0.11705685618729098,
+          0.04013377926421405,
+          0.03678929765886288,
+          0.046822742474916385,
+          0.05016722408026756,
+          0.03678929765886288,
+          0.026755852842809364,
+          0.006688963210702341,
+          0.023411371237458192,
+          0.016722408026755852
+        ],
+        [
+          0.1261127596439169,
+          0.12462908011869436,
+          0.1632047477744807,
+          0.0712166172106825,
+          0.06231454005934718,
+          0.08605341246290801,
+          0.04896142433234421,
+          0.03412462908011869,
+          0.025222551928783383,
+          0.017804154302670624,
+          0.017804154302670624,
+          0.025222551928783383,
+          0.017804154302670624,
+          0.016320474777448073
+        ]
+      ],
+      "labels": {
+        "9": "Crop Yield and Farm Management",
+        "6": "Plant Disease Detection",
+        "4": "Medical Image Segmentation",
+        "1": "Water, Land and Forest Modelling in Nepal",
+        "5": "AI in Healthcare",
+        "10": "Financial Market Forecasting",
+        "3": "Cybersecurity and Intrusion Detection",
+        "8": "Power Grid and Energy Demand Modelling",
+        "2": "AI in Education",
+        "12": "Materials Property Prediction",
+        "11": "Computational Drug Discovery",
+        "7": "COVID-19 and Epidemic Modelling",
+        "13": "Concrete Compressive Strength Prediction",
+        "0": "Nepali OCR and Text Processing"
+      },
+      "education_delta_bootstrap_95pct": [
+        0.1371158392434988,
+        0.22163120567375885
+      ],
+      "bootstrap_note": "2,000 resamples within each endpoint window, conditional on fitted model and assigned documents; 2018\u20132020 to 2024\u20132025",
+      "early_documents": [
+        {
+          "id": "https://openalex.org/W2590524343",
+          "year": 2017,
+          "title": "Stereoscopic Correspondence of Particles for 3-Dimensional Particle Tracking Velocimetry by using Genetic Algorithm",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2490768842",
+          "year": 2016,
+          "title": "GPU-Based Level Set Method for MRI Brain Tumor Segmentation using Modified Probabilistic Clustering",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2748925811",
+          "year": 2017,
+          "title": "Online Social Network Analysis Using Machine Learning Techniques",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2376053470",
+          "year": 2016,
+          "title": "Fuzzy Clustering Based Blind Adaptive OFDM System",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2754678544",
+          "year": 2017,
+          "title": "Identification of Novel Serodiagnostic Signatures of Typhoid Fever Using a Salmonella Proteome Array",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2291375252",
+          "year": 2016,
+          "title": "Learning approach among health sciences students in a medical college in Nepal: a cross-sectional study",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2328812530",
+          "year": 2016,
+          "title": "Computer Vision Based Hand Gesture Recognition For Speech Disabled Persons",
+          "education_mass": 0.0
+        },
+        {
+          "id": "https://openalex.org/W2194495952",
+          "year": 2015,
+          "title": "Analysis and Design of a Self-Tuned Neuro-Fuzzy Based IM Drives",
+          "education_mass": 0.0
+        }
+      ]
+    }
+  }
+}

@@ -66,3 +66,19 @@ nltk_data/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Local report build tools, dependencies and intermediate renders
+tmp/
+paper/latex/build/
+*.aux
+*.out
+
+# Assignment inputs and local experiment cache are kept outside version control.
+Instructions.pdf
+BibekSajanSiddhartha_AML_Proposal.pdf
+results/
+
+# Local scraper exports (the pipeline can regenerate these).
+scraper/output_smoke/
+scraper/output_broad_unfiltered/
+*.synctex.gz

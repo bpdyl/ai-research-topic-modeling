@@ -5,11 +5,10 @@ Step 12 — Interpretability panel (EXP-009).
 Aggregates three independent blind ratings of all 39 topics plus an independent
 label review, and computes inter-rater agreement.
 
-The raters are **three independent LLM judges**, not the three human raters the
-proposal specifies. Each ran in a separate context and saw only the shuffled
+The raters are **three independent LLM judges**, not the human review considered in the project plan. Each ran in a separate context and saw only the shuffled
 top-10 word lists and the rubric: no model names, no draft labels, and no
 sight of another rater's output. Agreement between them is therefore real and
-computable — which is what makes the proposal's promised agreement statistic
+computable — which is what makes an agreement statistic
 reportable at all — but they are automated raters and the paper says so.
 
 Raw ratings live in data/processed/ratings/ so the aggregation is auditable and
@@ -19,8 +18,9 @@ Usage:
     python scripts/12_interpretability_panel.py
 """
 import io, json, os, statistics, sys
+from pathlib import Path
 
-REPO = r"d:\Softwarica\Advanced ML\Main Assignment\ai-research-topic-modeling"
+REPO = str(Path(__file__).resolve().parents[1])
 SCR = os.path.join(REPO, "data", "processed", "ratings")
 os.chdir(REPO)
 sys.path.insert(0, "src")
@@ -99,7 +99,7 @@ for m, d in by_model_v.items():
 out = {
     "_provenance": {
         "panel": "THREE INDEPENDENT LLM RATERS (claude-opus-5), separate contexts, blind to model identity",
-        "NOT_HUMAN": "These are NOT the three human raters the proposal specifies. They are three "
+        "NOT_HUMAN": "These are automated judgments, not human ratings. They are three "
                      "independent automated raters. Inter-rater agreement between them is real and "
                      "computable, but they are LLM judges and the paper says so.",
         "independence": "Each rater received only the shuffled top-10 word lists and the rating "

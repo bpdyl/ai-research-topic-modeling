@@ -146,12 +146,14 @@ search can recover a known target*, **not** *the tuned controller is better for 
 residents*. The reference policy is deliberately a different functional form from the
 controller, so the error cannot be driven to zero by construction.
 
-**2. The Part 3 shift vectors are generated locally, so the numbers are not
-comparable with published CEC'2005 results.** The official suite ships the shift
-vectors as data files that were not available; the vectors used here are generated
-from a fixed seed and written out in full to `results/part3_shift_vectors.json`.
-Everything claimed is a *within-study* comparison across three algorithms on identical
-instances. No comparison against the literature is made, because it would be unsound.
+**2. Part 3 now uses the official CEC2005 shift vectors.** The 2026-09-15 revision
+vendors the reference data and source hashes in `data/cec2005/` and reruns all 180
+trials. Earlier local-shift results remain in `results/archive-local-shifts/`.
+The report compares the implemented algorithms within this study; two functions,
+two dimensions and fixed parameter settings do not establish a universal ranking.
+Pairwise tests are two-sided Mann-Whitney tests with Holm correction across all
+12 comparisons. `matlab/cec2005_f6_f9.m` implements the same reference equations;
+this additional MATLAB listing was not executed during the revision.
 
 **3. The Mamdani engine is hand-written and cross-checked against scikit-fuzzy.**
 `scikit-fuzzy` is a **test-only** dependency and is never imported by anything under

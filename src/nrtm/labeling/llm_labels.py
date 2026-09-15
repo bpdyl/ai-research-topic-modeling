@@ -1,8 +1,10 @@
 """
 LLM-assisted topic labelling.
 
-The proposal commits to labels "drafted by an LLM, reviewed and finalized by the
-team". Two things follow from that, and both are handled here:
+The supplied proposal commits to LLM-assisted thematic labels for every topic.
+The project additionally tracks human review as a separate quality step.
+The API-backed workflow is in providers.py/workflow.py; this legacy module
+assembles prompts and merges existing drafts without making API calls.
 
 1. **It is a method step, not a writing shortcut.** The assignment brief's
    integrity clause concerns tools that write the submission. Using a language

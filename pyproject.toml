@@ -24,6 +24,7 @@ dependencies = [
 [project.optional-dependencies]
 bertopic = ["bertopic", "sentence-transformers", "umap-learn", "hdbscan", "torch"]
 dev = ["pytest"]
+labeling = ["streamlit>=1.40,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

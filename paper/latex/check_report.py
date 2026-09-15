@@ -29,7 +29,7 @@ HERE = Path(__file__).resolve().parent
 
 # Minimum image count per document, as agreed for this submission: the combined
 # report carries both papers, the standalone carries Paper 2 only.
-FIG_TARGETS = {"main.tex": 23, "task2_standalone.tex": 16}
+FIG_TARGETS = {"main.tex": 23, "task1_standalone.tex": 10, "task2_standalone.tex": 16}
 FIG_TARGET_DEFAULT = 16
 
 

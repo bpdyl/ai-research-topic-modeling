@@ -1,0 +1,267 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% ── Mermaid listing style ──────────────────────────────────────────
+\definecolor{mermaidbg}{HTML}{F9F6F1}
+\lstdefinelanguage{mermaid}{
+  morekeywords={graph, subgraph, end, TD, direction, TB},
+  sensitive=true,
+  morecomment=[l]{\%\%},
+  morestring=[b]{"},
+}
+\lstdefinestyle{mermaidstyle}{
+  language=mermaid,
+  backgroundcolor=\color{mermaidbg},
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{gray},
+  captionpos=b,
+}
+
+\title{\textbf{Optimized Topic Modeling of \\AI Research Literature:
+Tracking Thematic Evolution and Trends in Nepal }}
+\author{
+  Bibek Paudyal \quad (Softwarica ID: 250288) \\
+  Siddhartha Bhatta \quad (Softwarica ID: 250620) \\
+  Sajan Mahat \quad (Softwarica ID: 250289) \\[1em]
+  \text{Module: ST7085CEM - Advanced Machine Learning} \\
+  \text{Softwarica College of IT \& E-Commerce}\\
+  \text{(Affiliated to Coventry University)}
+}
+\date{\today}
+
+\begin{document}
+
+% ── Title spans both columns, then switch to two-column ────────────
+\twocolumn[
+  \maketitle
+]
+
+% ====================================================================
+\section{Research Title / Topic}
+% ====================================================================
+Optimized Topic Modeling of AI Research Involving Nepali Authors:
+Tracking Thematic Evolution and Trends in Nepal (2015--2025)
+
+% ====================================================================
+\section{Introduction \& Background}
+% ====================================================================
+Artificial Intelligence (AI) research has grown exponentially worldwide,
+and Nepal's academic and research community has actively contributed to
+this global landscape through localized applications, natural language
+processing (NLP) for low-resource languages, and computer vision
+advancements. While individual studies document specific subfields,
+tracking the macro-level evolution of AI research produced by Nepali
+authors over the past decade remains a challenge. Traditional literature
+reviews are slow, manually intensive, and prone to individual bias.
+
+To overcome this, unsupervised topic modeling provides a powerful tool to
+discover hidden themes. While classical probabilistic models like Latent
+Dirichlet Allocation (LDA) offer high interpretability, they suffer from
+hyperparameter sensitivity and instability. Conversely, modern
+embedding-based models like BERTopic capture semantic relationships
+effectively. This study applies an evolutionary-optimized topic modeling
+framework specifically to peer-reviewed literature authored or
+co-authored by researchers affiliated with Nepal, providing a
+comprehensive view of how AI research has evolved locally from 2015 to
+2025.
+
+% ====================================================================
+\section{Problem Statement}
+% ====================================================================
+Although global AI literature is heavily analyzed, there is a lack of
+systematic, automated scientometric evaluation tracking how AI research
+involving Nepali authors and researchers has evolved over time.
+Furthermore, conventional topic modeling relies on unoptimized classical
+parameters, and there is a need to compare whether
+evolutionary-optimized LDA can outperform or complement modern neural
+methods (such as BERTopic) when applied to regional academic corpora.
+
+% ====================================================================
+\section{Research Objective}
+% ====================================================================
+Compare classical (LDA, GA-optimized LDA) and modern (BERTopic) topic
+modeling on one time-stamped corpus of AI research, discovering themes,
+quantifying their evolution, and judging which approach models the field
+best.
+
+% ====================================================================
+\section{Brief Literature Review}
+% ====================================================================
+Recent literature highlights a growing shift toward optimizing topic
+discovery. Agrawal et al.\ (2018) demonstrated that metaheuristic
+optimization fixes LDA instability. Yu \& Xiang (2023) applied standard
+LDA to global AI research literature, establishing a baseline for
+thematic mapping. Furthermore, recent studies (e.g., 2025 comparative
+evaluations of neural and classical topic models) indicate mixed
+performance results between embedding-based techniques and probabilistic
+baselines across various domains, justifying a comprehensive comparative
+benchmark. Specifically focusing this approach on regional contributions
+(such as Nepal-affiliated research) fills a distinct gap in localized
+scientometric tracking.
+
+% ====================================================================
+\section{Proposed Methodology}
+% ====================================================================
+The research follows a six-stage iterative computational pipeline, as
+illustrated in Figure~\ref{fig:pipeline}.
+
+\begin{enumerate}
+    \item \textbf{Corpus Construction.}
+          Build a time-stamped, peer-reviewed corpus of AI research
+          papers (titles and abstracts) spanning 2015 to 2025 with at
+          least one author affiliated with a Nepali institution.
+          Papers are retrieved from the Semantic Scholar API with
+          supplementary harvesting from NepJOL
+          (\url{https://www.nepjol.info/}), IEEE Xplore, and Springer,
+          then de-duplicated and venue-verified.
+
+    \item \textbf{Preprocessing.}
+          Implement domain-aware text preprocessing, tokenization,
+          lemmatization, stop-word removal, and Vector Space Model
+          (VSM) Bag-of-Words / TF-IDF generation, while preserving
+          critical technical acronyms and localized terms.
+
+    \item \textbf{Model Implementation.}
+          Fit three models onto the identical Nepal-focused corpus in
+          parallel:
+          \begin{itemize}
+              \item \textit{Standard LDA} ,  probabilistic baseline
+                    with manual or grid-search settings.
+              \item \textit{GA-Optimized LDA} ,  a Genetic Algorithm
+                    iteratively optimizes hyperparameters
+                    ($K, \alpha, \beta$) by maximizing a multi-objective
+                    fitness function combining topic coherence ($C_v$),
+                    diversity, and stability.
+              \item \textit{BERTopic} ,  sentence-transformer
+                    embeddings + HDBSCAN clustering to capture semantic
+                    nuances in local research.
+          \end{itemize}
+
+    \item \textbf{Multi-Dimensional Evaluation.}
+          Score all models rigorously using semantic coherence ($C_v$),
+          topic diversity, and stability metrics to determine which
+          approach models the corpus best.
+
+    \item \textbf{Temporal Evolution Tracking.}
+          Slice the corpus into temporal windows
+          (2015--17, 2018--20, 2021--23, 2024--25) and re-fit the
+          best-performing model(s) per window to map how local AI
+          research themes shift across the decade.
+
+    \item \textbf{Automated Labeling.}
+          Leverage Large Language Model (LLM) assistance to generate
+          coherent, human-interpretable thematic labels for every
+          discovered topic.
+\end{enumerate}
+
+% ── Pipeline diagram (Mermaid source) ──────────────────────────────
+% Render the Mermaid code below with the Mermaid CLI or online editor
+% (https://mermaid.live) and export as pipeline.png, then uncomment
+% the \includegraphics line.
+
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{ga_lda_architecture.png}
+  \caption{End-to-end methodology pipeline.}
+  \label{fig:pipeline}
+\end{figure*}
+
+
+% ====================================================================
+\section{Dataset Description}
+% ====================================================================
+The corpus comprises peer-reviewed AI/ML research papers (titles and
+abstracts) spanning from 2015 to 2025. Papers are collected from
+multiple sources:
+
+\begin{itemize}
+    \item \textbf{Semantic Scholar API}
+          (\url{https://api.semanticscholar.org/})  -  primary
+          retrieval and venue-verification engine.
+    \item \textbf{NepJOL}
+          (\url{https://www.nepjol.info/})  -  Nepal Journals Online,
+          aggregating Nepali academic publications across disciplines.
+    \item \textbf{IEEE Xplore}
+          (\url{https://ieeexplore.ieee.org/})  -  conference and
+          journal papers in electrical engineering, computer science,
+          and AI. Nepal-affiliated papers are retrieved via the
+          Advanced Search command
+          \texttt{"Author Affiliations":Nepal}
+          (\url{https://ieeexplore.ieee.org/search/advanced}).
+    \item \textbf{Springer}
+          (\url{https://link.springer.com/})  -  internationally
+          indexed research with Nepali-affiliated authorship,
+          filtered by searching with Nepal-based institution names
+          in the author affiliation facet.
+\end{itemize}
+
+\noindent
+Inclusion is strictly filtered to papers containing $\ge 1$ author with
+a Nepal-based institutional affiliation (e.g., Tribhuvan University,
+Kathmandu University, NAAMII, etc.), ensuring the dataset directly
+reflects domestic and diaspora contributions to AI from Nepal.
+
+
+% ====================================================================
+\section{Proposed Machine Learning Model}
+% ====================================================================
+\begin{itemize}
+    \item \textbf{Baseline 1:} Standard LDA (probabilistic baseline
+          with manual or grid settings).
+    \item \textbf{Proposed Model:} GA-Optimized LDA (metaheuristic
+          multi-objective search tuning topic count and Dirichlet
+          priors).
+    \item \textbf{Benchmark Model:} BERTopic (utilizing sentence
+          transformers for dense vector spaces and HDBSCAN clustering
+          to capture semantic nuances in local research).
+\end{itemize}
+
+% ====================================================================
+\section{Expected Results}
+% ====================================================================
+\begin{itemize}
+    \item A comparative evaluation table measuring LDA, GA-LDA, and
+          BERTopic across coherence, diversity, and interpretability
+          for the Nepal-focused dataset.
+    \item Longitudinal trend visualizations detailing how AI research
+          themes in Nepal shifted between 2015 and 2025 (e.g.,
+          tracking the transition from traditional machine
+          learning/local NLP tasks toward deep learning, transformer
+          models, and generative AI applications).
+    \item A validated, labeled topic set providing clear thematic
+          breakdowns of the trajectory of AI research in Nepal.
+\end{itemize}
+
+% ====================================================================
+\section{References}
+% ====================================================================
+\begin{enumerate}
+    \item Agrawal, A., Fu, W., \& Menzies, T. (2018). What is Wrong
+          with Topic Modeling? (and How to Fix it Using Search-based
+          Software Engineering). \textit{Information and Software
+          Technology}.
+    \item Yu, J., \& Xiang, Y. (2023). Discovering Topics and Trends
+          in the Field of Artificial Intelligence: Using LDA Topic
+          Modeling. \textit{Expert Systems with Applications}.
+    \item Mapping the Evolution of Artificial Intelligence in
+          Agriculture: A Large-Scale BERTopic Analysis.
+          \textit{MDPI AgriEngineering}, 8(8), 312.
+    \item Haq, M.~I.~U., Li, Q., \& Hassan, S. (2019). Text Mining
+          Techniques to Capture Facts for Cloud Computing Adoption
+          and Big Data Processing. \textit{IEEE Access}, 7,
+          162254--162267.
+\end{enumerate}
+
+
+\end{document}

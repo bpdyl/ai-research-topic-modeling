@@ -6,8 +6,9 @@ exact prompt used) for every model, merges in the drafted labels, and writes a
 review sheet for the team.
 
 The `human_reviewed` flag starts False for every topic and is never set by this
-script. The proposal claims labels are "reviewed and finalized by the team";
-only a person editing the review sheet can make that true.
+script. Human review is a separate project quality step; only a person editing
+the review sheet can perform it. The proposal explicitly asks for LLM-assisted
+labels, without that quoted human-review wording.
 
 Usage:
     python scripts/08_label_topics.py
@@ -115,8 +116,7 @@ def main() -> int:
     print(f"Review sheet  -> {review_path.relative_to(root)}")
     print(f"Run artefacts -> {run.path.relative_to(root)}")
     print("\nHUMAN REVIEW PENDING for all "
-          f"{len(review_rows)} topics. The proposal's claim that labels are "
-          "'reviewed and finalized by the team' is not yet met.")
+          f"{len(review_rows)} topics. Do not describe saved automated labels as human-validated.")
     return 0
 
 

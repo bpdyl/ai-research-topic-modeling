@@ -1,0 +1,23 @@
+\paperhead
+{A Fuzzy Logic Controller for an Assistive-Care Flat: Design, Genetic Tuning\\
+of Its Membership Functions, and an Optimiser Comparison on CEC'2005}
+{%
+We design a fuzzy logic controller that manages heating, cooling and
+lighting in one room of an assistive-care flat for a resident with limited
+mobility. Its 54 rules are written in plain linguistic terms so that a carer
+can check them, and the controller is implemented in both Python and MATLAB,
+which produce the same outputs. A genetic algorithm then tunes the controller,
+reducing its normalised test error by 32.6\% and clearly outperforming random search given
+the same effort. The tuning came at a cost, however: three of five runs
+scrambled the order of the fuzzy sets, so some rules no longer meant what they
+said, and four of five left parts of the input range with no output at all; no
+run avoided both problems. Finally, a genetic algorithm, particle swarm
+optimisation and simulated annealing are compared on two standard benchmark
+functions. None wins everywhere: particle swarm is best in two dimensions, the
+genetic algorithm is the most reliable in ten, while the ranking of
+simulated annealing depends on the statistic used.%
+}
+{fuzzy logic control, Mamdani inference, membership function tuning, genetic
+algorithms, particle swarm optimisation, simulated annealing, CEC'2005,
+assistive technology}
+

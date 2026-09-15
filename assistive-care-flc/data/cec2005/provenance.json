@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/P-N-Suganthan/CEC2005",
+  "archive": "https://raw.githubusercontent.com/P-N-Suganthan/CEC2005/master/ASCII-files.zip",
+  "retrieved": "2026-09-15",
+  "sha256": {
+    "rastrigin_func_data.txt": "62c126326aab86ef096de4d0803c04e1da862a3deab6e01f0fbccceab0ebbc14",
+    "rosenbrock_func_data.txt": "8f6ddba631a4f5510a784ee150ae1e647cb49efc1ab7440ec4f55051418bad74"
+  },
+  "selection": "first D entries, matching official MATLAB implementation"
+}

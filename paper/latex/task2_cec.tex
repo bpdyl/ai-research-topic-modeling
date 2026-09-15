@@ -1,0 +1,135 @@
+\section{Optimiser Comparison on CEC'2005 Functions}
+\label{sec:t2-cec}
+
+\subsection{Functions and reproducible instances}
+Two functions from the CEC'2005 real-parameter suite~\cite{suganthan2005} provide contrasting
+search landscapes. F6 is shifted Rosenbrock, a non-separable problem with a curved valley;
+F9 is shifted Rastrigin, a separable problem with many local minima. Their definitions are
+\begin{align}
+F_6(\mathbf{x}) &= \sum_{i=1}^{D-1}[100(z_i^2-z_{i+1})^2+(z_i-1)^2]+390,\\
+F_9(\mathbf{x}) &= \sum_{i=1}^{D}[z_i^2-10\cos(2\pi z_i)+10]-330.
+\end{align}
+For F6, $\mathbf{z}=\mathbf{x}-\mathbf{o}+1$, with domain $[-100,100]^D$ and optimum 390.
+For F9, $\mathbf{z}=\mathbf{x}-\mathbf{o}$, with domain $[-5,5]^D$ and optimum $-330$.
+Both use the first $D$ entries of the \emph{official} CEC2005 shift files, matching the reference
+MATLAB implementation. The vendored data include source attribution and checksums; earlier
+experiments using locally generated shifts are archived and are not the results reported here.
+Figure~\ref{fig:t2-landscapes} visualises the two official two-dimensional landscapes.
+
+There are 15 independent repetitions for each algorithm, function and dimension, with
+$D\in\{2,10\}$: 180 runs in total. Every run receives $10,000D$ objective evaluations.
+The random stream is determined by the repetition, algorithm, dimension and function; streams
+are reproducible but do not represent identical initial populations across different algorithms.
+An objective wrapper counts evaluations and rejects calls after the budget is exhausted.
+The two functions complement each other, but success on them does not establish general
+optimiser superiority across the CEC suite.
+
+\subsection{Algorithms and evaluation}
+The \textbf{GA} is real-coded, with population 50, tournament size three, blend crossover
+($\alpha=0.5$) at probability 0.9, Gaussian mutation with scale 0.1 times the search range and
+probability 0.1, and two-member elitism. Real coding avoids discretising these continuous
+benchmarks; it differs from the deliberately binary chromosome in the controller experiment.
+
+\textbf{Particle swarm optimisation (PSO)}~\cite{kennedy1995} uses a swarm of 40 particles,
+global-best topology, inertia decreasing linearly from 0.9 to 0.4, and cognitive/social
+coefficients 1.49445. Velocities are capped at 0.2 times the domain range and positions are
+bounded. Its observed poor runs should not be read as a limit on other PSO variants or
+attributed to absent velocity control: this implementation already has that control.
+
+\textbf{Simulated annealing (SA)}~\cite{kirkpatrick1983} uses a single candidate with stochastic
+proposals and temperature-dependent acceptance of worse moves. Temperature decreases by a
+factor of 0.995 after each chain of 20 proposals; the Gaussian proposal scale decreases from
+0.20 to 0.002 times the range. Initial temperature is calibrated to accept a typical uphill
+move with probability 0.5, and there are no restarts. These settings are stored with the results.
+Matching function evaluations
+equalises objective-call budgets, not wall-clock time or the suitability of a parameter setting
+to each function.
+
+Table~\ref{tab:t2-cec} reports means, sample standard deviations, best and worst final objective
+values. Convergence plots show median best-so-far error with an interquartile band, and
+Fig.~\ref{fig:t2-cecdist} displays all final-run errors. We also apply two-sided Mann--Whitney
+tests with Holm correction across the 12 pairwise comparisons. These test distributional
+differences; they are not tests of mean performance, and median differences alone do not
+fully describe skewed distributions.
+
+\input{task2_cec_table}
+
+\subsection{Results and interpretation}
+On \textbf{F6 at $D=2$}, PSO reaches the optimum to numerical precision and has the smallest
+mean error. GA's mean value is 396.728, slightly worse than SA's 396.145, because one poor
+GA run raises its mean. Yet GA's median is 390.025 versus SA's 394.243, and the distributions
+differ after correction ($p_{\mathrm{Holm}}=0.0045$). Mean and typical-run comparisons therefore
+answer different questions even in two dimensions. PSO differs from both alternatives after
+correction ($p_{\mathrm{Holm}}<0.001$).
+
+On \textbf{F9 at $D=2$}, both GA and PSO reach values extremely close to $-330$. Their
+corrected comparison does not meet the 0.05 threshold ($p_{\mathrm{Holm}}=0.0559$), and their
+practical difference is negligible at the displayed precision. Both improve substantially on
+SA's typical final error, although SA also gets close to the optimum in some runs.
+
+On \textbf{F6 at $D=10$}, the ranking is particularly sensitive to summary choice. GA has the
+lowest mean objective, 465.167, while PSO's mean is approximately $4.03\times10^5$. However,
+PSO's median is 391.661, lower than GA's 468.858. Poor PSO runs dominate its mean and spread.
+The GA--PSO distributional comparison is not significant after correcting all 12 tests
+($p_{\mathrm{Holm}}=0.0559$). This does not establish equivalence: it shows why a claim that
+GA is unconditionally superior would exceed the evidence. SA's median is 750.341, and its
+distribution differs from both GA and PSO after correction.
+
+On \textbf{F9 at $D=10$}, GA is best on both mean and median error: mean error above the
+optimum is 0.00760, compared with 4.968 for PSO and 19.557 for SA. All three pairwise
+comparisons remain significant after correction. The advantage is clearer here than on
+Rosenbrock because it is not explained by a few extreme failures in one competitor.
+
+\begin{figure*}[t]\centering
+\includegraphics[width=.85\textwidth]{fig14_convergence_cec2005.png}
+\caption{Official CEC2005 instances: median best-so-far error and interquartile band over
+15 runs. Each cell uses the same evaluation budget across algorithms. Errors below $10^{-12}$
+are displayed at that floor for the logarithmic axis.}
+\label{fig:t2-cecconv}\end{figure*}
+
+\begin{figure*}[t]\centering
+\includegraphics[width=.98\textwidth]{fig18_benchmark_distributions.png}
+\caption{All 180 final-run errors with per-cell medians. The large PSO tail on F6 at $D=10$
+explains the disagreement between mean and median rankings. A $10^{-12}$ plotting floor is
+used for errors at numerical precision.}
+\label{fig:t2-cecdist}\end{figure*}
+
+These observations concern the implemented algorithms and fixed parameter settings. Tuning
+the annealing schedule, changing PSO's velocity cap or adding restarts, or changing GA variation could alter the
+outcomes and would constitute a new experiment. The benchmark does not reproduce the
+membership-function constraints or inference cost of the controller; its rankings cannot simply
+be transferred to the assistive-care tuning problem. Runtime also differs across algorithms,
+so equal evaluation budgets should be interpreted as search-effort control, not equal elapsed time.
+
+\section{Conclusions}
+\label{sec:t2-conclusion}
+The Mamdani controller provides a demonstrable mapping from room conditions and user
+preferences to heating/cooling and lighting actions. Membership functions, a linguistic rule
+base, rule-activation examples and response surfaces make the design inspectable. The
+reference controller and MATLAB implementation support reproducible examination of the
+chosen scenario; simulation alone does not establish effectiveness for real residents.
+
+Genetic tuning reduces normalised test error by 32.6\% relative to the hand-designed baseline
+on the synthetic reference-policy dataset. It also exposes a weakness of error-only optimisation:
+three of five tuned controllers reorder linguistic sets, four leave some inputs without a defined
+output, and none preserves both audited properties. The lower-error controller should therefore
+be treated as an experimental result rather than a deployment-ready improvement. A stronger
+next design would enforce coverage and ordering as feasibility constraints, then compare error
+among valid controllers using the same training/test split.
+
+The official CEC benchmark comparison reinforces the need to inspect distributions. PSO is
+strong in two dimensions; GA gives the lowest mean objective in both ten-dimensional cells,
+but the F6 median and tail tell a different story. Corrected rank tests qualify claims that
+would appear decisive from means alone. No universal winner follows from two functions,
+two dimensions and 15 repetitions.
+
+The central limitations are the synthetic target policy, absence of real-resident evaluation,
+small number of controller-tuning runs and fixed optimiser parameters. The work demonstrates
+the requested design, optimisation and comparison processes while making the consequences
+of their assumptions visible.
+
+\section*{Individual Contributions}
+Bibek Paudyal (250288), Sajan Mahat (250289) and Siddhartha Bhatta (250620) contributed equally
+to the collaborative project, including controller design, implementation, experimental analysis
+and report preparation. Responsibility for interpreting and checking the work is shared rather
+than assigned exclusively to one member per task.

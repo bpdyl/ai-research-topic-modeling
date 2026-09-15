@@ -1,0 +1,75 @@
+\documentclass[conference,10pt,a4paper]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage{balance}
+\usepackage{xcolor}
+% This report carries ~30 floats. LaTeX's default limit is 18, past which it
+% raises "Too many unprocessed floats"; morefloats raises the ceiling.
+\usepackage{morefloats}
+\usepackage{listings}
+\usepackage{placeins}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+\pagestyle{plain}
+\raggedbottom
+
+% Compact float spacing; two-column format and extra pages approved.
+\setlength{\textfloatsep}{8pt}
+\setlength{\floatsep}{8pt}
+\setlength{\dbltextfloatsep}{10pt}
+\setlength{\dblfloatsep}{8pt}
+\setcounter{topnumber}{4}
+\setcounter{dbltopnumber}{4}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+\renewcommand{\dblfloatpagefraction}{0.75}
+
+
+%------------------------------------------------------------------------------
+% Full-width title; abstract and keywords follow in the normal column flow.
+%
+% \maketitle is not used. IEEEtran's \maketitle sets the abstract in the first
+% column only, and the combined file needs two repeatable title blocks.
+% Only title/author metadata belongs in \twocolumn[...]; the abstract uses
+% the normal two-column output routine immediately afterwards.
+%
+%   #1 title   #2 abstract text   #3 keywords
+%------------------------------------------------------------------------------
+% Supporting figures stay in reading order, including during column balancing.
+\makeatletter
+\newenvironment{appendixfigure}{%
+  \par\addvspace{8pt}\noindent\begin{minipage}{\columnwidth}%
+  \def\@captype{figure}\centering
+}{\end{minipage}\par\addvspace{8pt}}
+\makeatother
+
+\newcommand{\AUTHORLINE}{%
+  Bibek Paudyal (250288)\hspace{2.2em}%
+  Sajan Mahat (250289)\hspace{2.2em}%
+  Siddhartha Bhatta (250620)}
+\newcommand{\MODULELINE}{ST7085CEM Advanced Machine Learning}
+
+\newcommand{\paperhead}[3]{%
+  \twocolumn[%
+    \begin{center}
+      \vspace*{4pt}
+      {\large\bfseries #1\par}
+      \vspace{12pt}
+      {\normalsize \AUTHORLINE \par}
+      \vspace{4pt}
+      {\small\itshape \MODULELINE \par}
+      \vspace{14pt}
+    \end{center}
+  ]%
+  \begin{abstract}#2\end{abstract}
+  \begin{IEEEkeywords}#3\end{IEEEkeywords}
+}
+
