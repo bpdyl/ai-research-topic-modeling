@@ -35,8 +35,10 @@ audit files. A ChatGPT/Claude/Gemini consumer subscription is not itself a key.
 
 1. Explore a model and topic. Compare its historical draft and audited label,
    top words and highest-weight paper titles. Expand the exact prompt and hashes.
-2. Select any or all topics and generate. Each topic makes one request; charges
-   depend on your provider account. The app does not automatically retry requests.
+2. Select any or all topics and generate. The app sends up to five topics per
+   request, waits four seconds between requests, and checkpoints each batch.
+   This keeps a full 39-topic run to about eight requests and reduces free-tier
+   RPM pressure. The app does not automatically retry failed requests.
 3. Inspect the saved run in Review & export. Failed/pending topics can resume
    with the original run's provider, model and token limit; successes are skipped.
 4. Accept, revise or reject a draft with your name and an evidence note. This
@@ -46,7 +48,8 @@ audit files. A ChatGPT/Claude/Gemini consumer subscription is not itself a key.
    mapping; an incomplete mapping is not a completed topic set.
 
 Runs are checkpointed atomically in `results/labeling/<run-id>/labels.json`.
-Each contains the evidence, source run/hash, exact prompt, prompt version,
+Each contains the evidence, source run/hash, exact topic prompt, batch metadata,
+prompt version,
 requested/resolved provider model, completion text, response ID, usage and
 timestamp. Review history preserves previous decisions. API responses are
 validated for required fields, allowed coherence values and supplied document

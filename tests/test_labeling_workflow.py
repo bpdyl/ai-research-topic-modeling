@@ -5,7 +5,7 @@ import pytest
 
 from nrtm.labeling.providers import Completion, ProviderError, complete
 from nrtm.labeling.workflow import (load_evidence, new_run, generate_pending, parse_label,
-                                    record_review, export_labels)
+                                    parse_batch, record_review, export_labels)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -95,6 +95,29 @@ def test_checkpoint_resume_and_review(tmp_path, evidence):
     assert len(item["review_history"]) == 2
     assert export_labels(saved)["_provenance"]["exported_topics"] == 0
     assert export_labels(saved, False)["_provenance"]["exported_topics"] == 2
+
+
+def test_batched_generation_checkpoints_each_topic(tmp_path, evidence):
+    other = {**evidence, "topic_id": 1, "key": "test:1",
+             "representative_documents": [{"doc_id": "paper-2", "title": "AI and schools", "year": 2024, "weight": .8}]}
+    path, run = new_run(tmp_path, [evidence, other], "gemini", "model", 2048, batch_size=2)
+    calls = []
+
+    def batched_client(*args, **kwargs):
+        calls.append(args[3])
+        return Completion(json.dumps([
+            {"key": "test:0", "label": "AI in Education", "rationale": "Students and learning feature in the evidence.",
+             "coherence": "coherent", "supporting_doc_ids": ["paper-1"]},
+            {"key": "test:1", "label": "AI and Schools", "rationale": "Schools feature in the evidence.",
+             "coherence": "coherent", "supporting_doc_ids": ["paper-2"]}
+        ]), "resolved", "batch-1", {"input_tokens": 100})
+
+    generate_pending(path, run, "secret-key", client=batched_client)
+    saved = json.loads(path.read_text())
+    assert len(calls) == 1
+    assert [i["status"] for i in saved["items"]] == ["generated", "generated"]
+    assert all(i["batch_size"] == 2 for i in saved["items"])
+    assert "secret-key" not in path.read_text()
 
 
 def test_frozen_evidence_covers_all_39_topics():

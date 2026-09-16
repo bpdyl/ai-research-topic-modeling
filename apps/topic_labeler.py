@@ -1,6 +1,7 @@
 """Run: python -m streamlit run apps/topic_labeler.py --server.address 127.0.0.1"""
 from pathlib import Path
 import json
+import math
 import os
 import sys
 
@@ -9,6 +10,9 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import streamlit as st
 from nrtm.labeling.workflow import load_evidence, new_run, generate_pending, record_review, save_run, export_labels
+
+BATCH_SIZE = 5
+BATCH_PAUSE_SECONDS = 4.0
 
 st.set_page_config(page_title="Nepal AI | Topic labelling", page_icon="🔎", layout="wide")
 st.title("From topic words to research themes")
@@ -38,8 +42,8 @@ with st.sidebar:
     if provider == "gemini":
         key = key or os.getenv("GOOGLE_API_KEY", "")
     st.caption("Credential available" if key else "Enter a key to enable generation. Browsing needs no key.")
-    max_tokens = st.number_input("Maximum output tokens per topic", min_value=512, max_value=16384, value=2048, step=512)
-    st.caption("One request per topic. No automatic retries. Calls use your provider account and may incur charges.")
+    max_tokens = st.number_input("Maximum output tokens per request", min_value=512, max_value=16384, value=2048, step=512)
+    st.caption(f"Up to {BATCH_SIZE} topics per request, with a {BATCH_PAUSE_SECONDS:.0f}-second pause between requests. No automatic retries.")
 
 browse, generate, review = st.tabs(["Explore evidence", "Generate labels", "Review & export"])
 
@@ -70,13 +74,15 @@ with generate:
     selected_keys = st.multiselect("Topics to label", [e["key"] for e in eligible], default=[e["key"] for e in eligible],
                                   format_func=lambda k: next(f"{e['model_name']} · T{e['topic_id']}" for e in entries if e["key"] == k))
     chosen = [e for e in eligible if e["key"] in selected_keys]
-    st.write(f"{len(chosen)} requests · top words and up to four public paper titles per topic")
+    request_count = math.ceil(len(chosen) / BATCH_SIZE) if chosen else 0
+    st.write(f"{len(chosen)} topics · about {request_count} API requests in batches of {BATCH_SIZE} · top words and up to four public paper titles per topic")
     st.caption("New results are saved in results/labeling/. The manuscript's archived labels and ratings remain tied to their original experiment.")
     if st.button("Generate selected labels", type="primary", disabled=not (key and model.strip() and chosen)):
-        path, run = new_run(ROOT, chosen, provider, model.strip(), int(max_tokens))
+        path, run = new_run(ROOT, chosen, provider, model.strip(), int(max_tokens), batch_size=BATCH_SIZE)
         bar = st.progress(0.0)
         with st.spinner("Generating and checkpointing topic labels…"):
-            generate_pending(path, run, key, progress=lambda n, total: bar.progress(n / total))
+            generate_pending(path, run, key, pause_seconds=BATCH_PAUSE_SECONDS,
+                             progress=lambda n, total: bar.progress(n / total))
         st.session_state["active_label_run"] = str(path)
         success = sum(i["status"] == "generated" for i in run["items"])
         st.success(f"Saved {success}/{len(run['items'])} labels in run {run['run_id']}.")
@@ -101,7 +107,7 @@ with review:
                  f"{sum(bool(i.get('review')) for i in run['items'])} reviewed by a person")
         if pending:
             if st.button("Resume unfinished topics", disabled=not key or provider != run["provider"]):
-                generate_pending(path, run, key)
+                generate_pending(path, run, key, pause_seconds=BATCH_PAUSE_SECONDS)
                 st.rerun()
             for item in pending:
                 if item.get("error"):
