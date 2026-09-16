@@ -1,10 +1,14 @@
 {
   "Bibek250288_Sajan250289_Siddhartha250620_Task1.pdf": {
-    "sha256": "4334a543bd24ceae795ed421c894873d6f631c9f28a161ecc967000e39f68a5b",
-    "bytes": 506830
+    "sha256": "620518cf4ef3fb9b70000554e6bac6ba45865857ea8da693057d02b450fabd1e",
+    "bytes": 1232452
   },
   "Bibek250288_Sajan250289_Siddhartha250620_Task2.pdf": {
-    "sha256": "b8c6113c6891730a348f19ec64eb0b6f09333472ad9d7f3a30aac1dc4975e88b",
-    "bytes": 4390274
+    "sha256": "0a18f4bd16f465cfdea0f1f1b14e41d713bd8f2b38915eeae8c4998e01e51e44",
+    "bytes": 4389513
+  },
+  "main.pdf": {
+    "sha256": "62f2b3759bfdcf859acd6ff1f2a7f7dcb9c8dce227e289a4fad5c43c537b4235",
+    "bytes": 5582591
   }
 }

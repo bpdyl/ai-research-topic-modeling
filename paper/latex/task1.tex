@@ -180,7 +180,7 @@ document can change vocabulary frequencies, cluster membership or selected hyper
 
 Figure~\ref{fig:pipeline} summarises the shared corpus and model-specific representations.
 \begin{figure*}[t]\centering
-\includegraphics[width=.98\textwidth]{figPipeline.pdf}
+\includegraphics[height=.60\textheight,trim=95 60 95 60,clip,keepaspectratio]{figPipeline_corrected.png}
 \caption{End-to-end analysis. All models use the same records, while representations differ to suit
 the model. Label assessment and temporal interpretation follow, rather than define, training.}
 \label{fig:pipeline}\end{figure*}
@@ -516,18 +516,20 @@ than selecting one model and treating its labels as established facts.
 
 \balance
 \section*{Individual Contributions}
-Bibek Paudyal (250288), Sajan Mahat (250289) and Siddhartha Bhatta (250620) contributed equally
-to the group project. Corpus preparation, model development, evaluation, interpretation and
-report preparation were collaborative activities, with shared responsibility for the work as a
-whole rather than exclusive ownership of individual stages. This statement describes group
-participation; it does not constitute a separate human topic-rating exercise.
-
-\section*{Code and Reproducibility}
-The project repository~\cite{repo1} contains the implementation and experiment records. The
-report figures use pinned run identifiers and audited labels; their source hashes and derived
-window statistics are saved with the figure manifest. The notebook's quick mode checks pipeline
-execution and does not reproduce final numbers. Full settings reproduce the computational
-protocol, while automated assessments are reaggregated from saved judgments. The additional
-seed analysis and official Task 2 benchmark revision are recorded separately from earlier runs.
+Bibek Paudyal (250288) coordinated corpus retrieval, preprocessing and the topic-labelling
+application. Sajan Mahat (250289) coordinated the LDA baseline, genetic search and matched
+random-search experiments. Siddhartha Bhatta (250620) coordinated BERTopic, model evaluation
+and temporal analysis. All three members contributed equally to report preparation and
+review of the implementation, results and interpretation, with shared responsibility for
+the final submission.
 
 \input{task1_references}
+
+\section*{Appendix: Code and Reproducibility}
+The implementation and experiment configuration are available at
+\begin{center}
+\small\url{https://github.com/bpdyl/ai-research-topic-modeling}
+\end{center}
+\noindent Pinned runs, source hashes and figure statistics are recorded in
+\texttt{paper/report\_evidence.json}. Notebook quick mode checks execution; full settings
+reproduce the protocol. Automated assessments use saved judgments.

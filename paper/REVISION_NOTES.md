@@ -129,3 +129,20 @@ appropriate standalone file as its main document.
 
 Abstracts now use the normal two-column flow. Wide figures are retained, as permitted by IEEE two-column layouts. Removed premature float barriers and page breaks, resized Task 2 Figure 16 to unblock subsequent floats, and placed a barrier before Task 2 references. Figures 19 and 20 now appear on pages 14 and 15 before references. Appendix figures use fixed column-width blocks to preserve numerical order; the MATLAB listing has its own appendix. Final-page columns are balanced in both reports. Rendered and visually checked every standalone page, including the formerly affected regions; no content was removed. Normal unused space below the final content remains.
 
+## Review revision (16 September 2026)
+
+Task 1 Figure 2 uses the user-provided draw.io layout. With user approval,
+the duplicated right-branch text was corrected to the natural-sentence,
+embeddings, UMAP and HDBSCAN pipeline in `figPipeline_corrected.png`;
+the original JPEG is preserved. Repository links appear only in each
+report's appendix, with their bibliography entries removed. Contribution
+paragraphs use the allocation confirmed by the team, with report preparation
+and review shared equally. `paper/TASK1_DEMO_SCRIPT.md` provides a timed
+ten-minute narration and app walkthrough, including an honest fallback
+when no live provider request is available.
+
+Compiled the standalone reports and `main.tex`; the outputs contain 9, 17
+and 26 pages respectively. Reviewed all combined-report pages visually,
+including Figure 2 and the final-page flow. Source reference checks pass;
+the final compile has no overfull-box warnings. No commit or push was made.
+

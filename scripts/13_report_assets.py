@@ -42,18 +42,22 @@ def save(fig, name):
     plt.close(fig)
 
 def pipeline():
-    fig,ax=plt.subplots(figsize=(10,4.8)); ax.axis('off'); ax.set(xlim=(0,10),ylim=(0,5))
-    boxes=[(0.1,3.4,2.0,1.1,'OpenAlex retrieval\n1,693 records'),
-           (2.65,3.4,2.0,1.1,'Inclusion filters\n1,074 documents'),
-           (5.3,3.4,4.4,1.1,'Shared title + abstract corpus\n2015–2025 · Nepal affiliation'),
-           (1.4,1.8,3.4,1.0,'Token / phrase branch → BoW\nGrid LDA · GA-LDA · random LDA'),
-           (5.4,1.8,3.4,1.0,'Natural-sentence branch\nEmbeddings → UMAP → HDBSCAN'),
-           (1.4,.1,7.4,1.05,'Evaluation: coherence, diversity, stability, automated judgments\nTemporal reporting: fixed topics; explicit assigned/total counts')]
+    fig,ax=plt.subplots(figsize=(10.4,4.8)); ax.axis('off'); ax.set(xlim=(0,10.4),ylim=(0,5.1))
+    boxes=[(.3,3.72,2.25,1.0,'OpenAlex retrieval\n1,693 records'),
+           (3.15,3.72,2.25,1.0,'Inclusion filters\n1,074 documents'),
+           (6.0,3.72,4.1,1.0,'Shared title + abstract corpus\n2015–2025 · Nepal affiliation'),
+           (1.1,2.0,3.75,.92,'Token / phrase branch → BoW\nGrid LDA · GA-LDA · random LDA'),
+           (5.55,2.0,3.75,.92,'Natural-sentence branch\nEmbeddings → UMAP → HDBSCAN'),
+           (1.1,.32,8.2,.98,'Evaluation: coherence, diversity, stability, automated judgments\nTemporal reporting: fixed topics; explicit assigned/total counts')]
     for x,y,w,h,t in boxes:
         ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=.06',fc='#f1f4f5',ec='#86939c',lw=.8))
         ax.text(x+w/2,y+h/2,t,ha='center',va='center',fontsize=10)
-    for a,b in [((2.15,3.95),(2.58,3.95)),((4.71,3.95),(5.24,3.95)),((6.4,3.33),(3.1,2.86)),((7.7,3.33),(7.1,2.86)),((3.1,1.73),(4.1,1.21)),((7.1,1.73),(6.1,1.21))]:
-        ax.add_patch(FancyArrowPatch(a,b,arrowstyle='-|>',mutation_scale=13,color='#586874'))
+    arrows=[((2.61,4.22),(3.09,4.22)), ((5.46,4.22),(5.94,4.22)),
+            ((7.0,3.66),(2.98,2.98)), ((8.95,3.66),(7.42,2.98)),
+            ((2.98,1.94),(4.05,1.36)), ((7.42,1.94),(6.35,1.36))]
+    for a,b in arrows:
+        ax.add_patch(FancyArrowPatch(a,b,arrowstyle='-|>',mutation_scale=12,
+                                     color='#586874',lw=1.1,shrinkA=0,shrinkB=0))
     save(fig,'figPipeline')
 
 def search():
